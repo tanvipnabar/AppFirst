@@ -15,10 +15,8 @@
  */
 package com.appfirst.communication;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,33 +32,51 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.appfirst.datatypes.SystemData;
+import com.appfirst.types.Server;
 
 import android.util.Log;
 import android.util.Base64;
 
 
 /**
- * Client lib for accessing AppFirst Monitoring public API. 
+ * Client library for accessing AppFirst Monitoring public API.
+ * <p>
+ * It provides most of the interface of getting the current status for servers, applications, tags, 
+ * processes, polled datas and alerts. At the same time, it doesn't implement the interface of 
+ * accessing he functionalities like deleting or adding. 
+ * </p>
  * @author Bin Liu
- *
+ * 
  */
 public class AFClient {
-	private DefaultHttpClient _client;/* the actual http client */
+	private DefaultHttpClient mClient;/* the actual http client */
 	private String TAG = "AFHttpClient";/* tag for logging */
 	private List<Cookie> _cookies;/* keep cookies after login */
-	private String _encodedAuthString;/* the key for access the public API */
-	private String _authName = "Authorization";
-	private byte[] _authString = "YOUR_EMAIL:YOUR_API_KEY".getBytes();
+	private String mEncodedAuthString;/* the key for access the public API */
+	private String mAuthName = "Authorization";/* name of the header field for authorization */
+	private byte[] mAuthString = "Basic EMAIL:APIKEY".getBytes();/* value of authorization header */
+	
 	/**
 	 * My default constructor. 
 	 */
 	public AFClient() {
 		AFHttpClient afHttpClient = new AFHttpClient();
-		this._client = afHttpClient.getAFHttpClient();
+		this.mClient = afHttpClient.getAFHttpClient();
+	}
+	
+	/**
+	 * @param apiKey the new api key
+	 */
+	public void setApiKeyByString(String apiKey) {
+		this.mAuthString = apiKey.getBytes();
 	}
 
 	/**
-	 * User log in with this function. 
+	 * Logs in with input username and password, store the api key 
+	 * that's returned for accessing AppFirst public API. 
 	 * @param username user's name
 	 * @param password user's password
 	 * @return true is login succeed, false otherwise
@@ -78,13 +94,13 @@ public class AFClient {
 		}
 		HttpEntity entity;
 		try {
-			HttpResponse response = this._client.execute(post);
+			HttpResponse response = this.mClient.execute(post);
 			entity = response.getEntity();
 			Log.v(TAG, "Login form get: " + response.getStatusLine());
             if (entity != null) {
             	entity.consumeContent();
             }
-			this._cookies = this._client.getCookieStore().getCookies();
+			this._cookies = this.mClient.getCookieStore().getCookies();
             if (this._cookies.isEmpty()) {
                 Log.v(TAG, "Empty");
             } else {
@@ -100,63 +116,25 @@ public class AFClient {
 	}
 	
 	/**
-	 * 
-	 * @param username
-	 * @param password
-	 * @return
+	 * Gets a list of the server for a tenant, including the capacity data. 
+	 
+	 * @param	url	the url of appfirst public API	
+	 * @return a list of {@link Server} object. 
 	 */
-	public Boolean getApiKey(String username, String password) {
-		List<NameValuePair> postContent = new ArrayList<NameValuePair>(2);
-		postContent.add(new BasicNameValuePair("username", username));
-		postContent.add(new BasicNameValuePair("password", password));
-		HttpPost post = new HttpPost("https://173.192.88.66/api/iphone/login/");
-		Boolean result = false;
-		try {
-			post.setEntity(new UrlEncodedFormEntity(postContent));
-		} catch (Exception e) {
-			return result;
-		}
-		HttpEntity entity;
-		try {
-			HttpResponse response = this._client.execute(post);
-			entity = response.getEntity();
-			Log.v(TAG, "Login form get: " + response.getStatusLine());
-            if (entity != null) {
-            	entity.consumeContent();
-            }
-			this._cookies = this._client.getCookieStore().getCookies();
-            if (this._cookies.isEmpty()) {
-                Log.v(TAG, "Empty");
-            } else {
-            	logMyCookies();
-            	result = true;
-            }
-    	} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-		return result;
-	}
-	
-	/**
-	 * 
-	 * @param String url
-	 * @return JSONString an array of json object, each is the data of a server. 
-	 */
-	public JSONArray getServerList(String url) {
-		JSONArray json = new JSONArray();
+	public List<Server> getServerList(String url) {
+		JSONArray jsonArray = new JSONArray();
 		HttpGet getRequest = new HttpGet(url);
-		this._encodedAuthString = Base64.encodeToString(this._authString, Base64.DEFAULT);
-		getRequest.setHeader(this._authName, "Basic " + this._encodedAuthString.trim());
+		this.mEncodedAuthString = String.format("Basic %s", 
+				Base64.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
+		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
 		try {
-			HttpResponse response = this._client.execute(getRequest);
+			HttpResponse response = this.mClient.execute(getRequest);
 			Log.i(TAG, response.getStatusLine().toString());
 			HttpEntity entity = response.getEntity();
             if (entity != null) {
             	InputStream instream = entity.getContent();
-                String result = convertStreamToString(instream);
-                json = new JSONArray(result);
+                String result = Helper.convertStreamToString(instream);
+                jsonArray = new JSONArray(result);
                 instream.close();
             }
 		} catch (ClientProtocolException cpe) {
@@ -166,7 +144,69 @@ public class AFClient {
 		} catch(JSONException je) {
 			je.printStackTrace();
 		}
-		return json;
+		
+		return Helper.convertServerList(jsonArray);
+	}
+	
+	/**
+	 * Gets the capacity data for a server. 
+	 * @param url the url for the query
+	 * @return a {@link Server} object. 
+	 */
+	public Server getServer(String url) {
+		JSONObject jsonObject = null;
+		HttpGet getRequest = new HttpGet(url);
+		this.mEncodedAuthString = String.format("Basic %s", 
+				Base64.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
+		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
+		try {
+			HttpResponse response = this.mClient.execute(getRequest);
+			Log.i(TAG, response.getStatusLine().toString());
+			HttpEntity entity = response.getEntity();
+            if (entity != null) {
+            	InputStream instream = entity.getContent();
+                String result = Helper.convertStreamToString(instream);
+                jsonObject = new JSONObject(result);
+                instream.close();
+            }
+		} catch (ClientProtocolException cpe) {
+			cpe.printStackTrace();
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		} catch(JSONException je) {
+			je.printStackTrace();
+		}
+		
+		return new Server(jsonObject);
+	}
+	
+	public List<SystemData> getServerData(String url) {
+		JSONArray jsonArray = null;
+		
+		HttpGet getRequest = new HttpGet(url);
+		this.mEncodedAuthString = String.format("Basic %s", 
+				Base64.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
+		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
+		try {
+			HttpResponse response = this.mClient.execute(getRequest);
+			Log.i(TAG, response.getStatusLine().toString());
+			HttpEntity entity = response.getEntity();
+            if (entity != null) {
+            	InputStream instream = entity.getContent();
+                String result = Helper.convertStreamToString(instream);
+                jsonArray = new JSONArray(result);
+                instream.close();
+            }
+		} catch (ClientProtocolException cpe) {
+			cpe.printStackTrace();
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		} catch(JSONException je) {
+			je.printStackTrace();
+		}
+		
+		return Helper.convertServerDataList(jsonArray);
+		
 	}
 	
 	private void logMyCookies() {
@@ -174,29 +214,5 @@ public class AFClient {
             Log.v(TAG, "- " + this._cookies.get(i).toString());
         }
 	}
-	/**
-    *
-    * @param is
-    * @return one line of string
-    */
-   public static String convertStreamToString(InputStream is) {
-       BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-       StringBuilder sb = new StringBuilder();
 
-       String line = null;
-       try {
-           while ((line = reader.readLine()) != null) {
-               sb.append(line);
-           }
-       } catch (IOException e) {
-           e.printStackTrace();
-       } finally {
-           try {
-               is.close();
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
-       }
-       return sb.toString();
-   }
 }

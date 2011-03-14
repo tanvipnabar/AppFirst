@@ -1,0 +1,76 @@
+/*
+ * Copyright 2009-2011 AppFirst, Inc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.appfirst.datatypes;
+
+/**
+ * @author Bin Liu
+ * 
+ * <br>Example:
+ * <code>
+ *    "User Time (us)":1486058684791,
+ *   "Create Time":1443109011965,
+ *   "Kernel Time (us)":1211180777596,
+ *   "Exit Time":2555505541592,
+ *   "Stack Size (bytes)":4948,
+ *   "Thread ID":55
+ * </code>
+ *
+ */
+public class ThreadData {
+	
+	public long getUser_time() {
+		return user_time;
+	}
+	public void setUser_time(long userTime) {
+		user_time = userTime;
+	}
+	public long getCreate_time() {
+		return create_time;
+	}
+	public void setCreate_time(long createTime) {
+		create_time = createTime;
+	}
+	public long getKernel_time() {
+		return kernel_time;
+	}
+	public void setKernel_time(long kernelTime) {
+		kernel_time = kernelTime;
+	}
+	public long getExit_time() {
+		return exit_time;
+	}
+	public void setExit_time(long exitTime) {
+		exit_time = exitTime;
+	}
+	public long getStack_size() {
+		return stack_size;
+	}
+	public void setStack_size(long stackSize) {
+		stack_size = stackSize;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	private long user_time; 
+	private long create_time;
+	private long kernel_time;
+	private long exit_time;
+	private long stack_size;
+	private int id;
+}
