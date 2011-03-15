@@ -53,7 +53,7 @@ import android.util.Base64;
  */
 public class AFClient {
 	private DefaultHttpClient mClient;/* the actual http client */
-	private String TAG = "AFHttpClient";/* tag for logging */
+	private String TAG = "AFClient";/* tag for logging */
 	private List<Cookie> _cookies;/* keep cookies after login */
 	private String mEncodedAuthString;/* the key for access the public API */
 	private String mAuthName = "Authorization";/* name of the header field for authorization */
@@ -61,6 +61,8 @@ public class AFClient {
 	
 	/**
 	 * My default constructor. 
+	 * It create an instance of {@link AFHttpClient} as its member to access all the
+	 * get/post HTTP method.  
 	 */
 	public AFClient() {
 		AFHttpClient afHttpClient = new AFHttpClient();
@@ -82,7 +84,7 @@ public class AFClient {
 	 * @return true is login succeed, false otherwise
 	 */
 	public Boolean userLogin(String username, String password) {
-		List<NameValuePair> postContent = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> postContent = new ArrayList<NameValuePair>(2);
 		postContent.add(new BasicNameValuePair("username", username));
 		postContent.add(new BasicNameValuePair("password", password));
 		HttpPost post = new HttpPost("https://173.192.88.66/api/iphone/login/");
@@ -150,7 +152,7 @@ public class AFClient {
 	
 	/**
 	 * Gets the capacity data for a server. 
-	 * @param url the url for the query
+	 * @param url the public api address of the query
 	 * @return a {@link Server} object. 
 	 */
 	public Server getServer(String url) {
@@ -180,6 +182,11 @@ public class AFClient {
 		return new Server(jsonObject);
 	}
 	
+	/**
+	 * Gets the server data 
+	 * @param url the public api address of the query
+	 * @return a list of system data in the time order. 
+	 */
 	public List<SystemData> getServerData(String url) {
 		JSONArray jsonArray = null;
 		
@@ -206,8 +213,45 @@ public class AFClient {
 		}
 		
 		return Helper.convertServerDataList(jsonArray);
-		
 	}
+	
+	/**
+	 * Gets the server data 
+	 * @param url the public api address of the query
+	 * @param number the many number of points to be retrived. 
+	 * Note that there can be gaps in the data if the server has an outage.
+	 * @return a list of system data in the time order. 
+	 */
+	public List<SystemData> getServerData(String url, int number) {
+		JSONArray jsonArray = null;
+		
+		HttpGet getRequest = new HttpGet(url);
+		this.mEncodedAuthString = String.format("Basic %s", 
+				Base64.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
+		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
+		getRequest.getParams().setParameter("num", number);
+		try {
+			HttpResponse response = this.mClient.execute(getRequest);
+			Log.i(TAG, response.getStatusLine().toString());
+			HttpEntity entity = response.getEntity();
+            if (entity != null) {
+            	InputStream instream = entity.getContent();
+                String result = Helper.convertStreamToString(instream);
+                jsonArray = new JSONArray(result);
+                instream.close();
+            }
+		} catch (ClientProtocolException cpe) {
+			cpe.printStackTrace();
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		} catch(JSONException je) {
+			je.printStackTrace();
+		}
+		
+		return Helper.convertServerDataList(jsonArray);
+	}
+	
+	
 	
 	private void logMyCookies() {
 		for (int i = 0; i < this._cookies.size(); i++) {

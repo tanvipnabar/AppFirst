@@ -101,7 +101,7 @@ public class AFHttpClient extends DefaultHttpClient{
 
     private class AFSSLSocketFactory extends SSLSocketFactory {
         SSLContext sslContext = SSLContext.getInstance("TLS");
-
+        
         public AFSSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException, 
         KeyManagementException, KeyStoreException, UnrecoverableKeyException {
             super(truststore);
