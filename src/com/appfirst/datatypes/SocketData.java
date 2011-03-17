@@ -15,6 +15,8 @@
  */
 package com.appfirst.datatypes;
 
+import org.json.JSONObject;
+
 /**
  * @author Bin Liu
  * <br>Example:
@@ -34,6 +36,51 @@ package com.appfirst.datatypes;
  */
 public class SocketData {
 	
+	/**
+	 * @param jsonObject
+	 */
+	public SocketData(JSONObject jsonObject) {
+		// TODO Auto-generated constructor stub
+		status = BaseResourceData.getStringField(getFieldFullName("status"), jsonObject);
+		process_name = BaseResourceData.getStringField(getFieldFullName("process_name"), jsonObject);
+		type = BaseResourceData.getStringField(getFieldFullName("type"), jsonObject);
+		peer_ip = BaseResourceData.getStringField(getFieldFullName("peer_ip"), jsonObject);
+		socket_ip = BaseResourceData.getStringField(getFieldFullName("socket_ip"), jsonObject);
+		socket_port = BaseResourceData.getIntField(getFieldFullName("socket_port"), jsonObject);
+		peer_port = BaseResourceData.getIntField(getFieldFullName("peer_port"), jsonObject);
+		data_received = BaseResourceData.getIntField(getFieldFullName("data_received"), jsonObject);
+		data_sent = BaseResourceData.getIntField(getFieldFullName("data_sent"), jsonObject);
+		thread_id = BaseResourceData.getIntField(getFieldFullName("thread_id"), jsonObject);
+		time_open = BaseResourceData.getDoubleField(getFieldFullName("time_open"), jsonObject);
+	}
+	
+	public static String getFieldFullName(String field) {
+		if (field == "status") {
+			return "Status";
+		} else if (field == "process_name") {
+			return "Process Name";
+		} else if (field == "peer_port") {
+			return "Peer Port";
+		} else if (field == "peer_ip") {
+			return "Peer IP";
+		} else if (field == "socket_port") {
+			return "Socket Port";
+		} else if (field == "socket_ip") {
+			return "Socket IP";
+		} else if (field == "data_received") {
+			return "Data Received (bytes)";
+		} else if (field == "data_sent") {
+			return "Data Sent (bytes)";
+		} else if (field == "type") {
+			return "Type";
+		} else if (field == "time_open") {
+			return "Time Open (sec)";
+		} else if (field == "thread_id") {
+			return "Thread Id";
+		} else {
+			return "";
+		}
+	}
 	public String getStatus() {
 		return status;
 	}
@@ -88,20 +135,28 @@ public class SocketData {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public long getTime_open() {
+	public double getTime_open() {
 		return time_open;
 	}
-	public void setTime_open(long timeOpen) {
+	public void setTime_open(double timeOpen) {
 		time_open = timeOpen;
 	}
+	public int getThread_id() {
+		return thread_id;
+	}
+	public void setThread_id(int threadId) {
+		thread_id = threadId;
+	}
+
 	private String status;
 	private String process_name;
 	private int peer_port;
+	private int thread_id;
 	private String peer_ip;
 	private int socket_port;
 	private String socket_ip;
 	private long data_received;
 	private long data_sent;
 	private String type;
-	private long time_open;
+	private double time_open;
 }

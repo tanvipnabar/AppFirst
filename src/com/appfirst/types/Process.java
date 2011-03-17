@@ -16,6 +16,10 @@
 package com.appfirst.types;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @author Bin Liu
@@ -34,6 +38,34 @@ import java.net.URI;
  * </p>
  */
 public class Process extends BaseObject{
+	/**
+	 * Default constructor.
+	 */
+	public Process() {
+		
+	}
+	/**
+	 * Create a {@link Process} object from json object. 
+	 * @param process JSON object
+	 */
+	public Process(JSONObject process) {
+		try {
+			setName(process.getString("name"));
+			setResource_uri(new URI(process.getString("resource_uri")));
+			setStart(process.getInt("start"));
+			setPid(process.getInt("pid"));
+			setArgs(process.getString("args"));
+			Object end = process.get("end");
+			if (end != null && end.toString() != "null") {
+				setEnd(Integer.parseInt(end.toString()));
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int getStart() {
 		return start;
 	}
@@ -46,10 +78,10 @@ public class Process extends BaseObject{
 	public void setEnd(int end) {
 		this.end = end;
 	}
-	public String getPid() {
+	public int getPid() {
 		return pid;
 	}
-	public void setPid(String pid) {
+	public void setPid(int pid) {
 		this.pid = pid;
 	}
 	public String getArgs() {
@@ -61,6 +93,6 @@ public class Process extends BaseObject{
 	
 	private int start;
 	private int end;
-	private String pid;
+	private int pid;
 	private String args;
 }

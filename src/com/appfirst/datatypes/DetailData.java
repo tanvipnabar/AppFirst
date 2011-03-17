@@ -15,53 +15,149 @@
  */
 package com.appfirst.datatypes;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
- * Detail data at a certain time. 
+ * Detail data at a certain time.
+ * 
  * @author Bin Liu
- * <p>
- * Each of detail object may have the following data field. 
- * <br> time	The time this data is for.
- * <br> files	A list of files accessed.
- * <br> registries	A list of registries accessed.
- * <br> threads	A list of threads in the process.
- * <br> sockets	A list of sockets.
- * <br> logs	A list of incident reports.
- * </p>
+ *         <p>
+ *         Each of detail object may have the following data field. <br>
+ *         time The time this data is for. <br>
+ *         files A list of files accessed. <br>
+ *         registries A list of registries accessed. <br>
+ *         threads A list of threads in the process. <br>
+ *         sockets A list of sockets. <br>
+ *         logs A list of incident reports.
+ *         </p>
  */
-public class DetailData extends BaseResourceData{
-	
+public class DetailData extends BaseResourceData {
+	/*
+	 * Default constructor.
+	 */
+	public DetailData() {
+
+	}
+
+	/**
+	 * @param detailData
+	 *            the data object in {@link JSONObject}
+	 */
+	public DetailData(JSONObject detailData) {
+		setTime(BaseResourceData.getIntField("time", detailData));
+		setFiles(BaseResourceData.getJSONArrayField("files", detailData));
+		setLogs(BaseResourceData.getJSONArrayField("logs", detailData));
+		setSockets(BaseResourceData.getJSONArrayField("sockets", detailData));
+		setRegistries(BaseResourceData.getJSONArrayField("registries",
+				detailData));
+		setThreads(BaseResourceData.getJSONArrayField("files", detailData));
+	}
+
 	public List<FileData> getFiles() {
 		return files;
 	}
+
 	public void setFiles(List<FileData> files) {
 		this.files = files;
 	}
+
+	public void setFiles(JSONArray files) {
+		this.files = new ArrayList<FileData>();
+		for (int cnt = 0; cnt < files.length(); cnt++) {
+			try {
+				this.files.add(new FileData(files.getJSONObject(cnt)));
+			} catch (JSONException je) {
+				je.printStackTrace();
+			}
+		}
+	}
+
 	public List<RegistryData> getRegistries() {
 		return registries;
 	}
+
 	public void setRegistries(List<RegistryData> registries) {
 		this.registries = registries;
 	}
+
+	public void setRegistries(JSONArray registries) {
+		this.registries = new ArrayList<RegistryData>();
+		for (int cnt = 0; cnt < registries.length(); cnt++) {
+			try {
+				this.registries.add(new RegistryData(registries
+						.getJSONObject(cnt)));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public List<ThreadData> getThreads() {
 		return threads;
 	}
+
 	public void setThreads(List<ThreadData> threads) {
 		this.threads = threads;
 	}
+
+	public void setThreads(JSONArray threads) {
+		this.threads = new ArrayList<ThreadData>();
+		for (int cnt = 0; cnt < threads.length(); cnt++) {
+			try {
+				this.threads.add(new ThreadData(threads.getJSONObject(cnt)));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public List<SocketData> getSockets() {
 		return sockets;
 	}
+
 	public void setSockets(List<SocketData> sockets) {
 		this.sockets = sockets;
 	}
+
+	public void setSockets(JSONArray sockets) {
+		this.sockets = new ArrayList<SocketData>();
+		for (int cnt = 0; cnt < sockets.length(); cnt++) {
+			try {
+				this.sockets.add(new SocketData(sockets.getJSONObject(cnt)));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public List<LogData> getLogs() {
 		return logs;
 	}
+
 	public void setLogs(List<LogData> logs) {
 		this.logs = logs;
 	}
+
+	public void setLogs(JSONArray logs) {
+		this.logs = new ArrayList<LogData>();
+		for (int cnt = 0; cnt < logs.length(); cnt++) {
+			try {
+				this.logs.add(new LogData(logs.getJSONObject(cnt)));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private List<FileData> files;
 	private List<RegistryData> registries;
 	private List<ThreadData> threads;

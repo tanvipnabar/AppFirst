@@ -15,16 +15,32 @@
  */
 package com.appfirst.types;
 
+import java.net.URI;
+
+import org.json.JSONObject;
+
 /**
  * Mapping between Subscriber object in Java Class and JSON object in AppFirst public API.
  * @author Bin Liu
  * 
  */
-public class Subscriber {
-	public String getUrl() {
+public class Subscriber extends BaseObject{
+	/**
+	 * @param jsonObject
+	 */
+	public Subscriber(JSONObject jsonObject) {
+		super();
+		auth = BaseObject.getStringField("auth", jsonObject);
+		type = BaseObject.getStringField("type", jsonObject);
+		event = BaseObject.getStringField("event", jsonObject);
+		url = BaseObject.getURIField("url", jsonObject);
+		
+		// TODO Auto-generated constructor stub
+	}
+	public URI getUrl() {
 		return url;
 	}
-	public void setUrl(String url) {
+	public void setUrl(URI url) {
 		this.url = url;
 	}
 	public String getAuth() {
@@ -45,7 +61,7 @@ public class Subscriber {
 	public void setEvent(String event) {
 		this.event = event;
 	}
-	private String url;
+	private URI url;
 	private String auth;
 	private String type;
 	private String event;

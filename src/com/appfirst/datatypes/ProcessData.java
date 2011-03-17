@@ -15,6 +15,8 @@
  */
 package com.appfirst.datatypes;
 
+import org.json.JSONObject;
+
 /**
  * Process data at a certain minute. 
  * @author Bin Liu
@@ -40,17 +42,45 @@ package com.appfirst.datatypes;
  * </p>
  */
 public class ProcessData extends BaseResourceData{
+	/**
+	 * Default constructor. 
+	 */
+	public ProcessData() {
+		
+	}
 	
-	public float getCpu() {
+	/**
+	 * 
+	 * @param processData a process data object in {@link JSONObject}. 
+	 */
+	public ProcessData(JSONObject processData) {
+		cpu = BaseResourceData.getDoubleField("cpu", processData);
+		memory = BaseResourceData.getDoubleField("memory", processData);
+		avg_response_time = BaseResourceData.getDoubleField("avg_response_time", processData);
+		thread_num = BaseResourceData.getIntField("thread_num", processData);
+		page_faults = BaseResourceData.getIntField("page_faults", processData);
+		socket_write = BaseResourceData.getIntField("socket_write", processData);
+		socket_read = BaseResourceData.getIntField("socket_read", processData);
+		response_num = BaseResourceData.getIntField("response_num", processData);
+		total_log = BaseResourceData.getIntField("total_log", processData);
+		registry_num = BaseResourceData.getIntField("registry_num", processData);
+		socket_num = BaseResourceData.getIntField("socket_num", processData);
+		critical_log = BaseResourceData.getIntField("critical_log", processData);
+		file_read = BaseResourceData.getIntField("file_read", processData);
+		file_write = BaseResourceData.getIntField("file_write", processData);
+		file_num = BaseResourceData.getIntField("file_num", processData);
+		setTime(BaseResourceData.getIntField("time", processData));
+	}
+	public double getCpu() {
 		return cpu;
 	}
-	public void setCpu(float cpu) {
+	public void setCpu(double cpu) {
 		this.cpu = cpu;
 	}
-	public float getMemory() {
+	public double getMemory() {
 		return memory;
 	}
-	public void setMemory(float memory) {
+	public void setMemory(double memory) {
 		this.memory = memory;
 	}
 	public int getPage_faults() {
@@ -119,10 +149,10 @@ public class ProcessData extends BaseResourceData{
 	public void setTotal_log(int totalLog) {
 		total_log = totalLog;
 	}
-	public float getAvg_response_time() {
+	public double getAvg_response_time() {
 		return avg_response_time;
 	}
-	public void setAvg_response_time(float avgResponseTime) {
+	public void setAvg_response_time(double avgResponseTime) {
 		avg_response_time = avgResponseTime;
 	}
 	public int getResponse_num() {
@@ -131,8 +161,8 @@ public class ProcessData extends BaseResourceData{
 	public void setResponse_num(int responseNum) {
 		response_num = responseNum;
 	}
-	private float cpu;
-	private float memory;
+	private double cpu;
+	private double memory;
 	private int page_faults;
 	private int thread_num;
 	private long socket_write;
@@ -144,6 +174,6 @@ public class ProcessData extends BaseResourceData{
 	private int registry_num;
 	private int critical_log;
 	private int total_log;
-	private float avg_response_time;
+	private double avg_response_time;
 	private int response_num;
 }

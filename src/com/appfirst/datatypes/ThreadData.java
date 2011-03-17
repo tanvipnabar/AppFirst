@@ -15,6 +15,12 @@
  */
 package com.appfirst.datatypes;
 
+import java.lang.reflect.Field;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * @author Bin Liu
  * 
@@ -31,6 +37,18 @@ package com.appfirst.datatypes;
  */
 public class ThreadData {
 	
+	/**
+	 * @param jsonObject
+	 */
+	public ThreadData(JSONObject jsonObject) {
+		// TODO Auto-generated constructor stub
+		user_time = BaseResourceData.getLongField("User Time (us)", jsonObject);
+		create_time = BaseResourceData.getLongField("Create Time", jsonObject);
+		kernel_time= BaseResourceData.getLongField("Kernel Time (us)", jsonObject);
+		exit_time = BaseResourceData.getLongField("Exit Time", jsonObject);
+		stack_size = BaseResourceData.getLongField("Stack Size (bytes)", jsonObject);
+		id = BaseResourceData.getLongField("Thread ID", jsonObject);
+	}
 	public long getUser_time() {
 		return user_time;
 	}
@@ -61,10 +79,10 @@ public class ThreadData {
 	public void setStack_size(long stackSize) {
 		stack_size = stackSize;
 	}
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	private long user_time; 
@@ -72,5 +90,5 @@ public class ThreadData {
 	private long kernel_time;
 	private long exit_time;
 	private long stack_size;
-	private int id;
+	private long id;
 }

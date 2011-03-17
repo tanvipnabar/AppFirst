@@ -17,6 +17,8 @@ package com.appfirst.types;
 
 import java.net.URI;
 
+import org.json.JSONObject;
+
 /**
  * 
  * <p>
@@ -34,8 +36,19 @@ import java.net.URI;
  * <br> resource_uri (read-only)	The URI to get more information about this item
  * </p>
  */
-public class PolledDataObject {
+public class PolledDataObject extends BaseObject{
 	
+	/**
+	 * @param jsonObject
+	 */
+	public PolledDataObject(JSONObject jsonObject) {
+		super(jsonObject);
+		server = BaseObject.getIntField("server", jsonObject);
+		server_uri = BaseObject.getURIField("server_uri", jsonObject);
+		alert_uri = BaseObject.getURIField("alert_uri",jsonObject);
+		alert = BaseObject.getIntField("alert", jsonObject);
+		// TODO Auto-generated constructor stub
+	}
 	public int getServer() {
 		return server;
 	}
@@ -54,14 +67,14 @@ public class PolledDataObject {
 	public void setAlert(int alert) {
 		this.alert = alert;
 	}
-	public int getAlert_uri() {
+	public URI getAlert_uri() {
 		return alert_uri;
 	}
-	public void setAlert_uri(int alertUri) {
+	public void setAlert_uri(URI alertUri) {
 		alert_uri = alertUri;
 	}
 	private int server;
 	private URI server_uri;
 	private int alert;
-	private int alert_uri;
+	private URI alert_uri;
 }

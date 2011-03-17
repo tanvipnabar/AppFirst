@@ -17,6 +17,8 @@ package com.appfirst.types;
 
 import java.net.URI;
 
+import org.json.JSONObject;
+
 /**
  * Mapping between AlertHistory object in Java and JSON object in AppFirst Public API.
  * @author Bin Liu
@@ -35,6 +37,17 @@ import java.net.URI;
  */
 public class AlertHistory extends BaseObject{
 	
+	/**
+	 * @param jsonObject
+	 */
+	public AlertHistory(JSONObject jsonObject) {
+		// TODO Auto-generated constructor stub
+		super(jsonObject);
+		message_uri = BaseObject.getURIField("message_uri", jsonObject);
+		start = BaseObject.getIntField("start", jsonObject);
+		end = BaseObject.getIntField("end", jsonObject);
+		alert = BaseObject.getIntField("alert", jsonObject);
+	}
 	public int getStart() {
 		return start;
 	}

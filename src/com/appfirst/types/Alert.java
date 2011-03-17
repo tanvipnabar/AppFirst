@@ -16,7 +16,14 @@
 package com.appfirst.types;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.appfirst.datatypes.FileData;
 
 /**
  * <p>
@@ -46,6 +53,20 @@ import java.util.List;
  */
 public class Alert extends BaseObject{
 	
+	/**
+	 * @param jsonObject
+	 */
+	public Alert(JSONObject jsonObject) {
+		super(jsonObject);
+		active = BaseObject.getBooleanField("active", jsonObject);
+		in_incident = BaseObject.getBooleanField("in_incident", jsonObject);
+		last_triggered = BaseObject.getIntField("last_triggered", jsonObject);
+		target = BaseObject.getStringField("target", jsonObject);
+		type = BaseObject.getStringField("type", jsonObject);
+		trigger = BaseObject.getStringField("trigger", jsonObject);
+		target_uri = BaseObject.getURIField("target_uri", jsonObject);
+		setSubscribers(BaseObject.getJSONArrayField("subscribers", jsonObject));
+	}
 	public boolean isActive() {
 		return active;
 	}
@@ -58,10 +79,10 @@ public class Alert extends BaseObject{
 	public void setType(String type) {
 		this.type = type;
 	}
-	public int getTarget() {
+	public String getTarget() {
 		return target;
 	}
-	public void setTarget(int target) {
+	public void setTarget(String target) {
 		this.target = target;
 	}
 	public URI getTarget_uri() {
@@ -94,9 +115,19 @@ public class Alert extends BaseObject{
 	public void setSubscribers(List<Subscriber> subscribers) {
 		this.subscribers = subscribers;
 	}
+	public void setSubscribers(JSONArray subscribers) {
+		this.subscribers = new ArrayList<Subscriber>();
+		for (int cnt = 0; cnt < subscribers.length(); cnt++) {
+			try {
+				this.subscribers.add(new Subscriber(subscribers.getJSONObject(cnt)));
+			} catch (JSONException je) {
+				je.printStackTrace();
+			}
+		};
+	}
 	private boolean active;
 	private String type;
-	private int target;
+	private String target;
 	private URI target_uri;
 	private String trigger;
 	private int last_triggered;

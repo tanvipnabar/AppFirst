@@ -15,17 +15,22 @@
  */
 package com.appfirst.datatypes;
 
+import com.appfirst.types.BaseObject;
+
 /**
- * Base data field each data object should have. 
+ * Base data field each data object should have.
+ * 
  * @author Bin Liu
- *
+ * 
  */
-public class BaseResourceData {
+public class BaseResourceData extends BaseObject{
 	public int getTime() {
 		return time;
 	}
+
 	public void setTime(int time) {
 		this.time = time;
 	}
+
 	private int time;
 }

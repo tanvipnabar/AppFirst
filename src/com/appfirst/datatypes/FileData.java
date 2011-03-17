@@ -15,19 +15,29 @@
  */
 package com.appfirst.datatypes;
 
+import org.json.JSONObject;
+
 /**
  * @author Bin Liu
  *
  */
 public class FileData {
 	
+	/**
+	 * @param jsonObject 
+	 */
+	public FileData(JSONObject jsonObject) {
+		fileName = BaseResourceData.getStringField("Files", jsonObject);
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getFileName() {
-		return FileName;
+		return fileName;
 	}
 
 	public void setFileName(String fileName) {
-		FileName = fileName;
+		this.fileName = fileName;
 	}
 
-	private String FileName;
+	private String fileName;
 }

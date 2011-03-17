@@ -15,12 +15,23 @@
  */
 package com.appfirst.datatypes;
 
+import org.json.JSONObject;
+
 /**
  * @author Bin Liu
  *
  */
 public class RegistryData {
 	
+
+	/**
+	 * @param jsonObject
+	 */
+	public RegistryData(JSONObject jsonObject) {
+		registryName = BaseResourceData.getStringField("Registries", jsonObject);
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getRegistryName() {
 		return registryName;
 	}

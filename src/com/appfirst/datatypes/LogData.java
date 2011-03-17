@@ -15,6 +15,12 @@
  */
 package com.appfirst.datatypes;
 
+import java.lang.reflect.Field;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * @author Bin Liu
  * <br>Example:
@@ -24,6 +30,36 @@ package com.appfirst.datatypes;
  */
 public class LogData {
 	
+	/**
+	 * @param jsonObject
+	 */
+	public LogData(JSONObject jsonObject) {
+		// TODO Auto-generated constructor stub
+		Class cls = this.getClass();
+		JSONArray fields = jsonObject.names();
+		for (int cnt = 0; cnt < fields.length(); cnt ++) {
+			try {
+				String fieldName = fields.getString(cnt);
+				Field fld = cls.getField(fieldName);
+				fld.set(this, jsonObject.get(fieldName));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	public String getMessage() {
 		return Message;
 	}

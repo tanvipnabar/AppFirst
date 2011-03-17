@@ -15,7 +15,7 @@
  */
 package com.appfirst.types;
 
-import java.net.URI;
+import org.json.JSONObject;
 
 /**
  * Mapping between Application object in Java and JSON object in AppFirst Public API.
@@ -31,6 +31,15 @@ import java.net.URI;
  */
 public class Application extends BaseObject {
 	private int created;
+
+	/**
+	 * @param jsonObject
+	 */
+	public Application(JSONObject jsonObject) {
+		// TODO Auto-generated constructor stub
+		super(jsonObject);
+		created = BaseObject.getIntField("created", jsonObject);
+	}
 
 	public int getCreated() {
 		return created;

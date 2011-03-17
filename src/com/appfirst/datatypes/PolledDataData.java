@@ -15,14 +15,29 @@
  */
 package com.appfirst.datatypes;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @author Bin Liu
  *
  */
-public class PollDataData extends BaseResourceData{
+public class PolledDataData extends BaseResourceData{
 	
+	/**
+	 * @param jsonObject
+	 */
+	public PolledDataData(JSONObject jsonObject) {
+		// TODO Auto-generated constructor stub
+		setTime(BaseResourceData.getIntField("time", jsonObject));
+		status = BaseResourceData.getStringField("status", jsonObject);
+		text = BaseResourceData.getStringField("text", jsonObject);
+		setValues(BaseResourceData.getJSONArrayField("values", jsonObject));
+	}
 	public String getStatus() {
 		return status;
 	}
@@ -40,6 +55,16 @@ public class PollDataData extends BaseResourceData{
 	}
 	public void setValues(List<Integer> values) {
 		this.values = values;
+	}
+	public void setValues(JSONArray values) {
+		this.values = new ArrayList<Integer>();
+		for (int cnt = 0; cnt < values.length(); cnt++) {
+			try {
+				this.values.add(values.getInt(cnt));
+			} catch (JSONException je) {
+				je.printStackTrace();
+			}
+		}
 	}
 	private String status;
 	private String text;

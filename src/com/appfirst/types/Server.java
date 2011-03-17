@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -69,7 +70,7 @@ public class Server extends BaseObject{
 				diskValues.add(new BasicNameValuePair(name, value));
 			}
 			setCapacity_disks(diskValues);
-		} catch (Exception e) {
+		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
