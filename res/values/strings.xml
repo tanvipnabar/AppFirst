@@ -4,5 +4,6 @@
     <string name="app_name">AppFirst Monitoring</string>
     <string name="frontend_address">"https://173.192.88.66"</string>
     <string name="api_key">"/api/v1/apikey/"</string>
-    <string name="api_servers">"/api/v1/servers/"</string> 
+    <string name="api_servers">"/api/v1/servers/"</string>
+    <string name="api_alerts">"/api/v1/alerts/"</string>
 </resources>

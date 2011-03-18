@@ -38,7 +38,7 @@ public class BaseObject {
 	public BaseObject(JSONObject jsonObject) {
 		// TODO Auto-generated constructor stub
 		id = BaseObject.getIntField("id", jsonObject);
-		name = BaseObject.getStringField("Name", jsonObject);
+		name = BaseObject.getStringField("name", jsonObject);
 		resource_uri = BaseObject.getURIField("resource_uri", jsonObject);
 	}
 

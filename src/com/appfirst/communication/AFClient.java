@@ -71,11 +71,19 @@ public class AFClient {
 												 * name of the header field for
 												 * authorization
 												 */
-	private byte[] mAuthString = "Basic EMAIL:APIKEY".getBytes();/*
+	private byte[] mAuthString = "YOUREMAIL:YOURAPIKEY".getBytes();/*
 																 * value of
 																 * authorization
 																 * header
 																 */
+
+	public byte[] getmAuthString() {
+		return mAuthString;
+	}
+
+	public void setmAuthString(byte[] mAuthString) {
+		this.mAuthString = mAuthString;
+	}
 
 	/**
 	 * My default constructor. It create an instance of {@link AFHttpClient} as
