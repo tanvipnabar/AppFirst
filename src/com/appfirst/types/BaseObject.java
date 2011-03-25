@@ -52,7 +52,7 @@ public class BaseObject {
 	 */
 	public static Integer getIntField(String field, JSONObject dataObject) {
 		Integer ret = 0;
-		if (!dataObject.has(field)) {
+		if (dataObject == null || !dataObject.has(field)) {
 			return ret;
 		}
 		try {
@@ -162,6 +162,29 @@ public class BaseObject {
 		return ret;
 	}
 
+	/**
+	 * 
+	 * @param field
+	 *            the name of field in a {@link JSONObject}.
+	 * @param dataObject
+	 *            a {@link JSONObject}
+	 * @return a {@link JSONObject}
+	 */
+	public static JSONObject getJSONObjectField(String field,
+			JSONObject dataObject) {
+		JSONObject jsonObject = new JSONObject();
+		if (!dataObject.has(field)) {
+			return jsonObject;
+		}
+		try {
+			Object object = dataObject.get(field);
+			if (object.toString() != "null")
+				jsonObject = dataObject.getJSONObject(field);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
 	/**
 	 * 
 	 * @param field

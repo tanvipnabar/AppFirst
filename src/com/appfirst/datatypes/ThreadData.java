@@ -43,9 +43,9 @@ public class ThreadData {
 	public ThreadData(JSONObject jsonObject) {
 		// TODO Auto-generated constructor stub
 		user_time = BaseResourceData.getLongField("User Time (us)", jsonObject);
-		create_time = BaseResourceData.getLongField("Create Time", jsonObject);
+		create_time = BaseResourceData.getStringField("Create Time", jsonObject);
 		kernel_time= BaseResourceData.getLongField("Kernel Time (us)", jsonObject);
-		exit_time = BaseResourceData.getLongField("Exit Time", jsonObject);
+		exit_time = BaseResourceData.getStringField("Exit Time", jsonObject);
 		stack_size = BaseResourceData.getLongField("Stack Size (bytes)", jsonObject);
 		id = BaseResourceData.getLongField("Thread ID", jsonObject);
 	}
@@ -55,10 +55,10 @@ public class ThreadData {
 	public void setUser_time(long userTime) {
 		user_time = userTime;
 	}
-	public long getCreate_time() {
+	public String getCreate_time() {
 		return create_time;
 	}
-	public void setCreate_time(long createTime) {
+	public void setCreate_time(String createTime) {
 		create_time = createTime;
 	}
 	public long getKernel_time() {
@@ -67,10 +67,10 @@ public class ThreadData {
 	public void setKernel_time(long kernelTime) {
 		kernel_time = kernelTime;
 	}
-	public long getExit_time() {
+	public String getExit_time() {
 		return exit_time;
 	}
-	public void setExit_time(long exitTime) {
+	public void setExit_time(String exitTime) {
 		exit_time = exitTime;
 	}
 	public long getStack_size() {
@@ -86,9 +86,9 @@ public class ThreadData {
 		this.id = id;
 	}
 	private long user_time; 
-	private long create_time;
+	private String create_time;
 	private long kernel_time;
-	private long exit_time;
+	private String exit_time;
 	private long stack_size;
 	private long id;
 }

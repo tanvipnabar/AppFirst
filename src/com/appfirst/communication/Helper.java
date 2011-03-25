@@ -4,19 +4,27 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+
 import com.appfirst.datatypes.PolledDataData;
 import com.appfirst.datatypes.ProcessData;
 import com.appfirst.datatypes.SystemData;
+import com.appfirst.monitoring.R;
 import com.appfirst.types.Alert;
 import com.appfirst.types.AlertHistory;
+import com.appfirst.types.Application;
 import com.appfirst.types.PolledDataObject;
 import com.appfirst.types.Server;
 import com.appfirst.types.Process;
@@ -28,6 +36,8 @@ import com.appfirst.types.Process;
  * 
  */
 public class Helper {
+	private final static String HTTP_OK = "HTTP/1.1 200 OK";
+
 	/**
 	 * 
 	 * @param is
@@ -192,4 +202,214 @@ public class Helper {
 
 		return list;
 	}
+
+	/**
+	 * @param jsonArray
+	 * @return
+	 */
+	public static List<Application> convertApplicationList(JSONArray jsonArray) {
+		// TODO Auto-generated method stub
+		List<Application> list = new ArrayList<Application>();
+		for (int i = 0; i < jsonArray.length(); i++) {
+			try {
+				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+				Application item = new Application(jsonObject);
+				list.add(item);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String formatCpuValue(double value) {
+		return String.format("%.1f", value) + "%";
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String formatMemoryValue(double value) {
+		return String.format("%.0f MB", value / 1000000);
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String formatByteValue(long value) {
+		String valueString = String.format("%d", value);
+		String units = "B";
+		if (valueString.length() > 8) {
+			valueString = String.format("%d", value / 1000000);
+			units = "MB";
+		} else if (valueString.length() > 5) {
+			valueString = String.format("%d", value / 1000);
+			units = "KB";
+		}
+		return String.format("%s %s", valueString, units);
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String formatTimeValue(double value) {
+		if (Double.isNaN(value))
+			return "N/A";
+
+		String valueString = String.format("%.0f", value);
+		String units = "us";
+		if (valueString.length() > 8) {
+			valueString = String.format("%.1f", value / 1000000);
+			units = "s";
+		} else if (valueString.length() > 5) {
+			valueString = String.format("%.1f", value / 1000);
+			units = "ms";
+		}
+		return String.format("%s %s", valueString, units);
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String formatTimeValue(long value) {
+		String valueString = String.format("%d", value);
+		String units = "us";
+		if (valueString.length() > 8) {
+			valueString = String.format("%d", value / 1000000);
+			units = "s";
+		} else if (valueString.length() > 5) {
+			valueString = String.format("%d", value / 1000);
+			units = "ms";
+		}
+		return String.format("%s %s", valueString, units);
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String formatValue(long value) {
+		return String.format("%d", value);
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String formatValue(int value) {
+		return String.format("%d", value);
+	}
+
+	/**
+	 * 
+	 * @param time
+	 *            number of epoch second
+	 * @return formated time
+	 */
+	public static String formatTime(long time) {
+		String ret = "";
+		if (time > 0) {
+			Date date = new Date(time);
+			SimpleDateFormat df = new SimpleDateFormat("MMM d HH:mm");
+			ret = df.format(date);
+		} else {
+			ret = "N/A";
+		}
+		return ret;
+	}
+
+	/**
+	 * 
+	 * @param time
+	 *            number of epoch second
+	 * @return formated time
+	 */
+	public static String formatLongTime(long time) {
+		String ret = "";
+		if (time > 0) {
+			Date date = new Date(time);
+			SimpleDateFormat df = new SimpleDateFormat("MMM d HH:mm yyyy");
+			ret = df.format(date);
+		} else {
+			ret = "N/A";
+		}
+		return ret;
+	}
+
+	/**
+	 * Get the url of server list query.
+	 * 
+	 * @param context
+	 *            current activity.
+	 * @return the formatted url string.
+	 */
+	public static String getServerListUrl(Context context) {
+		return String.format("%s%s", context
+				.getString(R.string.frontend_address), context
+				.getString(R.string.api_servers));
+
+	}
+
+	/**
+	 * Get the url of the polled data list query.
+	 * 
+	 * @param context
+	 *            current activity.
+	 * @return the formatted url string.
+	 */
+	public static String getPollDataList(Context context) {
+		return String.format("%s%s", context
+				.getString(R.string.frontend_address), context
+				.getString(R.string.api_polled_datas));
+	}
+	
+	/**
+	 * Get the url of the alert query. 
+	 * @param context current activity.
+	 * @param id alert id
+	 * @return the formatted url string. 
+	 */
+	public static String getAlertUrl(Context context, int id) {
+		String ret = String.format("%s%s", context
+				.getString(R.string.frontend_address), context
+				.getString(R.string.api_alerts));
+		if (id > 0) {
+			ret = String.format("%s/%d", ret, id); 
+		}
+		return ret;
+	}
+
+	/**
+	 * Check whether request is successful.
+	 * 
+	 * @param response
+	 *            the HTTP Response
+	 * @return true if successful, false otherwise
+	 */
+	public static Boolean checkStatus(HttpResponse response) {
+		return response.getStatusLine().toString().equals(HTTP_OK);
+	}
+	
+	
+	
+	
+	
+
 }

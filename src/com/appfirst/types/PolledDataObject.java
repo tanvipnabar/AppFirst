@@ -37,7 +37,6 @@ import org.json.JSONObject;
  * </p>
  */
 public class PolledDataObject extends BaseObject{
-	
 	/**
 	 * @param jsonObject
 	 */

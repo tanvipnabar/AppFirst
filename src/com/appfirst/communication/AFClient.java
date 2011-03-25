@@ -29,6 +29,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -36,10 +37,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appfirst.datatypes.AlertHistoryData;
 import com.appfirst.datatypes.DetailData;
 import com.appfirst.datatypes.PolledDataData;
 import com.appfirst.datatypes.ProcessData;
 import com.appfirst.datatypes.SystemData;
+import com.appfirst.monitoring.R;
 import com.appfirst.types.Alert;
 import com.appfirst.types.AlertHistory;
 import com.appfirst.types.Application;
@@ -71,11 +74,9 @@ public class AFClient {
 												 * name of the header field for
 												 * authorization
 												 */
-	private byte[] mAuthString = "YOUREMAIL:YOURAPIKEY".getBytes();/*
-																 * value of
-																 * authorization
-																 * header
-																 */
+	private byte[] mAuthString = "".getBytes();/*
+												 * value of authorization header
+												 */
 
 	public byte[] getmAuthString() {
 		return mAuthString;
@@ -112,11 +113,11 @@ public class AFClient {
 	 *            user's password
 	 * @return true is login succeed, false otherwise
 	 */
-	public Boolean userLogin(String username, String password) {
+	public Boolean userLogin(String username, String password, String address) {
 		List<NameValuePair> postContent = new ArrayList<NameValuePair>(2);
 		postContent.add(new BasicNameValuePair("username", username));
 		postContent.add(new BasicNameValuePair("password", password));
-		HttpPost post = new HttpPost("https://173.192.88.66/api/iphone/login/");
+		HttpPost post = new HttpPost(address);
 		Boolean result = false;
 		try {
 			post.setEntity(new UrlEncodedFormEntity(postContent));
@@ -127,15 +128,15 @@ public class AFClient {
 		try {
 			HttpResponse response = this.mClient.execute(post);
 			entity = response.getEntity();
-			Log.v(TAG, "Login form get: " + response.getStatusLine());
 			if (entity != null) {
 				entity.consumeContent();
 			}
-			this._cookies = this.mClient.getCookieStore().getCookies();
-			if (this._cookies.isEmpty()) {
-				Log.v(TAG, "Empty");
-			} else {
+			if (Helper.checkStatus(response)) {
 				result = true;
+			} else {
+				Log.e(TAG, String.format("Log in failed: %s", response
+						.getStatusLine()));
+				result = false;
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -155,27 +156,7 @@ public class AFClient {
 	public List<Server> getServerList(String url) {
 		JSONArray jsonArray = new JSONArray();
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
-
+		jsonArray = makeJsonArrayRequest(getRequest);
 		return Helper.convertServerList(jsonArray);
 	}
 
@@ -189,27 +170,7 @@ public class AFClient {
 	public Server getServer(String url) {
 		JSONObject jsonObject = null;
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonObject = new JSONObject(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
-
+		jsonObject = makeJsonObjectRequest(getRequest);
 		return new Server(jsonObject);
 	}
 
@@ -222,29 +183,8 @@ public class AFClient {
 	 */
 	public List<SystemData> getServerData(String url) {
 		JSONArray jsonArray = null;
-
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
-
+		jsonArray = makeJsonArrayRequest(getRequest);
 		return Helper.convertServerDataList(jsonArray);
 	}
 
@@ -262,28 +202,7 @@ public class AFClient {
 		JSONArray jsonArray = null;
 		String params = String.format("?num=%d", number);
 		HttpGet getRequest = new HttpGet(url + params);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		getRequest.getParams().setParameter("num", number);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
-
+		jsonArray = makeJsonArrayRequest(getRequest);
 		return Helper.convertServerDataList(jsonArray);
 	}
 
@@ -307,26 +226,7 @@ public class AFClient {
 		String params = String.format("?start=%d&end=%d&num=%d", start, end,
 				number);
 		HttpGet getRequest = new HttpGet(url + params);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonArray = makeJsonArrayRequest(getRequest);
 
 		return Helper.convertServerDataList(jsonArray);
 	}
@@ -342,26 +242,7 @@ public class AFClient {
 		JSONArray jsonArray = null;
 
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonArray = makeJsonArrayRequest(getRequest);
 
 		return Helper.convertProcessList(jsonArray);
 	}
@@ -382,26 +263,7 @@ public class AFClient {
 		JSONArray jsonArray = null;
 		String params = String.format("?start=%d&end=%d", start, end);
 		HttpGet getRequest = new HttpGet(url + params);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonArray = makeJsonArrayRequest(getRequest);
 
 		return Helper.convertProcessList(jsonArray);
 	}
@@ -416,26 +278,7 @@ public class AFClient {
 	public Process getProcess(String url) {
 		JSONObject jsonObject = null;
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonObject = new JSONObject(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonObject = makeJsonObjectRequest(getRequest);
 
 		return new Process(jsonObject);
 	}
@@ -451,26 +294,7 @@ public class AFClient {
 		JSONArray jsonArray = null;
 
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonArray = makeJsonArrayRequest(getRequest);
 
 		return Helper.convertProcessDataList(jsonArray);
 	}
@@ -490,26 +314,7 @@ public class AFClient {
 		JSONArray jsonArray = null;
 		String params = String.format("?num=%d", number);
 		HttpGet getRequest = new HttpGet(url + params);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonArray = makeJsonArrayRequest(getRequest);
 
 		return Helper.convertProcessDataList(jsonArray);
 	}
@@ -534,26 +339,7 @@ public class AFClient {
 		String params = String.format("?start=%d&end=%d&num=%d", start, end,
 				number);
 		HttpGet getRequest = new HttpGet(url + params);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonArray = makeJsonArrayRequest(getRequest);
 
 		return Helper.convertProcessDataList(jsonArray);
 	}
@@ -568,26 +354,7 @@ public class AFClient {
 	public DetailData getDetailData(String url) {
 		JSONObject jsonObject = null;
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonObject = new JSONObject(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonObject = makeJsonObjectRequest(getRequest);
 
 		return new DetailData(jsonObject);
 	}
@@ -603,26 +370,7 @@ public class AFClient {
 		JSONObject jsonObject = null;
 		String params = String.format("?time=%d", time);
 		HttpGet getRequest = new HttpGet(url + params);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonObject = new JSONObject(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonObject = makeJsonObjectRequest(getRequest);
 
 		return new DetailData(jsonObject);
 	}
@@ -634,29 +382,25 @@ public class AFClient {
 	 *            the public api address of the query
 	 * @return a {@link Application} object.
 	 */
+	public List<Application> getApplicationList(String url) {
+		JSONArray jsonArray = null;
+		HttpGet getRequest = new HttpGet(url);
+		jsonArray = makeJsonArrayRequest(getRequest);
+
+		return Helper.convertApplicationList(jsonArray);
+	}
+
+	/**
+	 * Gets the application object.
+	 * 
+	 * @param url
+	 *            the public api address of the query
+	 * @return a {@link Application} object.
+	 */
 	public Application getApplication(String url) {
 		JSONObject jsonObject = null;
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonObject = new JSONObject(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonObject = makeJsonObjectRequest(getRequest);
 
 		return new Application(jsonObject);
 	}
@@ -671,26 +415,7 @@ public class AFClient {
 	public List<Alert> getAlertList(String url) {
 		JSONArray jsonArray = null;
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonArray = makeJsonArrayRequest(getRequest);
 
 		return Helper.convertAlertList(jsonArray);
 	}
@@ -705,26 +430,7 @@ public class AFClient {
 	public Alert getAlert(String url) {
 		JSONObject jsonObject = null;
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonObject = new JSONObject(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonObject = makeJsonObjectRequest(getRequest);
 
 		return new Alert(jsonObject);
 	}
@@ -739,26 +445,7 @@ public class AFClient {
 	public AlertHistory getAlertHistory(String url) {
 		JSONObject jsonObject = null;
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonObject = new JSONObject(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonObject = makeJsonObjectRequest(getRequest);
 
 		return new AlertHistory(jsonObject);
 	}
@@ -774,28 +461,7 @@ public class AFClient {
 		JSONArray jsonArray = null;
 		String params = String.format("?num=%d", number);
 		HttpGet getRequest = new HttpGet(url + params);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		getRequest.getParams().setParameter("num", number);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
-
+		jsonArray = makeJsonArrayRequest(getRequest);
 		return Helper.convertAlertHistoryList(jsonArray);
 	}
 
@@ -815,30 +481,22 @@ public class AFClient {
 		JSONArray jsonArray = null;
 		String params = String.format("?start=%d&end=%d", start, end);
 		HttpGet getRequest = new HttpGet(url + params);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		getRequest.getParams().setParameter("start", start);
-		getRequest.getParams().setParameter("end", end);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonArray = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
-
+		jsonArray = makeJsonArrayRequest(getRequest);
 		return Helper.convertAlertHistoryList(jsonArray);
+	}
+
+	/**
+	 * Gets the message of a triggered alert.
+	 * 
+	 * @param url
+	 *            the public api address of the query
+	 * @return a {@link AlertHistoryData} object
+	 */
+	public AlertHistoryData getAlertHistoryData(String url) {
+		JSONObject jsonObject = null;
+		HttpGet getRequest = new HttpGet(url);
+		jsonObject = makeJsonObjectRequest(getRequest);
+		return new AlertHistoryData(jsonObject);
 	}
 
 	/**
@@ -851,29 +509,12 @@ public class AFClient {
 	public PolledDataObject getPollData(String url) {
 		JSONObject jsonObject = null;
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				jsonObject = new JSONObject(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		jsonObject = makeJsonObjectRequest(getRequest);
 
 		return new PolledDataObject(jsonObject);
 	}
+
+	
 
 	/**
 	 * Gets an PolledDataObject with id.
@@ -885,27 +526,7 @@ public class AFClient {
 	public List<PolledDataObject> getPollDataList(String url) {
 		JSONArray dataObject = null;
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				dataObject = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
-
+		dataObject = makeJsonArrayRequest(getRequest);
 		return Helper.convertPolledDataList(dataObject);
 	}
 
@@ -919,27 +540,7 @@ public class AFClient {
 	public List<PolledDataData> getPollDataDataList(String url) {
 		JSONArray dataObject = null;
 		HttpGet getRequest = new HttpGet(url);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				dataObject = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
-
+		dataObject = makeJsonArrayRequest(getRequest);
 		return Helper.convertPolledDataDataList(dataObject);
 	}
 
@@ -962,33 +563,13 @@ public class AFClient {
 		JSONArray dataObject = null;
 		URI uri = null;
 		try {
-			uri = new URI(String.format("%s?num=%d", url,
-					number));
+			uri = new URI(String.format("%s?num=%d", url, number));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		HttpGet getRequest = new HttpGet(uri);
-		this.mEncodedAuthString = String.format("Basic %s", Base64
-				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
-		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = entity.getContent();
-				String result = Helper.convertStreamToString(instream);
-				dataObject = new JSONArray(result);
-				instream.close();
-			}
-		} catch (ClientProtocolException cpe) {
-			cpe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
+		dataObject = makeJsonArrayRequest(getRequest);
 
 		return Helper.convertPolledDataDataList(dataObject);
 	}
@@ -1010,17 +591,51 @@ public class AFClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		dataObject = makeJsonArrayRequest(getRequest);
+
+		return Helper.convertPolledDataDataList(dataObject);
+	}
+
+	
+
+	/**
+	 * Change the alert status to be either active or inactive.
+	 * 
+	 * @param url
+	 *            query url
+	 * @param id
+	 *            the id of the alert
+	 * @param active
+	 *            Boolean value indicates whether the alert is active or not.
+	 * @return the modified Alert object.
+	 */
+	public Alert updateAlertStatus(String url, int id, Boolean active) {
+		JSONObject updatedAlert = new JSONObject();
+		HttpPut putRequest = null;
+		String params = String
+				.format("?id=%d&active=%s", id, active.toString());
+		try {
+			putRequest = new HttpPut(new URI(url + params));
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		this.mEncodedAuthString = String.format("Basic %s", Base64
 				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
+		putRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
 		try {
-			HttpResponse response = this.mClient.execute(getRequest);
-			Log.i(TAG, response.getStatusLine().toString());
+			HttpResponse response = this.mClient.execute(putRequest);
+			if (!Helper.checkStatus(response)) {
+				Log.e(TAG, String.format("Request failed with :%s", response
+						.getStatusLine()));
+				return null;
+			}
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
 				InputStream instream = entity.getContent();
 				String result = Helper.convertStreamToString(instream);
-				dataObject = new JSONArray(result);
+				updatedAlert = new JSONObject(result);
 				instream.close();
 			}
 		} catch (ClientProtocolException cpe) {
@@ -1030,7 +645,73 @@ public class AFClient {
 		} catch (JSONException je) {
 			je.printStackTrace();
 		}
-
-		return Helper.convertPolledDataDataList(dataObject);
+		return new Alert(updatedAlert);
+	}
+	
+	/**
+	 * Make a get request and return a JSONArray. 
+	 * @param getRequest a HTTPGet request. 
+	 * @return JSONArray, null if error occurs. 
+	 */
+	private JSONArray makeJsonArrayRequest(HttpGet getRequest) {
+		JSONArray jsonArray = null;
+		this.mEncodedAuthString = String.format("Basic %s", Base64
+				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
+		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
+		try {
+			HttpResponse response = this.mClient.execute(getRequest);
+			if (!Helper.checkStatus(response)) {
+				Log.e(TAG, String.format("Request failed with :%s", response
+						.getStatusLine()));
+				return null;
+			}
+			HttpEntity entity = response.getEntity();
+			if (entity != null) {
+				InputStream instream = entity.getContent();
+				String result = Helper.convertStreamToString(instream);
+				jsonArray = new JSONArray(result);
+				instream.close();
+			}
+		} catch (ClientProtocolException cpe) {
+			cpe.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} catch (JSONException je) {
+			je.printStackTrace();
+		}
+		return jsonArray;
+	}
+	/**
+	 * Make a get request and return a JSONObject;
+	 * @param jsonObject a HttpGet request. 
+	 * @return JSONObject, null if error occurs. 
+	 */
+	private JSONObject makeJsonObjectRequest(HttpGet getRequest) {
+		JSONObject jsonObject = null;
+		this.mEncodedAuthString = String.format("Basic %s", Base64
+				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
+		getRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
+		try {
+			HttpResponse response = this.mClient.execute(getRequest);
+			if (!Helper.checkStatus(response)) {
+				Log.e(TAG, String.format("Request failed with :%s", response
+						.getStatusLine()));
+				return null;
+			}
+			HttpEntity entity = response.getEntity();
+			if (entity != null) {
+				InputStream instream = entity.getContent();
+				String result = Helper.convertStreamToString(instream);
+				jsonObject = new JSONObject(result);
+				instream.close();
+			}
+		} catch (ClientProtocolException cpe) {
+			cpe.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} catch (JSONException je) {
+			je.printStackTrace();
+		}
+		return jsonObject;
 	}
 }

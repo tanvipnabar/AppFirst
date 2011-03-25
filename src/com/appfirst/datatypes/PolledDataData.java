@@ -36,7 +36,7 @@ public class PolledDataData extends BaseResourceData{
 		setTime(BaseResourceData.getIntField("time", jsonObject));
 		status = BaseResourceData.getStringField("status", jsonObject);
 		text = BaseResourceData.getStringField("text", jsonObject);
-		setValues(BaseResourceData.getJSONArrayField("values", jsonObject));
+		values = BaseResourceData.getJSONObjectField("values", jsonObject);
 	}
 	public String getStatus() {
 		return status;
@@ -50,23 +50,14 @@ public class PolledDataData extends BaseResourceData{
 	public void setText(String text) {
 		this.text = text;
 	}
-	public List<Integer> getValues() {
+	public JSONObject getValues() {
 		return values;
 	}
-	public void setValues(List<Integer> values) {
+	public void setValues(JSONObject values) {
 		this.values = values;
 	}
-	public void setValues(JSONArray values) {
-		this.values = new ArrayList<Integer>();
-		for (int cnt = 0; cnt < values.length(); cnt++) {
-			try {
-				this.values.add(values.getInt(cnt));
-			} catch (JSONException je) {
-				je.printStackTrace();
-			}
-		}
-	}
+	
 	private String status;
 	private String text;
-	private List<Integer> values;
+	private JSONObject values;
 }

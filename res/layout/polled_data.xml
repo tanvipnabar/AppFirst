@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:stretchColumns="1"
+  android:layout_marginLeft="2px"
+  android:layout_marginRight="2px">
+	<TextView android:text="@+id/TextView01" android:id="@+id/polledDataName" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	<TextView android:text="@+id/TextView01" android:id="@+id/polledDataServerName" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    <TextView android:text="Status: (updating...)"
+            android:id="@+id/polledDataStatus" 
+            android:gravity="left"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+    </TextView>
+    <TextView android:text="Message: (updating...)"
+            android:id="@+id/polledDataMessage" 
+            android:gravity="left"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+    </TextView>
+    <Button android:text="Show history"
+    android:layout_width="wrap_content"
+    android:layout_height="35px"
+    android:id="@+id/polledDataShowHistory"
+    android:textSize="11px"
+    android:visibility="gone">
+    </Button>
+</TableLayout>

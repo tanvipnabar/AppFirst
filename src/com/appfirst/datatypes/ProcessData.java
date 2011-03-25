@@ -55,20 +55,20 @@ public class ProcessData extends BaseResourceData{
 	 */
 	public ProcessData(JSONObject processData) {
 		cpu = BaseResourceData.getDoubleField("cpu", processData);
-		memory = BaseResourceData.getDoubleField("memory", processData);
+		memory = BaseResourceData.getLongField("memory", processData);
 		avg_response_time = BaseResourceData.getDoubleField("avg_response_time", processData);
-		thread_num = BaseResourceData.getIntField("thread_num", processData);
-		page_faults = BaseResourceData.getIntField("page_faults", processData);
-		socket_write = BaseResourceData.getIntField("socket_write", processData);
-		socket_read = BaseResourceData.getIntField("socket_read", processData);
-		response_num = BaseResourceData.getIntField("response_num", processData);
-		total_log = BaseResourceData.getIntField("total_log", processData);
-		registry_num = BaseResourceData.getIntField("registry_num", processData);
-		socket_num = BaseResourceData.getIntField("socket_num", processData);
-		critical_log = BaseResourceData.getIntField("critical_log", processData);
-		file_read = BaseResourceData.getIntField("file_read", processData);
-		file_write = BaseResourceData.getIntField("file_write", processData);
-		file_num = BaseResourceData.getIntField("file_num", processData);
+		thread_num = BaseResourceData.getLongField("thread_num", processData);
+		page_faults = BaseResourceData.getLongField("page_faults", processData);
+		socket_write = BaseResourceData.getLongField("socket_write", processData);
+		socket_read = BaseResourceData.getLongField("socket_read", processData);
+		response_num = BaseResourceData.getLongField("response_num", processData);
+		total_log = BaseResourceData.getLongField("total_log", processData);
+		registry_num = BaseResourceData.getLongField("registry_num", processData);
+		socket_num = BaseResourceData.getLongField("socket_num", processData);
+		critical_log = BaseResourceData.getLongField("critical_log", processData);
+		file_read = BaseResourceData.getLongField("file_read", processData);
+		file_write = BaseResourceData.getLongField("file_write", processData);
+		file_num = BaseResourceData.getLongField("file_num", processData);
 		setTime(BaseResourceData.getIntField("time", processData));
 	}
 	public double getCpu() {
@@ -77,22 +77,22 @@ public class ProcessData extends BaseResourceData{
 	public void setCpu(double cpu) {
 		this.cpu = cpu;
 	}
-	public double getMemory() {
+	public long getMemory() {
 		return memory;
 	}
-	public void setMemory(double memory) {
+	public void setMemory(long memory) {
 		this.memory = memory;
 	}
-	public int getPage_faults() {
+	public long getPage_faults() {
 		return page_faults;
 	}
-	public void setPage_faults(int pageFaults) {
+	public void setPage_faults(long pageFaults) {
 		page_faults = pageFaults;
 	}
-	public int getThread_num() {
+	public long getThread_num() {
 		return thread_num;
 	}
-	public void setThread_num(int threadNum) {
+	public void setThread_num(long threadNum) {
 		thread_num = threadNum;
 	}
 	public long getSocket_write() {
@@ -107,10 +107,10 @@ public class ProcessData extends BaseResourceData{
 	public void setSocket_read(long socketRead) {
 		socket_read = socketRead;
 	}
-	public int getSocket_num() {
+	public long getSocket_num() {
 		return socket_num;
 	}
-	public void setSocket_num(int socketNum) {
+	public void setSocket_num(long socketNum) {
 		socket_num = socketNum;
 	}
 	public long getFile_write() {
@@ -125,28 +125,28 @@ public class ProcessData extends BaseResourceData{
 	public void setFile_read(long fileRead) {
 		file_read = fileRead;
 	}
-	public int getFile_num() {
+	public long getFile_num() {
 		return file_num;
 	}
-	public void setFile_num(int fileNum) {
+	public void setFile_num(long fileNum) {
 		file_num = fileNum;
 	}
-	public int getRegistry_num() {
+	public long getRegistry_num() {
 		return registry_num;
 	}
-	public void setRegistry_num(int registryNum) {
+	public void setRegistry_num(long registryNum) {
 		registry_num = registryNum;
 	}
-	public int getCritical_log() {
+	public long getCritical_log() {
 		return critical_log;
 	}
-	public void setCritical_log(int criticalLog) {
+	public void setCritical_log(long criticalLog) {
 		critical_log = criticalLog;
 	}
-	public int getTotal_log() {
+	public long getTotal_log() {
 		return total_log;
 	}
-	public void setTotal_log(int totalLog) {
+	public void setTotal_log(long totalLog) {
 		total_log = totalLog;
 	}
 	public double getAvg_response_time() {
@@ -155,25 +155,25 @@ public class ProcessData extends BaseResourceData{
 	public void setAvg_response_time(double avgResponseTime) {
 		avg_response_time = avgResponseTime;
 	}
-	public int getResponse_num() {
+	public long getResponse_num() {
 		return response_num;
 	}
-	public void setResponse_num(int responseNum) {
+	public void setResponse_num(long responseNum) {
 		response_num = responseNum;
 	}
 	private double cpu;
-	private double memory;
-	private int page_faults;
-	private int thread_num;
+	private long memory;
+	private long page_faults;
+	private long thread_num;
 	private long socket_write;
 	private long socket_read;
-	private int socket_num;
+	private long socket_num;
 	private long file_write;
 	private long file_read;
-	private int file_num;
-	private int registry_num;
-	private int critical_log;
-	private int total_log;
+	private long file_num;
+	private long registry_num;
+	private long critical_log;
+	private long total_log;
 	private double avg_response_time;
-	private int response_num;
+	private long response_num;
 }

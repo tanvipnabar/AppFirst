@@ -21,43 +21,53 @@ import java.net.URISyntaxException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 /**
  * @author Bin Liu
  * 
- * Mapping between Process object in Java and JSON object in AppFirst Public API. 
- * <p>
- * Each process will have the following fields. 
- * <br> id (read-only)	Unique id for the process in our system
- * <br> start (read-only)	The time the process was created
- * <br> end (read-only)	The time the process stopped, null if still running
- * <br> name (read-only)	The name for this process
- * <br> pid (read-only)	The operating system assigned process id 
- * (commonly called pid) for this process
- * <br> args (read-only)	The command line args used when starting this process
- * <br> resource_uri (read-only)	The URI to get more information about this item
- * </p>
+ *         Mapping between Process object in Java and JSON object in AppFirst
+ *         Public API.
+ *         <p>
+ *         Each process will have the following fields. <br>
+ *         id (read-only) Unique id for the process in our system <br>
+ *         start (read-only) The time the process was created <br>
+ *         end (read-only) The time the process stopped, null if still running <br>
+ *         name (read-only) The name for this process <br>
+ *         pid (read-only) The operating system assigned process id (commonly
+ *         called pid) for this process <br>
+ *         args (read-only) The command line args used when starting this
+ *         process <br>
+ *         resource_uri (read-only) The URI to get more information about this
+ *         item
+ *         </p>
  */
-public class Process extends BaseObject{
+public class Process extends BaseObject {
+
 	/**
 	 * Default constructor.
 	 */
 	public Process() {
-		
+
 	}
+
 	/**
-	 * Create a {@link Process} object from json object. 
-	 * @param process JSON object
+	 * Create a {@link Process} object from json object.
+	 * 
+	 * @param process
+	 *            JSON object
 	 */
 	public Process(JSONObject process) {
+		super(process);
 		try {
-			setName(process.getString("name"));
 			setResource_uri(new URI(process.getString("resource_uri")));
-			setStart(process.getInt("start"));
+			Log.v("start", String.format("%d", process.getLong("start")));
+			setStart(process.getLong("start"));
 			setPid(process.getInt("pid"));
 			setArgs(process.getString("args"));
 			Object end = process.get("end");
 			if (end != null && end.toString() != "null") {
-				setEnd(Integer.parseInt(end.toString()));
+				setEnd(Long.parseLong(end.toString()));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -65,34 +75,41 @@ public class Process extends BaseObject{
 			e.printStackTrace();
 		}
 	}
-	
-	public int getStart() {
+
+	public long getStart() {
 		return start;
 	}
-	public void setStart(int start) {
+
+	public void setStart(long start) {
 		this.start = start;
 	}
-	public int getEnd() {
+
+	public long getEnd() {
 		return end;
 	}
-	public void setEnd(int end) {
+
+	public void setEnd(long end) {
 		this.end = end;
 	}
+
 	public int getPid() {
 		return pid;
 	}
+
 	public void setPid(int pid) {
 		this.pid = pid;
 	}
+
 	public String getArgs() {
 		return args;
 	}
+
 	public void setArgs(String args) {
 		this.args = args;
 	}
-	
-	private int start;
-	private int end;
+
+	private long start;
+	private long end;
 	private int pid;
 	private String args;
 }

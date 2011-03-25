@@ -55,7 +55,7 @@ public class DetailData extends BaseResourceData {
 		setSockets(BaseResourceData.getJSONArrayField("sockets", detailData));
 		setRegistries(BaseResourceData.getJSONArrayField("registries",
 				detailData));
-		setThreads(BaseResourceData.getJSONArrayField("files", detailData));
+		setThreads(BaseResourceData.getJSONArrayField("threads", detailData));
 	}
 
 	public List<FileData> getFiles() {
@@ -69,6 +69,8 @@ public class DetailData extends BaseResourceData {
 	public void setFiles(JSONArray files) {
 		this.files = new ArrayList<FileData>();
 		for (int cnt = 0; cnt < files.length(); cnt++) {
+			if (cnt > 50)
+				break;
 			try {
 				this.files.add(new FileData(files.getJSONObject(cnt)));
 			} catch (JSONException je) {
@@ -109,6 +111,8 @@ public class DetailData extends BaseResourceData {
 	public void setThreads(JSONArray threads) {
 		this.threads = new ArrayList<ThreadData>();
 		for (int cnt = 0; cnt < threads.length(); cnt++) {
+			if (cnt > 50)
+				break;
 			try {
 				this.threads.add(new ThreadData(threads.getJSONObject(cnt)));
 			} catch (JSONException e) {
@@ -129,6 +133,8 @@ public class DetailData extends BaseResourceData {
 	public void setSockets(JSONArray sockets) {
 		this.sockets = new ArrayList<SocketData>();
 		for (int cnt = 0; cnt < sockets.length(); cnt++) {
+			if (cnt > 50)
+				break;
 			try {
 				this.sockets.add(new SocketData(sockets.getJSONObject(cnt)));
 			} catch (JSONException e) {
@@ -149,6 +155,8 @@ public class DetailData extends BaseResourceData {
 	public void setLogs(JSONArray logs) {
 		this.logs = new ArrayList<LogData>();
 		for (int cnt = 0; cnt < logs.length(); cnt++) {
+			if (cnt > 50)
+				break;
 			try {
 				this.logs.add(new LogData(logs.getJSONObject(cnt)));
 			} catch (JSONException e) {

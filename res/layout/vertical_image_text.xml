@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical"
-    android:layout_width="wrap_content" android:layout_height="wrap_content">
-    <ImageView android:id="@+id/icon" android:layout_marginLeft="4px" android:layout_marginRight="4px" android:layout_marginTop="4px" android:layout_height="80px" android:src="@drawable/icon" android:layout_width="80px"></ImageView>
-    <TextView android:text="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="20px" android:id="@+id/label" android:textSize="15px"></TextView>
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="wrap_content"
+	android:layout_height="95dp" android:gravity="center_vertical">
+	<ImageView android:id="@+id/icon" android:src="@drawable/icon"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"></ImageView>
+	<TextView android:layout_width="fill_parent"
+		android:textStyle="bold" android:layout_height="wrap_content"
+		android:id="@+id/label" android:gravity="center" android:text="mycontent"
+		android:textSize="13sp"></TextView>
 </LinearLayout>

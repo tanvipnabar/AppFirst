@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:stretchColumns="1"
+  android:layout_marginLeft="2dp"
+  android:layout_marginRight="2dp">
+    <TextView android:text="@+id/TextView01" 
+        android:id="@+id/serverHostname" 
+        android:textStyle="bold"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"></TextView>
+    <TextView android:text="System Info:"  
+            android:gravity="left"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+    </TextView>   
+    <TableRow>
+        <TextView android:text="OS:" 
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+              android:layout_marginLeft="5dp">
+        </TextView>
+        <TextView android:text="N/A" 
+            android:id="@+id/serverOSType" 
+            android:gravity="right"
+            android:maxWidth="150dp"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="CPU:"  android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="N/A" 
+            android:id="@+id/serverCpuCapacity" 
+            android:gravity="right"
+            android:maxWidth="150dp"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow >
+        <TextView android:text="Memory:" 
+            android:layout_height="wrap_content"
+            android:layout_column="0" android:layout_marginLeft="5dp"
+             >
+        </TextView>
+        <TextView android:text="N/A" 
+            android:id="@+id/serverMemCapacity" 
+            android:gravity="right"
+            android:maxWidth="150dp"
+            android:layout_height="wrap_content">
+       </TextView>
+    </TableRow>
+    <TableRow >
+        <TextView android:text="Total Disk:" 
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginLeft="5dp"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/serverDiskCapacity" 
+            android:gravity="right"
+            android:maxWidth="150dp"
+            android:layout_height="wrap_content">
+       </TextView>
+    </TableRow>
+    <TextView android:text="Resource usage: (updating...)"
+            android:id="@+id/serverResourceUsageLabel" 
+            android:gravity="left"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+    </TextView>
+    <TableRow>
+        <TextView android:text="CPU:"  android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/serverCpuValue" 
+            android:gravity="right"
+            android:maxWidth="150dp"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Memory:"  android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/serverMemoryValue" 
+            android:gravity="right"
+            android:maxWidth="150dp"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Disk usage:"  android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/serverDiskValue" 
+            android:gravity="right"
+            android:maxWidth="150dp"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Page faults:"  android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/serverPFValue" 
+            android:gravity="right"
+            android:maxWidth="150dp"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Process running"  android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/serverPRValue" 
+            android:gravity="right"
+            android:maxWidth="150dp"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Thread running:"  android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/serverTRValue" 
+            android:gravity="right"
+            android:maxWidth="150dp"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+        <Button
+         android:layout_height="35dp"
+         android:layout_width="fill_parent"
+         android:textSize="12sp"
+         android:text="Show historical data"
+          android:gravity="center"
+          android:visibility="gone" 
+         android:id="@+id/serverShowGraph"
+         />
+    <TextView android:text="Intercepted processes: (updating...)" 
+            android:id="@+id/serverProcessListLabel" 
+            android:gravity="left"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+    </TextView>
+    <ListView android:layout_marginLeft="5dp" android:id="@+id/serverProcessList">
+    </ListView>
+</TableLayout>

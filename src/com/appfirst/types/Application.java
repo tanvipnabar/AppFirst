@@ -31,7 +31,7 @@ import org.json.JSONObject;
  */
 public class Application extends BaseObject {
 	private int created;
-
+	
 	/**
 	 * @param jsonObject
 	 */

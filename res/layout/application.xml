@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:stretchColumns="1"
+  android:layout_marginLeft="2px"
+  android:layout_marginRight="2px">
+  <TextView android:text="@+id/TextView01" android:id="@+id/applicationName" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+<TextView android:text="Resource usage: (updating...)"
+            android:id="@+id/applicationResourceUsageLabel" 
+            android:gravity="left"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+    </TextView>
+    <ScrollView android:layout_height="180px" android:id="@+id/ScrollView01" android:layout_width="fill_parent">
+    <TableLayout android:stretchColumns="1" android:id="@+id/LinearLayout01" android:layout_width="fill_parent" android:layout_height="wrap_content">
+    <TableRow>
+        <TextView android:text="CPU"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationCpuValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Memory"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationMemoryValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Page Fault"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationPageFaultValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Threads alive"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationThreadNumValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Network connections"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationSocketNumValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Inbound network traffic"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationSocketReadValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Outbound network traffic"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationSocketWriteValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="File accessed"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationFileNumValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="File read"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationFileReadValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="File write"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationFileWriteValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Registry key accessed"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationRegistryNumValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Incidents reports"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationTotalLogValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Critical incidents reports"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationCriticalLogValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Average response time"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationAvgResponseTimeValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Response number"  android:layout_marginLeft="5px"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+             >
+        </TextView>
+        <TextView android:text="" 
+            android:id="@+id/applicationResponseNumValue" 
+            android:gravity="right"
+            android:maxWidth="150px"
+            android:layout_height="wrap_content"
+             >
+       </TextView>
+    </TableRow>
+    </TableLayout>
+    </ScrollView>
+            <Button
+	         android:layout_height="35px"
+	         android:layout_width="fill_parent"
+	         android:textSize="12px"
+	         android:text="More detail"
+	         android:visibility="gone"
+	         android:id="@+id/applicationMoreDetail"
+	         />
+	         <Button
+             android:layout_height="35px"
+             android:layout_width="fill_parent"
+             android:textSize="12px"
+             android:text="Show historical data"
+             android:visibility="gone"
+             android:id="@+id/applicationShowGraph"
+             />
+    <TextView android:text="Intercepted processes: (updating...)" 
+            android:id="@+id/applicationProcessListLabel" 
+            android:gravity="left"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+    </TextView>
+    
+    <ListView android:layout_marginLeft="5px" android:id="@+id/applicationProcessList">
+    </ListView>
+
+</TableLayout>

@@ -87,14 +87,17 @@ public class VerticalImageTextGroupAdapter extends BaseAdapter {
 			holder = (ViewHolder) myView.getTag();
 		}
 		holder.textView.setText(mNames[position]);
-		holder.textView.setGravity(0x11);
 		holder.imageView.setImageResource(mThumbIds[position]);
 		return myView;
 	}
 
 	// references to our images
-	private Integer[] mThumbIds = { R.drawable.icon, R.drawable.icon };
+	private Integer[] mThumbIds = { R.drawable.ic_icon_server,
+			R.drawable.ic_icon_application, R.drawable.ic_icon_alert,
+			R.drawable.ic_icon_nagios, R.drawable.ic_icon_alerthistory,
+			R.drawable.ic_icon_account };
 	// references to the names
-	private String[] mNames = new String[] { "servers", "applications" };
+	private String[] mNames = new String[] { "Servers", "Applications",
+			"Alerts", "Polled data", "Alert Histories", "Account" };
 	private Activity mContext;
 }
