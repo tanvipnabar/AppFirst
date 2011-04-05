@@ -2,7 +2,6 @@
 <resources>
     <string name="hello">Hello World, LoginScreen!</string>
     <string name="app_name">AppFirst Monitoring</string>
-<!--    <string name="frontend_address">"https://192.168.1.102"</string>-->
     <string name="frontend_address">"https://173.192.88.66"</string>
     <string name="api_login">/api/iphone/login/</string>
     <string name="api_key">"/api/v1/apikey/"</string>
@@ -17,5 +16,5 @@
     <string name="sender_email">"appfirst@gmail.com"</string>
     <string name="notification_title">"New message from AppFirst"</string>
     <string name="notification_key">"subject"</string>
-    <string name="appfirst_preference_key">"AppFirst_Monitoring_5(84*76%@#^$FD"</string>
+
 </resources>
