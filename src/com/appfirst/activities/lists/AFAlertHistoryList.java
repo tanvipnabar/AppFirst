@@ -20,18 +20,18 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.appfirst.activities.details.AFAlertDetail;
 import com.appfirst.activities.details.AFAlertHistoryDetail;
-import com.appfirst.activities.lists.AFListActivity.ResourceLoader;
+import com.appfirst.activities.details.AFServerDetail;
+import com.appfirst.communication.Helper;
 import com.appfirst.monitoring.MainApplication;
 import com.appfirst.monitoring.R;
-import com.appfirst.types.Alert;
 import com.appfirst.types.AlertHistory;
+import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
 import com.appfirst.utils.DynamicComparator;
 
 /**
@@ -41,12 +41,14 @@ import com.appfirst.utils.DynamicComparator;
  * 
  */
 public class AFAlertHistoryList extends AFListActivity {
+	private static final String TAG = "AFAlertHistoryList";
 
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		setObjectClass(AlertHistory.class);
 		// Create an array of Strings, that will be put to our ListActivity
+		setCurrentView();
 
 		if (MainApplication.getAlertHistories() == null) {
 			showDialog(PROGRESS_DIALOG);
@@ -62,15 +64,24 @@ public class AFAlertHistoryList extends AFListActivity {
 		dismissDialog(PROGRESS_DIALOG);
 		List<String> names = new ArrayList<String>();
 		List<AlertHistory> items = MainApplication.getAlertHistories();
+		List<String> details = new ArrayList<String>();
+		List<Integer> ids = new ArrayList<Integer>();
 		for (int i = 0; i < items.size(); i++) {
 			AlertHistory item = items.get(i);
-			// TODO: change to use subject name
+			String subject = item.getSubject();
+			if (this.filterString != ""
+					&& !subject.toLowerCase().contains(
+							this.filterString.toLowerCase())) {
+				continue;
+			}
 			names.add(String.format("%s", item.getSubject()));
+			details.add("");
+			ids.add(item.getId());
 		}
 		// Create an ArrayAdapter, that will actually make the Strings above
 		// appear in the ListView
-		this.setListAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, names));
+		mListView.setAdapter(new DoubleLineLayoutArrayAdapter(this, names,
+				details, ids, AFAlertHistoryDetail.class));
 	}
 
 	/**
@@ -105,5 +116,12 @@ public class AFAlertHistoryList extends AFListActivity {
 				getString(R.string.frontend_address),
 				getString(R.string.api_alert_histories));
 		MainApplication.loadAlertHistory(url);
+
+		if (MainApplication.getDevice() != null) { // reset badge count.
+			MainApplication.client.updateDeviceBadge(Helper.getDeviceUrl(this,
+					MainApplication.getDevice().getId()), 0, MainApplication
+					.getUid());
+			Log.i(TAG, "Badge has been reset. ");
+		}
 	}
 }

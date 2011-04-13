@@ -76,7 +76,7 @@ public class BaseObject {
 	 */
 	public static Boolean getBooleanField(String field, JSONObject dataObject) {
 		Boolean ret = false;
-		if (!dataObject.has(field)) {
+		if (dataObject == null || !dataObject.has(field)) {
 			return ret;
 		}
 		try {
@@ -100,7 +100,7 @@ public class BaseObject {
 	 */
 	public static Long getLongField(String field, JSONObject dataObject) {
 		Long ret = 0L;
-		if (!dataObject.has(field)) {
+		if (dataObject == null || !dataObject.has(field)) {
 			return ret;
 		}
 		try {
@@ -124,7 +124,7 @@ public class BaseObject {
 	 */
 	public static double getDoubleField(String field, JSONObject dataObject) {
 		double ret = Double.NaN;
-		if (!dataObject.has(field)) {
+		if (dataObject == null || !dataObject.has(field)) {
 			return ret;
 		}
 		try {
@@ -148,7 +148,7 @@ public class BaseObject {
 	 */
 	public static String getStringField(String field, JSONObject dataObject) {
 		String ret = "";
-		if (!dataObject.has(field)) {
+		if (dataObject == null || !dataObject.has(field)) {
 			return ret;
 		}
 		try {
@@ -173,7 +173,7 @@ public class BaseObject {
 	public static JSONObject getJSONObjectField(String field,
 			JSONObject dataObject) {
 		JSONObject jsonObject = new JSONObject();
-		if (!dataObject.has(field)) {
+		if (dataObject == null || !dataObject.has(field)) {
 			return jsonObject;
 		}
 		try {
@@ -196,7 +196,7 @@ public class BaseObject {
 	public static JSONArray getJSONArrayField(String field,
 			JSONObject dataObject) {
 		JSONArray jsonArray = new JSONArray();
-		if (!dataObject.has(field)) {
+		if (dataObject == null || !dataObject.has(field)) {
 			return jsonArray;
 		}
 		try {
@@ -218,7 +218,7 @@ public class BaseObject {
 	 */
 	public static URI getURIField(String field, JSONObject dataObject) {
 		URI ret = null;
-		if (!dataObject.has(field)) {
+		if (dataObject == null || !dataObject.has(field)) {
 			return ret;
 		}
 		try {

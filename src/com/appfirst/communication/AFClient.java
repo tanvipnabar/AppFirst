@@ -54,7 +54,8 @@ import android.util.Log;
 import android.util.Base64;
 
 /**
- * Client library for accessing AppFirst Monitoring public API.
+ * JAVA Client library for accessing AppFirst Monitoring public API. This is
+ * used on Android platform.
  * <p>
  * It provides most of the interface of getting the current status for servers,
  * applications, tags, processes, polled datas and alerts. At the same time, it
@@ -147,6 +148,108 @@ public class AFClient {
 	}
 
 	/**
+	 * Update the device information in the database for push notification on
+	 * Android platform.
+	 * 
+	 * @param url
+	 *            the query url
+	 * @param brand
+	 *            brand of the device, it's always Android.
+	 * @param uid
+	 *            the unique device id provided by Google push notification
+	 *            platform, or C2DM.
+	 * @return a JSONOject represents the device.
+	 */
+	public JSONObject saveDeviceInfo(String url, String brand, String uid) {
+		JSONObject device = null;
+		List<NameValuePair> postContent = new ArrayList<NameValuePair>(2);
+		postContent.add(new BasicNameValuePair("brand", brand));
+		postContent.add(new BasicNameValuePair("uid", uid));
+		HttpPost post = new HttpPost(url);
+		device = makeHttpPostRequest(post, postContent);
+		return device;
+	}
+	
+	/**
+	 * Update the device information in the database for push notification on
+	 * Android platform.
+	 * 
+	 * @param url
+	 *            the query url
+	 * @param brand
+	 *            brand of the device, it's always Android.
+	 * @param uid
+	 *            the unique device id provided by Google push notification
+	 *            platform, or C2DM.
+	 * @return a JSONOject represents the device.
+	 */
+	public JSONObject saveDeviceInfo(String url, String brand, String uid, Boolean subscribeAll) {
+		JSONObject device = null;
+		List<NameValuePair> postContent = new ArrayList<NameValuePair>(2);
+		postContent.add(new BasicNameValuePair("brand", brand));
+		postContent.add(new BasicNameValuePair("uid", uid));
+		postContent.add(new BasicNameValuePair("subscribe_all", subscribeAll.toString()));
+		HttpPost post = new HttpPost(url);
+		device = makeHttpPostRequest(post, postContent);
+		return device;
+	}
+
+	/**
+	 * Update the badge information for a specific mobile device. Used to reset
+	 * the unread messages count.
+	 * 
+	 * @param url
+	 *            the query url
+	 * @param count
+	 *            new badge count, which is 0 in this case.
+	 * @param uid
+	 *            unique identifier of the device, provided by Google CD2M.
+	 * @return the updated device information.
+	 */
+	public JSONObject updateDeviceBadge(String url, int count, String uid) {
+		JSONObject jsonObject = null;
+		HttpPut request = null;
+		String params = String.format("?badge=%d&uid=%s", count, uid);
+		try {
+			request = new HttpPut(new URI(url + params));
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		jsonObject = this.makeJsonObjectPutRequest(request);
+		return jsonObject;
+	}
+
+	/**
+	 * Get the device status based on its id.
+	 * 
+	 * @param url
+	 *            request url containing its id.
+	 * @return a JSONObject represents the device.
+	 */
+	public JSONObject getDeviceStatus(String url) {
+		JSONObject jsonObject = null;
+		HttpGet request = new HttpGet(url);
+		jsonObject = this.makeJsonObjectRequest(request);
+		return jsonObject;
+	}
+	
+	/**
+	 * Get the device list for a user. 
+	 * 
+	 * @param url
+	 *            request url containing its id.
+	 * @return a JSONArray represents the device list. 
+	 */
+	public JSONArray getDeviceList(String url) {
+		JSONArray jsonArray = null;
+		HttpGet request = new HttpGet(url);
+		jsonArray = this.makeJsonArrayRequest(request);
+		return jsonArray;
+	}
+
+	/**
 	 * Gets a list of the server for a tenant, including the capacity data.
 	 * 
 	 * @param url
@@ -175,7 +278,7 @@ public class AFClient {
 	}
 
 	/**
-	 * Gets the server data
+	 * Gets the server data for a single point. 
 	 * 
 	 * @param url
 	 *            the public api address of the query
@@ -189,12 +292,12 @@ public class AFClient {
 	}
 
 	/**
-	 * Gets the server data
+	 * Gets the server data for specified number of points. 
 	 * 
 	 * @param url
 	 *            the public api address of the query
 	 * @param number
-	 *            the many number of points to be retrived. Note that there can
+	 *            the many number of points to be retrieved. Note that there can
 	 *            be gaps in the data if the server has an outage.
 	 * @return a list of system data in the time order.
 	 */
@@ -514,8 +617,6 @@ public class AFClient {
 		return new PolledDataObject(jsonObject);
 	}
 
-	
-
 	/**
 	 * Gets an PolledDataObject with id.
 	 * 
@@ -596,8 +697,6 @@ public class AFClient {
 		return Helper.convertPolledDataDataList(dataObject);
 	}
 
-	
-
 	/**
 	 * Change the alert status to be either active or inactive.
 	 * 
@@ -610,22 +709,35 @@ public class AFClient {
 	 * @return the modified Alert object.
 	 */
 	public Alert updateAlertStatus(String url, int id, Boolean active) {
-		JSONObject updatedAlert = new JSONObject();
-		HttpPut putRequest = null;
+		JSONObject jsonObject = new JSONObject();
+		HttpPut request = null;
 		String params = String
 				.format("?id=%d&active=%s", id, active.toString());
 		try {
-			putRequest = new HttpPut(new URI(url + params));
+			request = new HttpPut(new URI(url + params));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+		jsonObject = makeJsonObjectPutRequest(request);
+		return new Alert(jsonObject);
+	}
+
+	/**
+	 * Make a HttpPut request and update the content.
+	 * 
+	 * @param request
+	 *            a HttpPut request contains the content to be updated.
+	 * @return the updated content in JSONObject format, null if query failed.
+	 */
+	private JSONObject makeJsonObjectPutRequest(HttpPut request) {
+		JSONObject jsonObject = null;
 		this.mEncodedAuthString = String.format("Basic %s", Base64
 				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
-		putRequest.setHeader(this.mAuthName, this.mEncodedAuthString);
+		request.setHeader(this.mAuthName, this.mEncodedAuthString);
 		try {
-			HttpResponse response = this.mClient.execute(putRequest);
+			HttpResponse response = this.mClient.execute(request);
 			if (!Helper.checkStatus(response)) {
 				Log.e(TAG, String.format("Request failed with :%s", response
 						.getStatusLine()));
@@ -635,7 +747,7 @@ public class AFClient {
 			if (entity != null) {
 				InputStream instream = entity.getContent();
 				String result = Helper.convertStreamToString(instream);
-				updatedAlert = new JSONObject(result);
+				jsonObject = new JSONObject(result);
 				instream.close();
 			}
 		} catch (ClientProtocolException cpe) {
@@ -645,13 +757,15 @@ public class AFClient {
 		} catch (JSONException je) {
 			je.printStackTrace();
 		}
-		return new Alert(updatedAlert);
+		return jsonObject;
 	}
-	
+
 	/**
-	 * Make a get request and return a JSONArray. 
-	 * @param getRequest a HTTPGet request. 
-	 * @return JSONArray, null if error occurs. 
+	 * Make a get request and return a JSONArray.
+	 * 
+	 * @param getRequest
+	 *            a HTTPGet request.
+	 * @return JSONArray, null if error occurs.
 	 */
 	private JSONArray makeJsonArrayRequest(HttpGet getRequest) {
 		JSONArray jsonArray = null;
@@ -681,10 +795,13 @@ public class AFClient {
 		}
 		return jsonArray;
 	}
+
 	/**
 	 * Make a get request and return a JSONObject;
-	 * @param jsonObject a HttpGet request. 
-	 * @return JSONObject, null if error occurs. 
+	 * 
+	 * @param jsonObject
+	 *            a HttpGet request.
+	 * @return JSONObject, null if error occurs.
 	 */
 	private JSONObject makeJsonObjectRequest(HttpGet getRequest) {
 		JSONObject jsonObject = null;
@@ -711,6 +828,51 @@ public class AFClient {
 			ioe.printStackTrace();
 		} catch (JSONException je) {
 			je.printStackTrace();
+		}
+		return jsonObject;
+	}
+
+	/**
+	 * @param post
+	 *            the HttpPost request.
+	 * @param postContent
+	 *            the post content.
+	 * @return a JSONObject for the result
+	 */
+	private JSONObject makeHttpPostRequest(HttpPost post,
+			List<NameValuePair> postContent) {
+		JSONObject jsonObject = null;
+		this.mEncodedAuthString = String.format("Basic %s", Base64
+				.encodeToString(this.mAuthString, Base64.DEFAULT).trim());
+		post.setHeader(this.mAuthName, this.mEncodedAuthString);
+
+		try {
+			post.setEntity(new UrlEncodedFormEntity(postContent));
+		} catch (Exception e) {
+			return jsonObject;
+		}
+
+		try {
+			HttpResponse response = this.mClient.execute(post);
+			if (Helper.checkStatus(response)) {
+				HttpEntity entity = response.getEntity();
+				if (entity != null) {
+					InputStream instream = entity.getContent();
+					String result = Helper.convertStreamToString(instream);
+					jsonObject = new JSONObject(result);
+					instream.close();
+				}
+			} else {
+				Log.e(TAG, String.format("Request failed with :%s", response
+						.getStatusLine()));
+				return jsonObject;
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 		return jsonObject;
 	}

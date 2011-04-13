@@ -24,12 +24,14 @@ import org.achartengine.ChartFactory;
 import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
 
+import com.appfirst.activities.lists.AFProcessList;
 import com.appfirst.communication.Helper;
 import com.appfirst.datatypes.ProcessData;
 import com.appfirst.monitoring.MainApplication;
 import com.appfirst.monitoring.R;
 import com.appfirst.types.Application;
 import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
+import com.appfirst.utils.DynamicComparator;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -38,6 +40,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Contains all the activities of Application instance.
@@ -54,21 +57,22 @@ public class AFApplicationDetail extends AFDetailActivity {
 	private Button mDetailButton;
 	private Button mGraphButton;
 	private List<ProcessData> mGraphData;
+	private TextView mShowProcesses;
 	private Boolean bRefreshGraph = false;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.application);
 		Intent i = getIntent();
-		int selected = i.getIntExtra(Application.class.getName() + ".selected",
-				-1);
+		int selected = i.getIntExtra(AFApplicationDetail.class.getName()
+				+ ".selected", -1);
 		if (selected < 0) {
 			return;
 		}
 		updateViewWithSelected(selected);
 		setupMinuteDetailButton();
 		setupShowGraphButton();
-
+		setupShowProcesses();
 		new DataUpdater().execute();
 		new ProcessListUpdater().execute();
 		new DetailUpdater().execute();
@@ -100,9 +104,10 @@ public class AFApplicationDetail extends AFDetailActivity {
 	@Override
 	protected void updateViewWithSelected(int selected) {
 		// TODO Auto-generated method stub
-		Application application = MainApplication.applications.get(selected);
+		Application application = MainApplication.getApplications().get(
+				selected);
 		application_id = application.getId();
-		setTextView(this, R.id.applicationName, application.getName());	
+		setTextView(this, R.id.applicationName, application.getName());
 	}
 
 	/**
@@ -118,9 +123,20 @@ public class AFApplicationDetail extends AFDetailActivity {
 		});
 		setupGraphOptions();
 	}
+	
+	private void setupShowProcesses() {
+		mShowProcesses = (TextView) findViewById(R.id.applicationShowProcesses);
+		mShowProcesses.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(AFApplicationDetail.this, AFProcessList.class);
+				startActivity(intent);
+			}
+		});
+	}
 
 	/**
-	 * setup onclick event of minute detail button.  
+	 * setup onclick event of minute detail button.
 	 */
 	private void setupMinuteDetailButton() {
 		mDetailButton = (Button) findViewById(R.id.applicationMoreDetail);
@@ -220,25 +236,27 @@ public class AFApplicationDetail extends AFDetailActivity {
 	 */
 	@Override
 	protected void setProcessList() {
-		List<String> names = new ArrayList<String>();
-		List<String> details = new ArrayList<String>();
-		List<Integer> ids = new ArrayList<Integer>();
+//		List<String> names = new ArrayList<String>();
+//		List<String> details = new ArrayList<String>();
+//		List<Integer> ids = new ArrayList<Integer>();
 		if (processes == null) {
 			return;
 		}
-		for (int cnt = 0; cnt < processes.size(); cnt++) {
-			com.appfirst.types.Process process = processes.get(cnt);
-			names.add(String.format("%s (pid:%d)", process.getName(), process
-					.getPid()));
-			details.add(process.getArgs());
-			ids.add(process.getId());
-		}
-		ListView lv = (ListView) findViewById(R.id.applicationProcessList);
-		lv.setAdapter(new DoubleLineLayoutArrayAdapter(this, names, details,
-				ids, AFProcessDetail.class));
+//		DynamicComparator.sort(processes, "name", true);
+//		for (int cnt = 0; cnt < processes.size(); cnt++) {
+//			com.appfirst.types.Process process = processes.get(cnt);
+//			names.add(String.format("%s (pid:%d)", process.getName(), process
+//					.getPid()));
+//			details.add(process.getArgs());
+//			ids.add(process.getId());
+//		}
+//		ListView lv = (ListView) findViewById(R.id.applicationProcessList);
+//		lv.setAdapter(new DoubleLineLayoutArrayAdapter(this, names, details,
+//				ids, AFProcessDetail.class));
+		mShowProcesses.setVisibility(View.VISIBLE);
 		setTextView(this, R.id.applicationProcessListLabel, String.format(
-				"Intercepted processes: %d", names.size()));
-		MainApplication.processes = processes;
+				"Intercepted processes: %d", processes.size()));
+		MainApplication.setProcesses(processes);
 	}
 
 	protected class DetailUpdater extends AsyncTask<URL, Integer, Long> {
@@ -267,8 +285,9 @@ public class AFApplicationDetail extends AFDetailActivity {
 	 * Enable the show detail button after data is loaded.
 	 */
 	public void updateDetail() {
-		// TODO Auto-generated method stub
-		mDetailButton.setVisibility(View.VISIBLE);
+		if (MainApplication.hasValidDetailData()) {
+			mDetailButton.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override

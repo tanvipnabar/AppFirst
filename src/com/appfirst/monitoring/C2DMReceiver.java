@@ -20,21 +20,18 @@ package com.appfirst.monitoring;
  *
  */
 
+import com.appfirst.activities.lists.AFAlertHistoryList;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.util.Log;
-
-import com.google.android.c2dm.C2DMBaseReceiver;
-import com.google.android.c2dm.C2DMessaging;
 
 public class C2DMReceiver extends BroadcastReceiver {
 	private Context context;
-	private static String REGISTRATION_KEY = "registrationKey";
 	private static String TAG = "C2DMReceiver";
 
 	public C2DMReceiver() {
@@ -43,7 +40,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 
 	/**
 	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context,
-	 * android.content.Intent)
+	 *      android.content.Intent)
 	 */
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -59,7 +56,8 @@ public class C2DMReceiver extends BroadcastReceiver {
 	}
 
 	/**
-	 * @param context2 current activity
+	 * @param context2
+	 *            current activity
 	 * @param intent
 	 */
 	private void handleMessage(Context context2, Intent intent) {
@@ -88,6 +86,9 @@ public class C2DMReceiver extends BroadcastReceiver {
 				.getString(R.string.notification_title);
 		CharSequence contentText = message;
 		Intent notificationIntent = new Intent(context2, LoginScreen.class);
+		// redirect to alert history directly
+		notificationIntent.putExtra(context2.getString(R.string.redirect_key),
+				AFAlertHistoryList.class.getName().toString());
 		PendingIntent contentIntent = PendingIntent.getActivity(context2, 0,
 				notificationIntent, 0);
 		notification.setLatestEventInfo(context, contentTitle, contentText,
@@ -132,16 +133,8 @@ public class C2DMReceiver extends BroadcastReceiver {
 
 		} else if (registration != null) {
 			Log.d(TAG, registration);
+			MainApplication.setUid(context2, registration);
 			MainApplication.setReceiveNotification(true);
-			// Editor editor =
-			// context.getSharedPreferences("com.appfirst",
-			// Context.MODE_PRIVATE).edit();
-			// editor.putString(REGISTRATION_KEY, registration);
-			// editor.commit();
-			// Send the registration ID to the 3rd party site that is sending
-			// the messages.
-			// This should be done in a separate thread.
-			// When done, remember that all registration is done.
 		}
 	}
 }

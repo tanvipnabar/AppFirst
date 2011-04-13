@@ -80,8 +80,8 @@ public class VerticalImageTextGroupAdapter extends BaseAdapter {
 			myView = mContext.getLayoutInflater().inflate(
 					R.layout.vertical_image_text, null);
 			holder = new ViewHolder();
-			holder.textView = (TextView) myView.findViewById(R.id.label);
-			holder.imageView = (ImageView) myView.findViewById(R.id.icon);
+			holder.textView = (TextView) myView.findViewById(R.id.home_screen_label);
+			holder.imageView = (ImageView) myView.findViewById(R.id.home_screen_icon);
 			myView.setTag(holder);
 		} else {
 			holder = (ViewHolder) myView.getTag();
@@ -95,9 +95,9 @@ public class VerticalImageTextGroupAdapter extends BaseAdapter {
 	private Integer[] mThumbIds = { R.drawable.ic_icon_server,
 			R.drawable.ic_icon_application, R.drawable.ic_icon_alert,
 			R.drawable.ic_icon_nagios, R.drawable.ic_icon_alerthistory,
-			R.drawable.ic_icon_account };
+			R.drawable.ic_icon_setting };
 	// references to the names
 	private String[] mNames = new String[] { "Servers", "Applications",
-			"Alerts", "Polled data", "Alert Histories", "Account" };
+			"Alerts", "Polled data", "Alert Histories", "Settings" };
 	private Activity mContext;
 }

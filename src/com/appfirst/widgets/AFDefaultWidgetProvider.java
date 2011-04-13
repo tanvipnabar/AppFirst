@@ -17,7 +17,10 @@ package com.appfirst.widgets;
 
 import java.util.Date;
 
+import com.appfirst.activities.lists.AFAlertHistoryList;
+import com.appfirst.activities.lists.AFServerList;
 import com.appfirst.communication.Helper;
+import com.appfirst.monitoring.LoginScreen;
 import com.appfirst.monitoring.MainApplication;
 import com.appfirst.monitoring.R;
 
@@ -49,6 +52,8 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 
 	}
 
+	public static final String TAG = "AFDefaultWidgetProvider";
+
 	@Override
 	public void onReceive(Context context, Intent intent)
 
@@ -75,17 +80,64 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 			int appWidgetId = appWidgetIds[i];
 			RemoteViews views = new RemoteViews(context.getPackageName(),
 					R.layout.widget_layout);
-			// attach onclick() intent to the button.
-			Intent clickintent = new Intent(context, UpdateService.class);
-			PendingIntent pendingIntentClick = PendingIntent.getService(
-					context, 0, clickintent, PendingIntent.FLAG_UPDATE_CURRENT);
-			views.setOnClickPendingIntent(R.id.widget_refresh_button,
-					pendingIntentClick);
+			setUpdateIntent(context, views);
+			setHomeScreenIntent(context, views);
+			setServerViewIntent(context, views);
+			setAlertViewIntent(context, views);
+			
 			appWidgetManager.updateAppWidget(appWidgetId, views);
 		}
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 		context.startService(new Intent(context, UpdateService.class));
 
+	}
+
+	/**
+	 * @param context
+	 * @param views
+	 */
+	private void setServerViewIntent(Context context, RemoteViews views) {
+		Intent intent = new Intent(context, AFServerList.class);
+		intent.putExtra(context.getString(R.string.redirect_key), AFServerList.class.getName().toString());
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+		views.setOnClickPendingIntent(R.id.widget_server_container, pendingIntent);
+		views.setOnClickPendingIntent(R.id.widget_server_count, pendingIntent);
+	}
+	
+	/**
+	 * @param context
+	 * @param views
+	 */
+	private void setAlertViewIntent(Context context, RemoteViews views) {
+		Intent intent = new Intent(context, AFAlertHistoryList.class);
+		intent.putExtra(context.getString(R.string.redirect_key), AFAlertHistoryList.class.getName().toString());
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+		views.setOnClickPendingIntent(R.id.widget_alert_container, pendingIntent);
+		views.setOnClickPendingIntent(R.id.widget_alert_count, pendingIntent);
+	}
+
+	/**
+	 * @param context
+	 * @param views
+	 */
+	private void setUpdateIntent(Context context, RemoteViews views) {
+		Intent clickintent = new Intent(context, UpdateService.class);
+		PendingIntent pendingIntentClick = PendingIntent.getService(
+				context, 0, clickintent, PendingIntent.FLAG_UPDATE_CURRENT);
+		views.setOnClickPendingIntent(R.id.widget_refresh_button,
+				pendingIntentClick);
+	}
+
+	/**
+	 * @param context
+	 * @param views
+	 */
+	private void setHomeScreenIntent(Context context, RemoteViews views) {
+		Intent homeIntent = new Intent(context, LoginScreen.class);
+		PendingIntent homePendingIntent = PendingIntent.getActivity(context, 0, homeIntent, 0);
+		//views.setOnClickPendingIntent(R.id.widget_inner_container, homePendingIntent);
+		views.setOnClickPendingIntent(R.id.widget_icon, homePendingIntent);
+		views.setOnClickPendingIntent(R.id.widget_text, homePendingIntent);
 	}
 
 	/**
@@ -98,9 +150,11 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 	 */
 	protected static void setServerCount(RemoteViews views, Context context) {
 		MainApplication.loadServerList(Helper.getServerListUrl(context));
-		String serverCount = String
-				.format("%d", MainApplication.servers.size());
-		views.setTextViewText(R.id.widget_server_count, serverCount);
+		if (MainApplication.getServers() != null) {
+			String serverCount = String.format("%d", MainApplication.getServers()
+					.size());
+			views.setTextViewText(R.id.widget_server_count, serverCount);
+		}
 	}
 
 	/**
@@ -112,9 +166,8 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 	 *            the application running context.
 	 */
 	protected static void setAlertCount(RemoteViews views, Context context) {
-		MainApplication.loadAlertList(Helper.getAlertUrl(context, -1));
-		String alertCount = String.format("%d", MainApplication.getAlerts().size());
-		views.setTextViewText(R.id.widget_alert_count, alertCount);
+		Long badgeNumber = MainApplication.getBadgeNumber(context);
+		views.setTextViewText(R.id.widget_alert_count, String.format("%d", badgeNumber));
 	}
 
 	/**
@@ -128,7 +181,7 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 		RemoteViews views = new RemoteViews(context.getPackageName(),
 				R.layout.widget_layout);
 		views.setTextViewText(R.id.widget_text, "Updating...");
-		views.setViewVisibility(R.id.widget_refresh_button, View.INVISIBLE);
+		//views.setViewVisibility(R.id.widget_refresh_button, View.INVISIBLE);
 		manager.updateAppWidget(thisWidget, views);
 	}
 
@@ -143,7 +196,7 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 	protected static void setUpdateTime(RemoteViews views, Context context) {
 		String text = Helper.formatTime(System.currentTimeMillis());
 		views.setTextViewText(R.id.widget_text, text);
-		
+
 	}
 
 	public static class UpdateService extends Service {
@@ -180,9 +233,17 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 			views = new RemoteViews(context.getPackageName(),
 					R.layout.widget_layout);
 
-			setServerCount(views, context);
-			setAlertCount(views, context);
-			setUpdateTime(views, context);
+			byte[] ret = MainApplication.getSavedLogin(context);
+			Log.i(TAG, ret.toString());
+			MainApplication.client.setmAuthString(ret);
+			try {
+				setServerCount(views, context);
+				setAlertCount(views, context);
+				setUpdateTime(views, context);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			views.setViewVisibility(R.id.widget_refresh_button, View.VISIBLE);
 			return views;
 		}

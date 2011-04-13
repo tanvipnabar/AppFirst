@@ -36,6 +36,7 @@ public class AFSocketList extends AFListActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		setObjectClass(SocketData.class);
+		setCurrentView();
 		// Create an array of Strings, that will be put to our ListActivity
 		displayList();
 	}
@@ -48,15 +49,24 @@ public class AFSocketList extends AFListActivity {
 		// TODO Auto-generated method stub
 		List<String> names = new ArrayList<String>();
 		List<String> details = new ArrayList<String>();
-		List<SocketData> items = MainApplication.detailData.getSockets();
+		List<SocketData> items = MainApplication.getDetailData().getSockets();
 		if (items != null) {
 			for (int i = 0; i < items.size(); i++) {
 				SocketData item = items.get(i);
+				String socketName = formatSocketName(item);
+				String socketDetail = formatSocketDetail(item);
+				if (this.filterString != ""
+						&& !socketName.toLowerCase().contains(
+								this.filterString.toLowerCase())
+						&& !socketDetail.toLowerCase().contains(
+								this.filterString.toLowerCase())) {
+					continue;
+				}
 				names.add(formatSocketName(item));
 				details.add(formatSocketDetail(item));
 			}
 		}
-		this.setListAdapter(new DoubleLineLayoutArrayAdapter(this, names,
+		mListView.setAdapter(new DoubleLineLayoutArrayAdapter(this, names,
 				details));
 	}
 
@@ -75,7 +85,7 @@ public class AFSocketList extends AFListActivity {
 	@Override
 	public void sortListItems() {
 		// TODO Auto-generated method stub
-		DynamicComparator.sort(MainApplication.detailData.getSockets(),
+		DynamicComparator.sort(MainApplication.getDetailData().getSockets(),
 				sortField.getName(), true);
 		displayList();
 	}
@@ -98,15 +108,13 @@ public class AFSocketList extends AFListActivity {
 	 */
 	private String formatSocketDetail(SocketData item) {
 		String ret = "";
-		ret = String
-				.format(
-						"Status: %s, Received: %s Sent: %s Time open (sec): %s Process: %s" + 
-						" Thread id: %d",
-						item.getStatus(), Helper.formatByteValue(item
-								.getData_received()), Helper
-								.formatByteValue(item.getData_sent()), item
-								.getTime_open(), item.getProcess_name(), item
-								.getThread_id());
+		ret = String.format(
+				"Status: %s, Received: %s Sent: %s Time open (sec): %s Process: %s"
+						+ " Thread id: %d", item.getStatus(), Helper
+						.formatByteValue(item.getData_received()), Helper
+						.formatByteValue(item.getData_sent()), item
+						.getTime_open(), item.getProcess_name(), item
+						.getThread_id());
 		return ret;
 	}
 }

@@ -6,24 +6,26 @@
 	<LinearLayout android:orientation="horizontal"
 		android:layout_width="wrap_content" android:layout_margin="20dp"
 		android:id="@+id/widget_inner_container" android:layout_height="wrap_content">
-		<ImageButton style="@style/WidgetAppFirstLogo"
-			android:layout_width="35dp" android:layout_height="35dp">
-		</ImageButton>
 
-		<LinearLayout android:orientation="vertical"
-			android:minWidth="130dp" android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-			<TextView android:textColor="#ff000000" android:textSize="12sp"
 
-				android:layout_height="wrap_content" android:text="Updating..."
-				android:id="@+id/widget_text" android:gravity="center"
-				android:layout_width="fill_parent"></TextView>
-			<Button android:text="update now" android:clickable="true"
-				android:textSize="9sp" android:gravity="center" android:id="@+id/widget_refresh_button"
-				android:layout_width="fill_parent" android:layout_height="30dp">
-			</Button>
-		</LinearLayout>
 		<LinearLayout android:orientation="horizontal"
+			android:minWidth="155dp" android:layout_width="wrap_content"
+			android:layout_height="fill_parent" android:gravity="center">
+			<ImageButton style="@style/WidgetAppFirstLogo" android:id="@+id/widget_icon"
+				android:layout_width="30dp" android:layout_height="30dp"
+				android:layout_marginRight="5dp">
+			</ImageButton>
+			<TextView android:textColor="#ff000000" android:textSize="13sp"
+				android:textStyle="bold" android:layout_height="wrap_content"
+				android:text="Updating..." android:id="@+id/widget_text"
+				android:gravity="center" android:minWidth="80dp"
+				android:layout_width="wrap_content" android:layout_marginRight="5dp"></TextView>
+			<ImageView android:clickable="true" style="@style/WidgetRefreshButton"
+				android:gravity="center_horizontal" android:id="@+id/widget_refresh_button"
+				android:layout_height="30dp" android:layout_width="30dp">
+			</ImageView>
+		</LinearLayout>
+		<LinearLayout android:orientation="horizontal" android:id="@+id/widget_server_container"
 			android:layout_width="wrap_content" android:layout_height="wrap_content">
 			<LinearLayout android:layout_width="2dp"
 				android:background="#FFa8a8a8" android:layout_height="fill_parent">
@@ -44,11 +46,10 @@
 				android:background="#FFa8a8a8" android:layout_height="fill_parent">
 			</LinearLayout>
 
-			<LinearLayout android:layout_width="60dp"
+			<LinearLayout android:layout_width="60dp" android:id="@+id/widget_alert_container"
 				android:orientation="vertical" android:layout_height="fill_parent">
 				<TextView android:textColor="#ff000000"
 					android:layout_height="wrap_content" android:text="Alerts"
-
 					android:gravity="center" android:textSize="12sp"
 					android:layout_width="fill_parent"></TextView>
 				<TextView android:textColor="#ff000000"

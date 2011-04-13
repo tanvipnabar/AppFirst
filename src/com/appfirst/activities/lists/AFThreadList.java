@@ -36,6 +36,7 @@ public class AFThreadList extends AFListActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		setObjectClass(ThreadData.class);
+		setCurrentView();
 		// Create an array of Strings, that will be put to our ListActivity
 		displayList();
 	}
@@ -48,15 +49,24 @@ public class AFThreadList extends AFListActivity {
 		// TODO Auto-generated method stub
 		List<String> names = new ArrayList<String>();
 		List<String> details = new ArrayList<String>();
-		List<ThreadData> items = MainApplication.detailData.getThreads();
+		List<ThreadData> items = MainApplication.getDetailData().getThreads();
 		if (items != null) {
 			for (int i = 0; i < items.size(); i++) {
 				ThreadData item = items.get(i);
+				String threadName = formatThreadName(item);
+				String threadDetail = formatThreadDetail(item);
+				if (this.filterString != ""
+						&& !threadName.toLowerCase().contains(
+								this.filterString.toLowerCase())
+						&& !threadDetail.toLowerCase().contains(
+								this.filterString.toLowerCase())) {
+					continue;
+				}
 				names.add(formatThreadName(item));
 				details.add(formatThreadDetail(item));
 			}
 		}
-		this.setListAdapter(new DoubleLineLayoutArrayAdapter(this, names,
+		mListView.setAdapter(new DoubleLineLayoutArrayAdapter(this, names,
 				details));
 	}
 
@@ -75,7 +85,7 @@ public class AFThreadList extends AFListActivity {
 	@Override
 	public void sortListItems() {
 		// TODO Auto-generated method stub
-		DynamicComparator.sort(MainApplication.detailData.getThreads(),
+		DynamicComparator.sort(MainApplication.getDetailData().getThreads(),
 				sortField.getName(), true);
 		displayList();
 	}

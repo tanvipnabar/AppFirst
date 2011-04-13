@@ -4,8 +4,8 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:stretchColumns="1"
-  android:layout_marginLeft="2px"
-  android:layout_marginRight="2px">
+  android:layout_marginLeft="2dp"
+  android:layout_marginRight="2dp">
 	<TextView android:text="@+id/TextView01" android:id="@+id/polledDataName" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 	<TextView android:text="@+id/TextView01" android:id="@+id/polledDataServerName" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
     <TextView android:text="Status: (updating...)"
@@ -22,9 +22,9 @@
     </TextView>
     <Button android:text="Show history"
     android:layout_width="wrap_content"
-    android:layout_height="35px"
+    android:layout_height="35dp"
     android:id="@+id/polledDataShowHistory"
-    android:textSize="11px"
+    android:textSize="11dp"
     android:visibility="gone">
     </Button>
 </TableLayout>

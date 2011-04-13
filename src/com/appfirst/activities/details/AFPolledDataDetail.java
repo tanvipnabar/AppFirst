@@ -41,6 +41,9 @@ import com.appfirst.monitoring.R;
 import com.appfirst.types.PolledDataObject;
 
 /**
+ * Display the PollData detail, the message that's originally sent in the
+ * alerting email.
+ * 
  * @author Bin Liu
  * 
  */
@@ -104,7 +107,8 @@ public class AFPolledDataDetail extends AFDetailActivity {
 		// TODO Auto-generated method stub
 		if (data != null) {
 			setTextView(this, R.id.polledDataStatus, String.format(
-					"Status at %s: %s", Helper.formatLongTime(data.getTime() * 1000), data
+					"Status at %s: %s", Helper
+							.formatLongTime(data.getTime() * 1000), data
 							.getStatus()));
 			setTextView(this, R.id.polledDataMessage, String.format(
 					"Message: %s", data.getText()));
@@ -132,7 +136,7 @@ public class AFPolledDataDetail extends AFDetailActivity {
 	 */
 	@Override
 	protected void updateViewWithSelected(int selected) {
-		PolledDataObject item = MainApplication.polledDatas.get(selected);
+		PolledDataObject item = MainApplication.getPolledDatas().get(selected);
 		polled_data_id = item.getId();
 		setTextView(this, R.id.polledDataName, String.format("Script name: %s",
 				item.getName()));
@@ -249,7 +253,6 @@ public class AFPolledDataDetail extends AFDetailActivity {
 			while (it.hasNext()) {
 				String key = (String) it.next();
 				if (!mGraphOptions.contains(key)) {
-
 					String unit = "";
 					try {
 						JSONArray array = data.getValues().getJSONArray(key);

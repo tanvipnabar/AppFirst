@@ -35,6 +35,7 @@ public class AFFileList extends AFListActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		setObjectClass(FileData.class);
+		setCurrentView();
 		// Create an array of Strings, that will be put to our ListActivity
 		displayList();
 	}
@@ -47,15 +48,20 @@ public class AFFileList extends AFListActivity {
 		// TODO Auto-generated method stub
 		List<String> names = new ArrayList<String>();
 		List<String> details = new ArrayList<String>();
-		List<FileData> items = MainApplication.detailData.getFiles();
+		List<FileData> items = MainApplication.getDetailData().getFiles();
 		if (items != null) {
 			for (int i = 0; i < items.size(); i++) {
 				FileData item = items.get(i);
+				if (this.filterString != ""
+						&& !item.getFileName().toLowerCase().contains(
+								this.filterString.toLowerCase())) {
+					continue;
+				}
 				names.add(item.getFileName());
 				details.add("");
 			}
 		}
-		this.setListAdapter(new DoubleLineLayoutArrayAdapter(this, names,
+		mListView.setAdapter(new DoubleLineLayoutArrayAdapter(this, names,
 				details));
 	}
 
@@ -74,7 +80,7 @@ public class AFFileList extends AFListActivity {
 	@Override
 	public void sortListItems() {
 		// TODO Auto-generated method stub
-		DynamicComparator.sort(MainApplication.detailData.getFiles(), sortField
+		DynamicComparator.sort(MainApplication.getDetailData().getFiles(), sortField
 				.getName(), true);
 		displayList();
 	}

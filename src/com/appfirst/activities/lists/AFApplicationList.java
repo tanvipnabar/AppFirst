@@ -23,15 +23,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.appfirst.activities.details.AFApplicationDetail;
 import com.appfirst.monitoring.MainApplication;
 import com.appfirst.monitoring.R;
 import com.appfirst.types.Application;
+import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
 import com.appfirst.utils.DynamicComparator;
 
 /**
- * Display the list of application 
+ * Display the list of application
  * 
  * @author Bin Liu
  * 
@@ -43,12 +45,11 @@ public class AFApplicationList extends AFListActivity {
 		super.onCreate(icicle);
 		setObjectClass(Application.class);
 		// Create an array of Strings, that will be put to our ListActivity
-
-		if (MainApplication.applications == null) {
-			showDialog(PROGRESS_DIALOG);
+		setCurrentView();
+		showDialog(PROGRESS_DIALOG);
+		if (MainApplication.getApplications() == null) {
 			new ResourceLoader().execute();
 		} else {
-			showDialog(PROGRESS_DIALOG);
 			displayList();
 		}
 	}
@@ -60,21 +61,30 @@ public class AFApplicationList extends AFListActivity {
 		if (sortField != null) {
 			sortName = sortField.getName();
 		}
-		DynamicComparator.sort(MainApplication.applications, sortName, true);
+		DynamicComparator.sort(MainApplication.getApplications(), sortName, true);
 		List<String> names = new ArrayList<String>();
-		List<Application> items = MainApplication.applications;
+		List<String> details = new ArrayList<String>();
+		List<Integer> ids= new ArrayList<Integer>();
+		List<Application> items = MainApplication.getApplications();
 		for (int i = 0; i < items.size(); i++) {
 			Application item = items.get(i);
-			names.add(item.getName());
+			String name = item.getName();
+			if (this.filterString != ""
+					&& !name.toLowerCase().contains(filterString.toLowerCase())) {
+				continue;
+			}
+			names.add(name);
+			details.add("");
+			ids.add(item.getId());
 		}
 		// Create an ArrayAdapter, that will actually make the Strings above
 		// appear in the ListView
-		this.setListAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_checked, names));
+		mListView.setAdapter(new DoubleLineLayoutArrayAdapter(this,
+				names, details, ids, AFApplicationDetail.class));
 	}
 
 	/**
-	 * Start the detailed application instance. 
+	 * Start the detailed application instance.
 	 */
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);

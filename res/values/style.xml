@@ -4,9 +4,9 @@
         <item name="android:background">@drawable/widget_bg</item>
     </style>
     <style name="WidgetRefreshButton">
-        <item name="android:background">@android:drawable/ic_menu_rotate</item>
+        <item name="android:background">@drawable/ic_icon_af_refresh</item>
     </style>
     <style name="WidgetAppFirstLogo">
-        <item name="android:background">@drawable/ic_launcher_appfirst</item>
+        <item name="android:background">@drawable/ic_launcher_appfirst_flat</item>
     </style>
 </resources>

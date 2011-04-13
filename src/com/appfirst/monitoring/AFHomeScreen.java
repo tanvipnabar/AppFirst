@@ -17,17 +17,24 @@ package com.appfirst.monitoring;
 
 import java.net.URL;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.appfirst.activities.lists.AFAlertHistoryList;
 import com.appfirst.activities.lists.AFAlertList;
 import com.appfirst.activities.lists.AFApplicationList;
 import com.appfirst.activities.lists.AFPolledDataList;
 import com.appfirst.activities.lists.AFServerList;
 import com.appfirst.communication.Helper;
+import com.appfirst.types.AFDevice;
 import com.appfirst.utils.VerticalImageTextGroupAdapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,6 +42,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -49,6 +57,11 @@ import android.view.View;
  */
 public class AFHomeScreen extends Activity {
 	private static final int PROGRESS_DIALOG = 0;
+	private static final int SUBSCRIBE_DIALOG = 1;
+	private static final String TAG = "AFHomeScreen";
+	private static Boolean subscribeAll = false;
+	private Boolean firstLogin = false;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
@@ -61,19 +74,29 @@ public class AFHomeScreen extends Activity {
 				navigateToView(position);
 			}
 		});
-		initializeApplication();
+
+		if (MainApplication.getDevice() == null) {// only does this when
+			// application starts
+			firstLogin = MainApplication.getFirstTimeLogin(this);
+			if (firstLogin) { // only does this when
+				// user first log in
+				showDialog(SUBSCRIBE_DIALOG);
+			}
+			initializeApplication();
+		}
+		handleIntent(getIntent());
 	}
-	
+
 	private void initializeApplication() {
-		if (MainApplication.servers == null) {
-			showDialog(PROGRESS_DIALOG);
-			new ResourceLoader().execute();
-		}	
+		showDialog(PROGRESS_DIALOG);
+		new ResourceLoader().execute();
 	}
-	
+
 	/**
-	 * Load the selected view. 
-	 * @param position the index of the view have been selected
+	 * Load the selected view.
+	 * 
+	 * @param position
+	 *            the index of the view have been selected
 	 */
 	private void navigateToView(int position) {
 		switch (position) {
@@ -91,30 +114,57 @@ public class AFHomeScreen extends Activity {
 			startActivity(alert);
 			break;
 		case 3:
-			Intent polledData = new Intent(AFHomeScreen.this, AFPolledDataList.class);
+			Intent polledData = new Intent(AFHomeScreen.this,
+					AFPolledDataList.class);
 			startActivity(polledData);
 			break;
 		case 4:
-			Intent alertHistory = new Intent(AFHomeScreen.this, AFAlertHistoryList.class);
+			Intent alertHistory = new Intent(AFHomeScreen.this,
+					AFAlertHistoryList.class);
 			startActivity(alertHistory);
 			break;
 		case 5:
-			Intent account = new Intent(AFHomeScreen.this, AFAccountManagement.class);
+			Intent account = new Intent(AFHomeScreen.this,
+					AFAccountManagement.class);
 			startActivity(account);
 			break;
 		default:
 			break;
 		}
 	}
-	
+
+	/**
+	 * Register device and get the device id from the database. This function is
+	 * always called when home screen is loaded.
+	 */
 	protected void loadResource() {
-		MainApplication.loadServerList(Helper.getServerListUrl(this));
+		if (MainApplication.getUid() != "") {
+			JSONObject deviceObject = null;
+			if (firstLogin) {
+				deviceObject = MainApplication.client.saveDeviceInfo(Helper
+						.getDeviceUrl(this, -1), getString(R.string.brand),
+						MainApplication.getUid(), subscribeAll);
+			} else {
+				deviceObject = MainApplication.client.saveDeviceInfo(Helper
+						.getDeviceUrl(this, -1), getString(R.string.brand),
+						MainApplication.getUid());
+			}
+			if (deviceObject != null) {
+				try {
+					MainApplication.setDevice(new AFDevice(deviceObject));
+					Log.i(TAG, String.format("Get new device id: %d",
+							MainApplication.getDevice().getId()));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
-	
+
 	protected void displayResult() {
 		dismissDialog(PROGRESS_DIALOG);
 	}
-	
+
 	protected class ResourceLoader extends AsyncTask<URL, Integer, Long> {
 		protected Long doInBackground(URL... urls) {
 			loadResource();
@@ -125,18 +175,20 @@ public class AFHomeScreen extends Activity {
 			displayResult();
 		}
 	}
-	
+
 	protected ProgressDialog progressDialog;
+
 	/**
 	 * Create the alert box using for showing progress.
-	 * @return dialog box showing progress. 
+	 * 
+	 * @return dialog box showing progress.
 	 */
 	protected ProgressDialog createProcessDialog() {
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setMessage("Initializing...");
 		return progressDialog;
 	}
-	
+
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		switch (id) {
@@ -144,7 +196,7 @@ public class AFHomeScreen extends Activity {
 			progressDialog.setProgress(0);
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -154,10 +206,65 @@ public class AFHomeScreen extends Activity {
 		case PROGRESS_DIALOG:
 			dialog = createProcessDialog();
 			break;
+		case SUBSCRIBE_DIALOG:
+			dialog = createSubscribeDialog();
+			break;
 		default:
 			break;
 		}
 
 		return dialog;
+	}
+
+	/**
+	 * Create the alert box to allow user to select whether receive all
+	 * notifications from this device. This only happens the first time user
+	 * login, or change its current login to another one.
+	 * 
+	 * @return an alert dialog box to choose "YES" or "NO".
+	 */
+	private Dialog createSubscribeDialog() {
+		AlertDialog.Builder builder;
+		AlertDialog alertDialog;
+
+		builder = new AlertDialog.Builder(this);
+		builder.setMessage("Receive all alerts through this device?")
+				.setCancelable(false).setPositiveButton("YES",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dismissDialog(SUBSCRIBE_DIALOG);
+								subscribeAll = true;
+							}
+						}).setNegativeButton("NO",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+								subscribeAll = false;
+							}
+						});
+
+		alertDialog = builder.create();
+		return alertDialog;
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// Because this activity has set launchMode="singleTop", the system
+		// calls this method
+		// to deliver the intent if this actvity is currently the foreground
+		// activity when
+		// invoked again (when the user executes a search from this activity, we
+		// don't create
+		// a new instance of this activity, so the system delivers the search
+		// intent here)
+		handleIntent(intent);
+	}
+
+	private void handleIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			// handles a search query
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			// showResults(query);
+		}
 	}
 }

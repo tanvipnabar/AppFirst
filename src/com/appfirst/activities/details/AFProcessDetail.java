@@ -71,11 +71,11 @@ public class AFProcessDetail extends AFDetailActivity {
 	 *            index of the process
 	 */
 	private void setProcessInfo(Integer selected) {
-		if (MainApplication.processes == null)
+		if (MainApplication.getProcesses() == null)
 			return;
 
-		for (int i = 0; i < MainApplication.processes.size(); i++) {
-			com.appfirst.types.Process process = MainApplication.processes
+		for (int i = 0; i < MainApplication.getProcesses().size(); i++) {
+			com.appfirst.types.Process process = MainApplication.getProcesses()
 					.get(i);
 			if (process.getId() == selected) {
 				setTextView(this, R.id.processName, String.format(
@@ -252,7 +252,9 @@ public class AFProcessDetail extends AFDetailActivity {
 	 */
 	public void updateDetail() {
 		// TODO Auto-generated method stub
-		mDetailButton.setVisibility(View.VISIBLE);
+		if (MainApplication.hasValidDetailData()) {
+			mDetailButton.setVisibility(View.VISIBLE);
+		}	
 	}
 
 	@Override

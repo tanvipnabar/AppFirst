@@ -44,7 +44,9 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer.Orientation;
 
 import com.appfirst.datatypes.BaseResourceData;
+import com.appfirst.datatypes.DetailData;
 import com.appfirst.datatypes.SystemData;
+import com.appfirst.views.Helper;
 
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -99,11 +101,10 @@ public abstract class AFDetailActivity extends Activity {
 	 * {@link ResourceDataBase} in the time increasing order.
 	 */
 	protected abstract void setGraphData();
-	
-	
-	
-	
-	
+
+	/**
+	 * List the resource options that are graphable.
+	 */
 	protected abstract void setupGraphOptions();
 
 	protected ProgressDialog progressDialog;
@@ -117,6 +118,9 @@ public abstract class AFDetailActivity extends Activity {
 
 	static final int PROGRESS_DIALOG = 0;
 	static final int OPTION_DIALOG = 1;
+	static final int DISK_DIALOG = 2;
+	static final int CPU_DIALOG = 3;
+	static final int DISK_BUSY_DIALOG = 4;
 	public final String CPU_DISPALY_NAME = "CPU (%)";
 	public final String MEMORY_DISPLAY_NAME = "Memory (MB)";
 	public final String THREAD_DISPLAY_NAME = "Thread";
@@ -141,7 +145,7 @@ public abstract class AFDetailActivity extends Activity {
 	public AFDetailActivity() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		switch (id) {
@@ -229,32 +233,32 @@ public abstract class AFDetailActivity extends Activity {
 		return new ArrayList<String>();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		SubMenu sortMenuItem = menu.addSubMenu(0, 1, 0, "graph");
-		List<String> options = getGraphOptions();
-		int cnt = 0;
-		for (cnt = 0; cnt < options.size(); cnt++) {
-			sortMenuItem.add(1, cnt, 0, options.get(cnt)).setCheckable(true);
-		}
-		sortMenuItem.add(1, cnt, 0, "OK").setCheckable(false);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.isChecked()) {
-			item.setChecked(false);
-		} else {
-			item.setChecked(true);
-		}
-		String fieldName = item.toString();
-		if (fieldName == "OK") {
-			return true;// super.onOptionsItemSelected(item);
-		} else {
-			return false;
-		}
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// SubMenu sortMenuItem = menu.addSubMenu(0, 1, 0, "graph");
+	// List<String> options = getGraphOptions();
+	// int cnt = 0;
+	// for (cnt = 0; cnt < options.size(); cnt++) {
+	// sortMenuItem.add(1, cnt, 0, options.get(cnt)).setCheckable(true);
+	// }
+	// sortMenuItem.add(1, cnt, 0, "OK").setCheckable(false);
+	// return super.onCreateOptionsMenu(menu);
+	// }
+	//
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// if (item.isChecked()) {
+	// item.setChecked(false);
+	// } else {
+	// item.setChecked(true);
+	// }
+	// String fieldName = item.toString();
+	// if (fieldName == "OK") {
+	// return true;// super.onOptionsItemSelected(item);
+	// } else {
+	// return false;
+	// }
+	// }
 
 	/**
 	 * Nested class that performs progress calculations (counting)
@@ -298,14 +302,14 @@ public abstract class AFDetailActivity extends Activity {
 	/**
 	 * Create the graph resource options dialog according to the extended class.
 	 * 
-	 * @return the view created dynamically. 
+	 * @return the view created dynamically.
 	 */
 	protected View createGraphOptionDialog() {
 		LinearLayout outerContainer = new LinearLayout(this);
 		ScrollView container = new ScrollView(this);
 		container.setVerticalScrollBarEnabled(true);
 		container.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-				180));
+				Helper.convertDpToPx(200, this)));
 		LinearLayout linear = new LinearLayout(this);
 		linear.setOrientation(LinearLayout.VERTICAL);
 		linear.setLayoutParams(new LinearLayout.LayoutParams(
@@ -317,7 +321,7 @@ public abstract class AFDetailActivity extends Activity {
 			CheckBox newRadioButton = new CheckBox(this);
 			newRadioButton.setChecked(mGraphResource.get(cnt));
 			newRadioButton.setText(options.get(cnt));
-			newRadioButton.setTextSize(15);
+			newRadioButton.setTextSize(Helper.convertDpToPx(15, this));
 			newRadioButton.setLayoutParams(new LayoutParams(
 					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 			newRadioButton
@@ -342,7 +346,8 @@ public abstract class AFDetailActivity extends Activity {
 
 	/**
 	 * Create the alert box using for showing progress.
-	 * @return dialog box showing progress. 
+	 * 
+	 * @return dialog box showing progress.
 	 */
 	protected ProgressDialog createProcessDialog() {
 		progressDialog = new ProgressDialog(this);
@@ -352,8 +357,9 @@ public abstract class AFDetailActivity extends Activity {
 
 	/**
 	 * Create the alert box of choosing graph resource options. The inner view
-	 * is from the function createGraphOptionDialog. 
-	 * @return alert dialog box. 
+	 * is from the function createGraphOptionDialog.
+	 * 
+	 * @return alert dialog box.
 	 */
 	protected AlertDialog createOptionDialog() {
 		AlertDialog.Builder builder;
@@ -383,9 +389,9 @@ public abstract class AFDetailActivity extends Activity {
 	protected double getDataValue(BaseResourceData data, String field) {
 		return 0;
 	}
-	
+
 	/**
-	 * 
+	 * Create dialogs.
 	 */
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog = null;
@@ -396,11 +402,50 @@ public abstract class AFDetailActivity extends Activity {
 		case OPTION_DIALOG:
 			dialog = createOptionDialog();
 			break;
+		case DISK_DIALOG:
+			dialog = createDiskDialog();
+			break;
+		case CPU_DIALOG:
+			dialog = createCPUDialog();
+			break;
+		case DISK_BUSY_DIALOG:
+			dialog = createDiskBusyDialog();
+			break;
 		default:
 			break;
 		}
 
 		return dialog;
+	}
+
+	/**
+	 * Need to be overwritten.
+	 * 
+	 * @return
+	 */
+	protected Dialog createDiskBusyDialog() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * Need to be overwritten.
+	 * 
+	 * @return
+	 */
+	protected Dialog createCPUDialog() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * Need to be overwritten.
+	 * 
+	 * @return
+	 */
+	protected Dialog createDiskDialog() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
@@ -410,14 +455,16 @@ public abstract class AFDetailActivity extends Activity {
 	 */
 	protected XYMultipleSeriesRenderer getDemoRenderer() {
 		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
-		renderer.setAxisTitleTextSize(12);
-		renderer.setChartTitleTextSize(15);
-		renderer.setLabelsTextSize(12);
-		renderer.setLegendTextSize(12);
-		renderer.setPointSize(10f);
+		renderer.setAxisTitleTextSize(Helper.convertDpToPx(12, this));
+		renderer.setChartTitleTextSize(Helper.convertDpToPx(15, this));
+		renderer.setLabelsTextSize(Helper.convertDpToPx(12, this));
+		renderer.setLegendTextSize(Helper.convertDpToPx(12, this));
+		renderer.setPointSize(Helper.convertDpToPx(12, this));
 		renderer.setYAxisMin(0.0);
 		renderer.setOrientation(Orientation.HORIZONTAL);
-		renderer.setMargins(new int[] { 20, 30, 15, 0 });
+		renderer.setMargins(new int[] { Helper.convertDpToPx(15, this),
+				Helper.convertDpToPx(30, this), Helper.convertDpToPx(15, this),
+				0 });
 		for (int cnt = 0; cnt < mGraphOptions.size(); cnt++) {
 			if (mGraphResource.get(cnt)) {
 				XYSeriesRenderer r = new XYSeriesRenderer();

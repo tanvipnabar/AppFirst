@@ -21,17 +21,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.appfirst.monitoring.AFHomeScreen;
+import com.appfirst.monitoring.R;
 import com.appfirst.types.BaseObject;
 
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * AFListActivity is the base class for other list activities.
@@ -48,16 +52,54 @@ import android.view.SubMenu;
 public abstract class AFListActivity extends ListActivity {
 	public abstract void sortListItems();
 
+	/**
+	 * This method should be called every time the search filter has been
+	 * changed or sort field has been changed. It needs to be implemented for
+	 * different activities.
+	 */
 	public abstract void displayList();
 
+	/**
+	 * Load the data list for the view, it should be called every time the view
+	 * is initialized, in onCreate method.
+	 */
 	public abstract void loadResource();
 
 	static final int PROGRESS_DIALOG = 0;
 
+	protected TextView mTextView;
+	protected ListView mListView;
+	protected String filterString = "";
+	
+	protected void setCurrentView() {
+		setContentView(R.layout.searchable_list);
+		mTextView = (TextView) findViewById(R.id.searchable_textview);
+		mListView = (ListView) findViewById(android.R.id.list);
+		handleIntent(getIntent());
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+		handleIntent(intent);
+	}
+
+	protected void handleIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			mTextView.setText(String.format("Filtered by word: '%s'", query));
+			filterString = query;
+			displayList();
+		}
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, 1, 0, "Dashboard").setIcon(android.R.drawable.ic_menu_today);
+		menu.add(0, 1, 0, "Dashboard")
+				.setIcon(android.R.drawable.ic_menu_today);
 		menu.add(0, 1, 0, "Refresh").setIcon(android.R.drawable.ic_menu_rotate);
+		menu.add(0, 1, 0, "Search").setIcon(
+				android.R.drawable.ic_search_category_default);
 		SubMenu sortMenuItem = menu.addSubMenu(0, 1, 0, "Sort").setIcon(
 				android.R.drawable.ic_menu_sort_alphabetically);
 		List<String> options = getSortOptions();
@@ -65,6 +107,7 @@ public abstract class AFListActivity extends ListActivity {
 			sortMenuItem.add(1, cnt, 0, options.get(cnt));
 		}
 		sortMenuItem.setGroupCheckable(1, true, true);
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -76,13 +119,15 @@ public abstract class AFListActivity extends ListActivity {
 			finish();
 			Intent i = new Intent(this, AFHomeScreen.class);
 			startActivity(i);
-		} else if (item.toString() == "Refresh"){
+		} else if (item.toString() == "Refresh") {
 			showDialog(PROGRESS_DIALOG);
 			new ResourceLoader().execute();
 		} else if (item.toString() == "Sort") {
 			sortField = null;
-		}
-		else {
+		} else if (item.toString() == "Search") {
+			return super.onSearchRequested();
+			// TODO: handle search
+		} else {
 			if (item.isChecked()) {
 				item.setChecked(false);
 			} else {
@@ -101,7 +146,7 @@ public abstract class AFListActivity extends ListActivity {
 			if (sortField != null)
 				sortListItems();
 		}
-		
+
 		return super.onOptionsItemSelected(item);
 	}
 

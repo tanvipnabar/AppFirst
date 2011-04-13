@@ -19,10 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.appfirst.activities.details.AFAlertDetail;
+import com.appfirst.activities.details.AFServerDetail;
 import com.appfirst.activities.lists.AFListActivity.ResourceLoader;
+import com.appfirst.communication.Helper;
 import com.appfirst.monitoring.MainApplication;
 import com.appfirst.monitoring.R;
 import com.appfirst.types.Alert;
+import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
 import com.appfirst.utils.DynamicComparator;
 
 import android.content.Intent;
@@ -30,6 +33,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * @author Bin Liu
@@ -41,6 +45,7 @@ public class AFAlertList extends AFListActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		setObjectClass(Alert.class);
+		setCurrentView();
 		showDialog(PROGRESS_DIALOG);
 		// Create an array of Strings, that will be put to our ListActivity
 		if (MainApplication.getAlerts() == null) {
@@ -57,18 +62,40 @@ public class AFAlertList extends AFListActivity {
 		if (sortField != null) {
 			sortName = sortField.getName();
 		}
-		DynamicComparator.sort(MainApplication.getAlerts(), sortName,
-				true);
+		DynamicComparator.sort(MainApplication.getAlerts(), sortName, true);
 		List<String> names = new ArrayList<String>();
+		List<String> details = new ArrayList<String>();
+		List<Integer> ids = new ArrayList<Integer>();
+		List<Integer> icons = new ArrayList<Integer>();
 		List<Alert> items = MainApplication.getAlerts();
 		for (int i = 0; i < items.size(); i++) {
 			Alert alert = items.get(i);
-			names.add(alert.getName());
+			String name = alert.getName();
+			if (this.filterString != ""
+					&& !name.toLowerCase().contains(name.toLowerCase())) {
+				continue;
+			}
+			names.add(name);
+			details.add(String.format("Last triggerred: %s, %s", Helper
+					.formatTime(alert.getLast_triggered() * 1000), alert
+					.getTarget()));
+			ids.add(alert.getId());
+			Integer resourceId = 0;
+			if (alert.isActive()) {
+				if (alert.isIn_incident()) {
+					resourceId = R.drawable.ic_icon_red_status;
+				} else {
+					resourceId = R.drawable.ic_icon_green_status;
+				}
+			} else {
+				resourceId = R.drawable.ic_icon_grey_status;
+			}
+			icons.add(resourceId);
 		}
 		// Create an ArrayAdapter, that will actually make the Strings above
 		// appear in the ListView
-		this.setListAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, names));
+		mListView.setAdapter(new DoubleLineLayoutArrayAdapter(this, names,
+				details, icons, ids, AFAlertDetail.class));
 	}
 
 	/**
@@ -100,6 +127,5 @@ public class AFAlertList extends AFListActivity {
 				getString(R.string.api_alerts));
 
 		MainApplication.loadAlertList(url);
-
 	}
 }

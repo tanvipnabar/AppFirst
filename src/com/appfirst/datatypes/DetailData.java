@@ -166,6 +166,32 @@ public class DetailData extends BaseResourceData {
 		}
 	}
 
+	public Boolean isEmpty() {
+		Boolean ret = true;
+
+		if (files != null && files.size() > 0) {
+			ret = false;
+		}
+
+		if (logs != null && logs.size() > 0) {
+			ret = false;
+		}
+
+		if (registries != null && registries.size() > 0) {
+			ret = false;
+		}
+
+		if (sockets != null && sockets.size() > 0) {
+			ret = false;
+		}
+
+		if (threads != null && threads.size() > 0) {
+			ret = false;
+		}
+
+		return ret;
+	}
+
 	private List<FileData> files;
 	private List<RegistryData> registries;
 	private List<ThreadData> threads;

@@ -36,7 +36,11 @@ import org.json.JSONObject;
  *         disk_percent The total hard disk usage in percent. <br>
  *         page_faults The number of page faults of the server. <br>
  *         process_num The number of processes running on the server. <br>
- *         thread_num The number of threads running on the server.
+ *         thread_num The number of threads running on the server. <br>
+ *         disk_percent_part A mapping of hard disk drive names (mount points)
+ *         to their current usage in percent.<br>
+ *         disk_busy	A mapping of each physcial disk name to its busy percentage.<br>
+ *         cpu_cores	A mapping of each CPU core to its usage in percent. <br>
  *         </p>
  * 
  */
@@ -56,18 +60,28 @@ public class SystemData extends BaseResourceData {
 		page_faults = BaseResourceData.getIntField("page_faults", systemData);
 		disk_percent = BaseResourceData.getDoubleField("disk_percent",
 				systemData);
+
+		disk = getListData(systemData, "disk");
+		cpu_cores = getListData(systemData, "cpu_cores");
+		disk_busy = getListData(systemData, "disk_busy");
+		disk_percent_part = getListData(systemData, "disk_percent_part");
+	}
+
+	private List<BasicNameValuePair> getListData(JSONObject systemData,
+			String fieldName) {
+		List<BasicNameValuePair> parsedObjects = new ArrayList<BasicNameValuePair>();
 		try {
-			JSONObject disks = systemData.getJSONObject("disk");
-			List<BasicNameValuePair> diskValues = new ArrayList<BasicNameValuePair>();
-			for (int i = 0; i < disks.names().length(); i++) {
-				String name = disks.names().getString(i);
-				String value = String.format("%d", disks.getInt(name));
-				diskValues.add(new BasicNameValuePair(name, value));
+			JSONObject objects = systemData.getJSONObject(fieldName);
+			for (int i = 0; i < objects.names().length(); i++) {
+				String name = objects.names().getString(i);
+				String value = String.format("%f", objects.getDouble(name));
+				parsedObjects.add(new BasicNameValuePair(name, value));
 			}
-			setDisk(diskValues);
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		return parsedObjects;
 	}
 
 	/*
@@ -133,6 +147,30 @@ public class SystemData extends BaseResourceData {
 		thread_num = threadNum;
 	}
 
+	public List<BasicNameValuePair> getDisk_busy() {
+		return disk_busy;
+	}
+
+	public void setDisk_busy(List<BasicNameValuePair> diskBusy) {
+		disk_busy = diskBusy;
+	}
+
+	public List<BasicNameValuePair> getDisk_percent_part() {
+		return disk_percent_part;
+	}
+
+	public void setDisk_percent_part(List<BasicNameValuePair> diskPercentPart) {
+		disk_percent_part = diskPercentPart;
+	}
+
+	public List<BasicNameValuePair> getCpu_cores() {
+		return cpu_cores;
+	}
+
+	public void setCpu_cores(List<BasicNameValuePair> cpuCores) {
+		cpu_cores = cpuCores;
+	}
+
 	private double cpu;
 	private double memory;
 	private List<BasicNameValuePair> disk;
@@ -140,4 +178,7 @@ public class SystemData extends BaseResourceData {
 	private int page_faults;
 	private int process_num;
 	private int thread_num;
+	private List<BasicNameValuePair> disk_busy;
+	private List<BasicNameValuePair> disk_percent_part;
+	private List<BasicNameValuePair> cpu_cores;
 }

@@ -15,22 +15,59 @@
  */
 package com.appfirst.activities.lists;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.os.Bundle;
+
+
+import com.appfirst.datatypes.RegistryData;
+import com.appfirst.monitoring.MainApplication;
+import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
+import com.appfirst.utils.DynamicComparator;
+
 /**
+ * Display list of registries. 
  * @author Bin Liu
  *
  */
 public class AFRegistryList extends AFListActivity {
 
-	/* (non-Javadoc)
+	/** Called when the activity is first created. */
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
+		setObjectClass(RegistryData.class);
+		setCurrentView();
+		// Create an array of Strings, that will be put to our ListActivity
+		displayList();
+	}
+
+	/**
 	 * @see com.appfirst.activities.lists.AFListActivity#displayList()
 	 */
 	@Override
 	public void displayList() {
 		// TODO Auto-generated method stub
-
+		List<String> names = new ArrayList<String>();
+		List<String> details = new ArrayList<String>();
+		List<RegistryData> items = MainApplication.getDetailData().getRegistries();
+		if (items != null) {
+			for (int i = 0; i < items.size(); i++) {
+				RegistryData item = items.get(i);
+				if (this.filterString != ""
+						&& !item.getRegistryName().toLowerCase().contains(
+								this.filterString.toLowerCase())) {
+					continue;
+				}
+				names.add(item.getRegistryName());
+				details.add("");
+			}
+		}
+		mListView.setAdapter(new DoubleLineLayoutArrayAdapter(this, names,
+				details));
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see com.appfirst.activities.lists.AFListActivity#loadResource()
 	 */
 	@Override
@@ -39,13 +76,15 @@ public class AFRegistryList extends AFListActivity {
 
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see com.appfirst.activities.lists.AFListActivity#sortListItems()
 	 */
 	@Override
 	public void sortListItems() {
 		// TODO Auto-generated method stub
-
+		DynamicComparator.sort(MainApplication.getDetailData().getRegistries(), sortField
+				.getName(), true);
+		displayList();
 	}
 
 }

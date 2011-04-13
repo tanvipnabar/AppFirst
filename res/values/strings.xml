@@ -3,6 +3,7 @@
     <string name="hello">Hello World, LoginScreen!</string>
     <string name="app_name">AppFirst Monitoring</string>
     <string name="frontend_address">"https://173.192.88.66"</string>
+<!--    <string name="frontend_address">"https://192.168.1.102"</string>-->
     <string name="api_login">/api/iphone/login/</string>
     <string name="api_key">"/api/v1/apikey/"</string>
     <string name="api_servers">"/api/v1/servers/"</string>
@@ -11,10 +12,16 @@
     <string name="api_applications">"/api/v1/applications/"</string>
     <string name="api_polled_datas">"/api/v1/polled-data/"</string>
     <string name="api_alert_histories">"/api/v1/alert-histories/"</string>
+    <string name="api_device">"/api/v1/mobile-devices/"</string>
     <string name="passowrd_key">"af_password"</string>
     <string name="username_key">"af_username"</string>
+    <string name="subscribe_all_key">af_first_login</string>
+    <string name="uid_key">"af_uid"</string>
+    <string name="redirect_key">"redirect_to"</string>
     <string name="sender_email">"appfirst@gmail.com"</string>
     <string name="notification_title">"New message from AppFirst"</string>
     <string name="notification_key">"subject"</string>
-
+    <string name="appfirst_preference_key">"AppFirst_Monitoring_5(84*76%@#^$FD"</string>
+    <string name="brand">"Android"</string>
+    <string name="search_hint">Search</string>
 </resources>

@@ -18,17 +18,21 @@ package com.appfirst.activities.lists;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.appfirst.activities.details.AFServerDetail;
 import com.appfirst.activities.lists.AFListActivity.ResourceLoader;
 import com.appfirst.monitoring.MainApplication;
 import com.appfirst.monitoring.R;
 import com.appfirst.types.Server;
+import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
 import com.appfirst.utils.DynamicComparator;
 
 /**
@@ -36,17 +40,20 @@ import com.appfirst.utils.DynamicComparator;
  * 
  */
 public class AFServerList extends AFListActivity {
+	private static final String TAG = "AFServerList";
 
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		setObjectClass(Server.class);
+		setCurrentView();
+		showDialog(PROGRESS_DIALOG);
+		mListView.setBackgroundResource(R.drawable.list_view_background);
+
 		// Create an array of Strings, that will be put to our ListActivity
-		if (MainApplication.servers == null) {
-			showDialog(PROGRESS_DIALOG);
+		if (MainApplication.getServers() == null) {
 			new ResourceLoader().execute();
 		} else {
-			showDialog(PROGRESS_DIALOG);
 			displayList();
 		}
 	}
@@ -55,7 +62,10 @@ public class AFServerList extends AFListActivity {
 	public void displayList() {
 		dismissDialog(PROGRESS_DIALOG);
 		List<String> names = new ArrayList<String>();
-		List<Server> items = MainApplication.servers;
+		List<String> details = new ArrayList<String>();
+		List<Integer> images = new ArrayList<Integer>();
+		List<Server> items = MainApplication.getServers();
+		List<Integer> ids = new ArrayList<Integer>();
 		if (items == null) { // nothing is returned
 			return;
 		}
@@ -63,19 +73,32 @@ public class AFServerList extends AFListActivity {
 		if (sortField != null) {
 			sortName = sortField.getName();
 		}
-		DynamicComparator.sort(MainApplication.servers, sortName, true);
+		DynamicComparator.sort(MainApplication.getServers(), sortName, true);
 		for (int i = 0; i < items.size(); i++) {
 			Server item = items.get(i);
+			String hostname = item.getHostname();
+			if (filterString != "" && !hostname.contains(filterString))
+				continue;
 			if (item.getRunning()) {
 				names.add(item.getHostname());
 			} else {
 				names.add(String.format("%s (stopped)", item.getHostname()));
 			}
+			details.add("");
+
+			if (item.getOs().toString().startsWith("Windows")) {
+				images.add(R.drawable.ic_icon_windows);
+			} else {
+				images.add(R.drawable.ic_icon_linux);
+			}
+
+			ids.add(item.getId());
 		}
+
 		// Create an ArrayAdapter, that will actually make the Strings above
 		// appear in the ListView
-		this.setListAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, names));
+		mListView.setAdapter(new DoubleLineLayoutArrayAdapter(this, names,
+				details, images, ids, AFServerDetail.class));
 	}
 
 	/**
@@ -91,7 +114,6 @@ public class AFServerList extends AFListActivity {
 
 	@Override
 	public void sortListItems() {
-
 		displayList();
 	}
 
@@ -101,5 +123,11 @@ public class AFServerList extends AFListActivity {
 				getString(R.string.frontend_address),
 				getString(R.string.api_servers));
 		MainApplication.loadServerList(url);
+	}
+
+	@Override
+	public boolean onSearchRequested() {
+		Log.i(TAG, "search box created");
+		return super.onSearchRequested();
 	}
 }

@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appfirst.activities.details.AFPolledDataDetail;
@@ -46,12 +47,12 @@ public class AFPolledDataList extends AFListActivity {
 		super.onCreate(icicle);
 		setObjectClass(PolledDataObject.class);
 		// Create an array of Strings, that will be put to our ListActivity
-		
+		setCurrentView();
 		showDialog(PROGRESS_DIALOG);
-		if (MainApplication.polledDatas == null) {
+		if (MainApplication.getPolledDatas() == null) {
 			new ResourceLoader().execute();
 		} else {
-			displayList();	
+			displayList();
 		}
 	}
 
@@ -62,21 +63,27 @@ public class AFPolledDataList extends AFListActivity {
 		if (sortField != null) {
 			sortName = sortField.getName();
 		}
-		DynamicComparator.sort(MainApplication.polledDatas, sortName, true);
+		DynamicComparator.sort(MainApplication.getPolledDatas(), sortName, true);
 		List<String> names = new ArrayList<String>();
 		List<String> serverNames = new ArrayList<String>();
 		List<Integer> ids = new ArrayList<Integer>();
-		List<PolledDataObject> items = MainApplication.polledDatas;
+		List<PolledDataObject> items = MainApplication.getPolledDatas();
 		for (int i = 0; i < items.size(); i++) {
 			PolledDataObject item = items.get(i);
-			names.add(item.getName());
+			String name = item.getName();
+			if (this.filterString != ""
+					&& !this.filterString.toLowerCase().contains(
+							name.toLowerCase())) { // apply the filter
+				continue;
+			}
+			names.add(name);
 			ids.add(item.getId());
 			serverNames
-					.add(MainApplication.serverNameMap.get(item.getServer()));
+					.add(MainApplication.getServerNameMap().get(item.getServer()));
 		}
 		// Create an ArrayAdapter, that will actually make the Strings above
 		// appear in the ListView
-		this.setListAdapter(new DoubleLineLayoutArrayAdapter(this, names,
+		mListView.setAdapter(new DoubleLineLayoutArrayAdapter(this, names,
 				serverNames, ids, AFPolledDataDetail.class));
 	}
 
@@ -108,7 +115,7 @@ public class AFPolledDataList extends AFListActivity {
 		String url = String.format("%s%s",
 				getString(R.string.frontend_address),
 				getString(R.string.api_polled_datas));
-		if (MainApplication.polledDatas == null) {
+		if (MainApplication.getPolledDatas() == null) {
 			MainApplication.loadPolledDataList(url);
 		}
 

@@ -26,6 +26,7 @@ import com.appfirst.types.Application;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -47,11 +49,13 @@ public class DoubleLineLayoutArrayAdapter extends ArrayAdapter<String>
 	private LayoutInflater mInflator;
 	private List<String> mValues1;
 	private List<String> mValues2;
+	private List<Integer> mImageResources;
 	private List<Integer> mIds;
 	private Class mClass;
 	private Activity mContext;
 
 	static class ViewHolder {
+		public ImageView image;
 		public TextView line1;
 		public TextView line2;
 		public TextView id;
@@ -64,6 +68,19 @@ public class DoubleLineLayoutArrayAdapter extends ArrayAdapter<String>
 		mInflator = context.getLayoutInflater();
 		mValues1 = values;
 		mValues2 = values2;
+		mIds = ids;
+		mContext = context;
+		mClass = cls;
+	}
+
+	public DoubleLineLayoutArrayAdapter(Activity context, List<String> values,
+			List<String> values2, List<Integer> images, List<Integer> ids,
+			Class cls) {
+		super(context, R.id.TextView01, values);
+		mInflator = context.getLayoutInflater();
+		mValues1 = values;
+		mValues2 = values2;
+		mImageResources = images;
 		mIds = ids;
 		mContext = context;
 		mClass = cls;
@@ -107,6 +124,8 @@ public class DoubleLineLayoutArrayAdapter extends ArrayAdapter<String>
 					.findViewById(R.id.double_line_id);
 			viewHolder.position = (TextView) rowView
 					.findViewById(R.id.double_line_position);
+			viewHolder.image = (ImageView) rowView
+					.findViewById(R.id.double_line_image);
 			rowView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) rowView.getTag();
@@ -115,6 +134,14 @@ public class DoubleLineLayoutArrayAdapter extends ArrayAdapter<String>
 		rowView.setFocusable(true);
 		viewHolder.line1.setText(mValues1.get(position));
 		viewHolder.line2.setText(mValues2.get(position));
+
+		if (mImageResources != null) {
+			viewHolder.image.setVisibility(View.VISIBLE);
+			viewHolder.image.setBackgroundDrawable(mContext.getResources()
+					.getDrawable(mImageResources.get(position)));
+		} else {
+			viewHolder.image.setVisibility(View.GONE);
+		}
 
 		if (mIds != null) {
 			rowView.setOnClickListener(new View.OnClickListener() {
@@ -126,8 +153,10 @@ public class DoubleLineLayoutArrayAdapter extends ArrayAdapter<String>
 					Intent intent = new Intent(mContext, mClass);
 					intent.putExtra(mClass.getName() + ".id", viewHolder.id
 							.getText().toString());
-					intent.putExtra(mClass.getName() + ".selected",
-							Integer.parseInt(viewHolder.position.getText().toString()));
+					intent
+							.putExtra(mClass.getName() + ".selected", Integer
+									.parseInt(viewHolder.position.getText()
+											.toString()));
 					mContext.startActivity(intent);
 				}
 			});

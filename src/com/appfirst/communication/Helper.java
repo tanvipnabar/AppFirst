@@ -66,6 +66,8 @@ public class Helper {
 
 	public static List<Server> convertServerList(JSONArray jsonArray) {
 		List<Server> serverList = new ArrayList<Server>();
+		if (jsonArray == null)
+			return null;
 		for (int i = 0; i < jsonArray.length(); i++) {
 			try {
 				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
@@ -384,7 +386,7 @@ public class Helper {
 	 * Get the url of the alert query. 
 	 * @param context current activity.
 	 * @param id alert id
-	 * @return the formatted url string. 
+	 * @return the formatted url String. 
 	 */
 	public static String getAlertUrl(Context context, int id) {
 		String ret = String.format("%s%s", context
@@ -395,6 +397,23 @@ public class Helper {
 		}
 		return ret;
 	}
+	
+	/**
+	 * Get the url of the mobile device.  
+	 * @param context current activity. 
+	 * @param id device id
+	 * @return the formatted url String. 
+	 */
+	public static String getDeviceUrl(Context context, int id) {
+		String ret = String.format("%s%s", context
+				.getString(R.string.frontend_address), context
+				.getString(R.string.api_device));
+		if (id > 0) {
+			ret = String.format("%s/%d/", ret, id); 
+		}
+		return ret;
+	}
+	
 
 	/**
 	 * Check whether request is successful.

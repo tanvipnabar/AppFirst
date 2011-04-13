@@ -28,16 +28,18 @@ import com.appfirst.utils.DynamicComparator;
 
 /**
  * @author Bin Liu
- *
+ * 
  */
 public class AFLogList extends AFListActivity {
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		setObjectClass(LogData.class);
+		setCurrentView();
 		// Create an array of Strings, that will be put to our ListActivity
 		displayList();
 	}
+
 	/**
 	 * @see com.appfirst.activities.lists.AFListActivity#displayList()
 	 */
@@ -46,15 +48,22 @@ public class AFLogList extends AFListActivity {
 		// TODO Auto-generated method stub
 		List<String> names = new ArrayList<String>();
 		List<String> details = new ArrayList<String>();
-		List<LogData> items = MainApplication.detailData.getLogs();
+		List<LogData> items = MainApplication.getDetailData().getLogs();
+
 		if (items != null) {
 			for (int i = 0; i < items.size(); i++) {
 				LogData item = items.get(i);
+				if (this.filterString != ""
+						&& ! item.getMessage().toLowerCase().contains(
+								this.filterString.toLowerCase())) {
+					continue;
+				}
 				names.add(String.format("Message: %s", item.getMessage()));
 				details.add(String.format("Severity: %s", item.getSeverity()));
 			}
 		}
-		this.setListAdapter(new DoubleLineLayoutArrayAdapter(this, details, names));
+		mListView.setAdapter(new DoubleLineLayoutArrayAdapter(this, details,
+				names));
 	}
 
 	/**
@@ -71,7 +80,7 @@ public class AFLogList extends AFListActivity {
 	@Override
 	public void sortListItems() {
 		// TODO Auto-generated method stub
-		DynamicComparator.sort(MainApplication.detailData.getLogs(), sortField
+		DynamicComparator.sort(MainApplication.getDetailData().getLogs(), sortField
 				.getName(), true);
 		displayList();
 	}
