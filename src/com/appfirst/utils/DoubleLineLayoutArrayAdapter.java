@@ -37,6 +37,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 /**
@@ -162,6 +163,16 @@ public class DoubleLineLayoutArrayAdapter extends ArrayAdapter<String>
 			});
 			viewHolder.id.setText(String.format("%d", mIds.get(position)));
 			viewHolder.position.setText(String.format("%d", position));
+		} else {
+			rowView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					ViewHolder viewHolder = (ViewHolder) v.getTag();
+					String text = viewHolder.line1.getText() + "\n" + viewHolder.line2.getText();
+					Toast.makeText(mContext, text, 1000000).show();
+				}
+			});
 		}
 
 		return rowView;

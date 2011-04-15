@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 /**
  * @author Bin Liu
@@ -57,14 +58,13 @@ public class AFAlertDetail extends AFDetailActivity {
 	 * (int)
 	 */
 	@Override
-	protected void updateViewWithSelected(int selected) {
+	protected void updateViewWithSelected(final int selected) {
 		// TODO Auto-generated method stub
 		Alert alert = MainApplication.getAlerts().get(selected);
 		int lastTrigger = alert.getLast_triggered();
 		String triggerString = "N/A";
 		if (lastTrigger > 0) {
-			Date date = new Date(lastTrigger * 1000);
-			triggerString = DateFormat.getInstance().format(date);
+			triggerString = Helper.formatLongTime(Long.parseLong(String.format("%d", lastTrigger)) * 1000);
 		}
 		setTextView(this, R.id.alertName, alert.getName());
 		setTextView(this, R.id.alertTrigger, alert.getTrigger());
@@ -78,12 +78,17 @@ public class AFAlertDetail extends AFDetailActivity {
 		mAlertActive = (CheckBox) findViewById(R.id.alertActive);
 		mAlertActive.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				// Perform action on clicks, depending on whether it's now
-				// checked
-
-				MainApplication.client.updateAlertStatus(Helper.getAlertUrl(
+				Alert newAlert = MainApplication.client.updateAlertStatus(Helper.getAlertUrl(
 						AFAlertDetail.this, mAlertId), mAlertId, ((CheckBox) v)
 						.isChecked());
+				CharSequence message;
+				if (newAlert.isActive()) {
+					message = "Alert has been enabled";
+				} else {
+					message = "Alert has been disabled";
+				}
+				Toast.makeText(AFAlertDetail.this, message, 100).show();
+				MainApplication.updateCachedAlerts(selected, newAlert);
 			}
 		});
 	}

@@ -18,6 +18,8 @@ package com.appfirst.activities.lists;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,6 +51,7 @@ public class AFAlertHistoryList extends AFListActivity {
 		setObjectClass(AlertHistory.class);
 		// Create an array of Strings, that will be put to our ListActivity
 		setCurrentView();
+		mTitle.setText("Alert histories:");
 
 		if (MainApplication.getAlertHistories() == null) {
 			showDialog(PROGRESS_DIALOG);
@@ -66,6 +69,8 @@ public class AFAlertHistoryList extends AFListActivity {
 		List<AlertHistory> items = MainApplication.getAlertHistories();
 		List<String> details = new ArrayList<String>();
 		List<Integer> ids = new ArrayList<Integer>();
+		mSortName = "time";
+		mSortText.setText(getSortAndFilter());
 		for (int i = 0; i < items.size(); i++) {
 			AlertHistory item = items.get(i);
 			String subject = item.getSubject();
@@ -112,6 +117,7 @@ public class AFAlertHistoryList extends AFListActivity {
 	 */
 	@Override
 	public void loadResource() {
+		MainApplication.checkClientLogin(AFAlertHistoryList.this);
 		String url = String.format("%s%s",
 				getString(R.string.frontend_address),
 				getString(R.string.api_alert_histories));
@@ -121,6 +127,10 @@ public class AFAlertHistoryList extends AFListActivity {
 			MainApplication.client.updateDeviceBadge(Helper.getDeviceUrl(this,
 					MainApplication.getDevice().getId()), 0, MainApplication
 					.getUid());
+			String ns = Context.NOTIFICATION_SERVICE;
+			NotificationManager mNotificationManager = (NotificationManager) this
+					.getSystemService(ns);
+			mNotificationManager.cancelAll();
 			Log.i(TAG, "Badge has been reset. ");
 		}
 	}

@@ -39,9 +39,10 @@ public class AFProcessList extends AFListActivity {
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		setObjectClass(Process.class);
+		setObjectClass(com.appfirst.types.Process.class);
 		// Create an array of Strings, that will be put to our ListActivity
 		setCurrentView();
+		mTitle.setText("Processes: ");
 		processes = MainApplication.getProcesses();
 		displayList();
 	}
@@ -54,11 +55,12 @@ public class AFProcessList extends AFListActivity {
 	@Override
 	public void displayList() {
 		// TODO Auto-generated method stub
-		String sortName = "name";
+		mSortName = "name";
 		if (sortField != null) {
-			sortName = sortField.getName();
+			mSortName = sortField.getName();
 		}
-		DynamicComparator.sort(processes, sortName, true);
+		mSortText.setText(getSortAndFilter());
+		DynamicComparator.sort(processes, mSortName, true);
 		List<String> names = new ArrayList<String>();
 		List<String> details = new ArrayList<String>();
 		List<Integer> ids = new ArrayList<Integer>();

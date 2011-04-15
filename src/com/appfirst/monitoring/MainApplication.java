@@ -184,6 +184,12 @@ public class MainApplication extends Application {
 			return false;
 		}
 	}
+	
+	public static synchronized void checkClientLogin(Context context) {
+		if (client.getmAuthString() == null || client.getmAuthString().length == 0) {
+			client.setmAuthString(MainApplication.getSavedLogin(context));
+		}
+	}
 
 	/**
 	 * Unregistrate from push notification service.
@@ -348,6 +354,10 @@ public class MainApplication extends Application {
 	 */
 	public static synchronized AFDevice getDevice() {
 		return device;
+	}
+	
+	public static synchronized void updateCachedAlerts(int index, Alert newAlert) {
+		alerts.set(index, newAlert);
 	}
 
 //	/**

@@ -46,6 +46,7 @@ public class AFApplicationList extends AFListActivity {
 		setObjectClass(Application.class);
 		// Create an array of Strings, that will be put to our ListActivity
 		setCurrentView();
+		mTitle.setText("Applications: ");
 		showDialog(PROGRESS_DIALOG);
 		if (MainApplication.getApplications() == null) {
 			new ResourceLoader().execute();
@@ -57,11 +58,12 @@ public class AFApplicationList extends AFListActivity {
 	@Override
 	public void displayList() {
 		dismissDialog(PROGRESS_DIALOG);
-		String sortName = "name";
+		mSortName = "name";
 		if (sortField != null) {
-			sortName = sortField.getName();
+			mSortName = sortField.getName();
 		}
-		DynamicComparator.sort(MainApplication.getApplications(), sortName, true);
+		mSortText.setText(getSortAndFilter());
+		DynamicComparator.sort(MainApplication.getApplications(), mSortName, true);
 		List<String> names = new ArrayList<String>();
 		List<String> details = new ArrayList<String>();
 		List<Integer> ids= new ArrayList<Integer>();

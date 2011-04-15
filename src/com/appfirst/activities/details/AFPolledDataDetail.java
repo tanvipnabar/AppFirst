@@ -166,10 +166,8 @@ public class AFPolledDataDetail extends AFDetailActivity {
 				getString(R.string.frontend_address),
 				getString(R.string.api_polled_datas), polled_data_id);
 		if (mGraphData == null || bRefreshGraph) {
-			mGraphData = MainApplication.client.getPollDataDataList(url, 30);
+			mGraphData = MainApplication.client.getPollDataDataList(url, 60);
 			setupGraphOptions();
-		} else {
-			setGraphData();
 		}
 	}
 
@@ -181,9 +179,7 @@ public class AFPolledDataDetail extends AFDetailActivity {
 		// TODO Auto-generated method stub
 		if (mButton.getVisibility() != View.GONE) {
 			dismissDialog(PROGRESS_DIALOG);
-			Intent intent = ChartFactory.getTimeChartIntent(this,
-					getChartDataset(mGraphData), getDemoRenderer(), null);
-			startActivity(intent);
+			
 		} else {
 			mButton.setVisibility(View.VISIBLE);
 		}
@@ -271,5 +267,15 @@ public class AFPolledDataDetail extends AFDetailActivity {
 			}
 		}
 		Log.i(TAG, mGraphOptions.toString());
+	}
+	
+	@Override
+	protected void displayGraphData() {
+		if (mGraphData == null) {
+			return;
+		}
+		Intent intent = ChartFactory.getTimeChartIntent(this,
+				getChartDataset(mGraphData), getDemoRenderer(), null);
+		startActivity(intent);
 	}
 }

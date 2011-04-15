@@ -35,6 +35,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * @author Bin Liu
@@ -83,10 +84,10 @@ public class AFProcessDetail extends AFDetailActivity {
 				// setTextView(this, R.id.processServerName, process)
 				setTextView(this, R.id.processArgs, String.format(
 						"Command line: %s", process.getArgs()));
-				setTextView(this, R.id.processStart, Helper.formatTime(process
-						.getStart()));
-				setTextView(this, R.id.processEnd, Helper.formatTime(process
-						.getEnd()));
+				setTextView(this, R.id.processStart, Helper.formatLongTime(process
+						.getStart() * 1000));
+				setTextView(this, R.id.processEnd, Helper.formatLongTime(process
+						.getEnd() * 1000));
 				break;
 			}
 		}
@@ -138,11 +139,30 @@ public class AFProcessDetail extends AFDetailActivity {
 			}
 		});
 		setupGraphOptions();
-
+		setLongClickEvent();
 		new DataUpdater().execute();
 		new DetailUpdater().execute();
 		new GraphUpdater().execute();
 
+	}
+	
+	
+	protected void setLongClickEvent() {
+		setRowLongClickEvent(R.id.processTableRow01, 0);
+		setRowLongClickEvent(R.id.processTableRow02, 1);
+		setRowLongClickEvent(R.id.processTableRow03, 2);
+		setRowLongClickEvent(R.id.processTableRow04, 3);
+		setRowLongClickEvent(R.id.processTableRow05, 4);
+		setRowLongClickEvent(R.id.processTableRow06, 5);
+		setRowLongClickEvent(R.id.processTableRow07, 6);
+		setRowLongClickEvent(R.id.processTableRow08, 7);
+		setRowLongClickEvent(R.id.processTableRow09, 8);
+		setRowLongClickEvent(R.id.processTableRow10, 9);
+		setRowLongClickEvent(R.id.processTableRow11, 10);
+		setRowLongClickEvent(R.id.processTableRow12, 11);
+		setRowLongClickEvent(R.id.processTableRow13, 12);
+		setRowLongClickEvent(R.id.processTableRow14, 13);
+		setRowLongClickEvent(R.id.processTableRow15, 14);
 	}
 
 	/**
@@ -211,7 +231,7 @@ public class AFProcessDetail extends AFDetailActivity {
 			setTextView(this, R.id.processAvgResponseTimeValue, Helper
 					.formatTimeValue(data.getAvg_response_time()));
 			setTextView(this, R.id.processResourceUsageLabel, String.format(
-					"Resource usage at %s:", Helper.formatTime(data.getTime())));
+					"Resource usage at %s:", Helper.formatLongTime(data.getTime() * 1000)));
 		}
 	}
 
@@ -259,14 +279,7 @@ public class AFProcessDetail extends AFDetailActivity {
 
 	@Override
 	protected void setGraphData() {
-		if (mGraphButton.getVisibility() != View.GONE) {
-			dismissDialog(PROGRESS_DIALOG);
-			Intent intent = ChartFactory.getTimeChartIntent(this,
-					getChartDataset(mGraphData), getDemoRenderer(), null);
-			startActivity(intent);
-		} else {
-			mGraphButton.setVisibility(View.VISIBLE);
-		}
+		mGraphButton.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -275,9 +288,7 @@ public class AFProcessDetail extends AFDetailActivity {
 				getString(R.string.frontend_address),
 				getString(R.string.api_processes), process_id);
 		if (mGraphData == null || bRefreshGraph) {
-			mGraphData = MainApplication.client.getProcessData(url, 30);
-		} else {
-			setGraphData();
+			mGraphData = MainApplication.client.getProcessData(url, 60);
 		}
 	}
 
@@ -353,19 +364,19 @@ public class AFProcessDetail extends AFDetailActivity {
 	protected void setupGraphOptions() {
 		mGraphOptions.add(this.CPU_DISPALY_NAME);
 		mGraphOptions.add(this.MEMORY_DISPLAY_NAME);
-		mGraphOptions.add(this.THREAD_DISPLAY_NAME);
 		mGraphOptions.add(this.PAGE_FAULT_DISPLAY_NAME);
-		mGraphOptions.add(this.RESPONSE_NUM_DISPLAY_NAME);
-		mGraphOptions.add(this.AVG_RESPONSE_DISPLAY_NAME);
-		mGraphOptions.add(this.INCIDENTS_DISPLAY_NAME);
-		mGraphOptions.add(this.CRITICAL_INCIDENTS_DISPLAY_NAME);
-		mGraphOptions.add(this.FILE_NUM_DISPLAY_NAME);
-		mGraphOptions.add(this.FILE_READ_DISPLAY_NAME);
-		mGraphOptions.add(this.FILE_WRITE_DISPLAY_NAME);
+		mGraphOptions.add(this.THREAD_DISPLAY_NAME);
 		mGraphOptions.add(this.SOCKET_NUM_DISPLAY_NAME);
 		mGraphOptions.add(this.SOCKET_READ_DISPLAY_NAME);
 		mGraphOptions.add(this.SOCKET_WRITE_DISPLAY_NAME);
+		mGraphOptions.add(this.FILE_NUM_DISPLAY_NAME);
+		mGraphOptions.add(this.FILE_READ_DISPLAY_NAME);
+		mGraphOptions.add(this.FILE_WRITE_DISPLAY_NAME);
 		mGraphOptions.add(this.REGISTRY_DISPLAY_NAME);
+		mGraphOptions.add(this.INCIDENTS_DISPLAY_NAME);
+		mGraphOptions.add(this.CRITICAL_INCIDENTS_DISPLAY_NAME);
+		mGraphOptions.add(this.AVG_RESPONSE_DISPLAY_NAME);
+		mGraphOptions.add(this.RESPONSE_NUM_DISPLAY_NAME);
 
 		mGraphResource.add(true);
 		mGraphResource.add(false);
@@ -387,6 +398,17 @@ public class AFProcessDetail extends AFDetailActivity {
 	@Override
 	public List<String> getGraphOptions() {
 		return mGraphOptions;
+	}
+	
+	@Override
+	protected void displayGraphData() {
+		if (mGraphData == null) {
+			Toast.makeText(this, "Please wait data to be loaded", 200).show();
+			return;
+		}
+		Intent intent = ChartFactory.getTimeChartIntent(this,
+				getChartDataset(mGraphData), getDemoRenderer(), null);
+		startActivity(intent);
 	}
 
 }

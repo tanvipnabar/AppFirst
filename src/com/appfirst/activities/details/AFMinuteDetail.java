@@ -76,7 +76,7 @@ public class AFMinuteDetail extends TabActivity {
 		TabHost tabHost = getTabHost(); // The activity TabHost
 		TabHost.TabSpec spec; // Resusable TabSpec for each tab
 		Intent intent; // Reusable Intent for each tab
-
+		
 		if (MainApplication.getDetailData().getFiles() != null
 				&& MainApplication.getDetailData().getFiles().size() > 0) {
 			intent = new Intent().setClass(this, AFFileList.class);

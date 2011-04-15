@@ -15,35 +15,29 @@
  */
 package com.appfirst.activities.details;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.renderer.XYMultipleSeriesRenderer.Orientation;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,10 +45,9 @@ import com.appfirst.activities.lists.AFProcessList;
 import com.appfirst.communication.Helper;
 import com.appfirst.datatypes.SystemData;
 import com.appfirst.monitoring.MainApplication;
+import com.appfirst.monitoring.MainHelper;
 import com.appfirst.monitoring.R;
 import com.appfirst.types.Server;
-import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
-import com.appfirst.utils.DynamicComparator;
 import com.appfirst.views.AFBarView;
 import com.appfirst.views.AFPieView;
 
@@ -68,26 +61,34 @@ import com.appfirst.views.AFPieView;
 public class AFServerDetail extends AFDetailActivity {
 
 	private final String TAG = "AFServerDetail";
-	private int server_id = 0;
-	protected SystemData data;
-	protected List<com.appfirst.types.Process> processes;
 	private Button mButton;
-	private TextView mShowProcesses;
+	private Button mShowProcesses;
+	private Button mAllCpuCoreButton;
+	private Button mAllDiskBusyButton;
+	private Button mAllDiskUsageButton;
+
 	private List<SystemData> mGraphData;
 	private Boolean bRefreshGraph = false;
 	private Server mServer;
+
+	private int server_id = 0;
+	protected SystemData data;
+	protected List<com.appfirst.types.Process> processes;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.server);
 		Intent i = getIntent();
-		int selected = i.getIntExtra(AFServerDetail.class.getName() + ".selected", -1);
+		int selected = i.getIntExtra(AFServerDetail.class.getName()
+				+ ".selected", -1);
 		if (selected < 0) {
 			Log.e(TAG, "Unlikely, nothing selected");
 			return;
 		}
 		updateViewWithSelected(selected);
+		setDialogMaxInnerSpace();
 		setupGraphOptions();
+		
 	}
 
 	@Override
@@ -117,6 +118,8 @@ public class AFServerDetail extends AFDetailActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	
 
 	protected XYMultipleSeriesDataset getChartDataset(List<SystemData> graphData) {
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
@@ -145,12 +148,20 @@ public class AFServerDetail extends AFDetailActivity {
 		setTextView(this, R.id.serverCpuCapacity, cpuInfo);
 		setTextView(this, R.id.serverMemCapacity, memInfo);
 		setTextView(this, R.id.serverOSType, mServer.getOs());
-		setTextView(this, R.id.serverDiskCapacity, String.format("%d MB",
-				mServer.getTotalDisk()));
+		setTextView(this, R.id.serverDiskCapacity, Helper.formatByteValue(
+				mServer.getTotalDisk() * 1000000));
 		server_id = mServer.getId();
+		setClickEvents();
+
 		new DataUpdater().execute();
 		new ProcessListUpdater().execute();
 		new GraphUpdater().execute();
+	}
+
+	/**
+	 * Set up all the click events that this view can trigger.
+	 */
+	private void setClickEvents() {
 		mButton = (Button) findViewById(R.id.serverShowGraph);
 		mButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -158,16 +169,52 @@ public class AFServerDetail extends AFDetailActivity {
 				showDialog(OPTION_DIALOG);
 			}
 		});
-		
-		mShowProcesses = (TextView) findViewById(R.id.serverShowProcesses);
+
+		mShowProcesses = (Button) findViewById(R.id.serverShowProcesses);
 		mShowProcesses.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				showRunningProcesses();
 			}
 		});
+
+		mAllCpuCoreButton = (Button) findViewById(R.id.serverShowAllCPUCores);
+		mAllCpuCoreButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showDialog(CPU_DIALOG);
+			}
+		});
+
+		mAllDiskBusyButton = (Button) findViewById(R.id.serverShowAllDiskBusy);
+		mAllDiskBusyButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showDialog(DISK_BUSY_DIALOG);
+			}
+		});
+
+		mAllDiskUsageButton = (Button) findViewById(R.id.serverShowAllDiskUsage);
+		mAllDiskUsageButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showDialog(DISK_DIALOG);
+			}
+		});
+
+		setRowLongClickEvent(R.id.serverCpuValueRow, 0);
+		setRowLongClickEvent(R.id.serverMemoryValueRow, 1);
+		setRowLongClickEvent(R.id.serverDiskValueRow, 2);
+		setRowLongClickEvent(R.id.serverPFValueRow, 3);
+		setRowLongClickEvent(R.id.serverPRValueRow, 4);
+		setRowLongClickEvent(R.id.serverTRValueRow, 5);
 	}
+
 	
+
 	private void showRunningProcesses() {
 		Intent intent = new Intent(this, AFProcessList.class);
 		startActivity(intent);
@@ -179,22 +226,32 @@ public class AFServerDetail extends AFDetailActivity {
 	@Override
 	protected void setData() {
 		if (data != null) {
-			setCpuData();
-			setMemoryData();
-			setDiskData();
-			setTextView(this, R.id.serverPFValue, String.format("%d", data
-					.getPage_faults()));
-			setTextView(this, R.id.serverPRValue, String.format("%d", data
-					.getProcess_num()));
-			setTextView(this, R.id.serverTRValue, String.format("%d", data
-					.getThread_num()));
-			setTextView(this, R.id.serverResourceUsageLabel, String.format(
-					"Resource usage at %s:", Helper.formatLongTime(data
-							.getTime() * 1000)));
+			setResourceUsages();
+			mAllCpuCoreButton.setVisibility(View.VISIBLE);
+			mAllDiskBusyButton.setVisibility(View.VISIBLE);
+			mAllDiskUsageButton.setVisibility(View.VISIBLE);
 		} else {
 			setTextView(this, R.id.serverResourceUsageLabel, String.format(
 					"Resource usage %s:", "(update failed)"));
 		}
+	}
+
+	/**
+	 * 
+	 */
+	private void setResourceUsages() {
+		setCpuData();
+		setMemoryData();
+		setDiskData();
+		setTextView(this, R.id.serverPFValue, String.format("%d", data
+				.getPage_faults()));
+		setTextView(this, R.id.serverPRValue, String.format("%d", data
+				.getProcess_num()));
+		setTextView(this, R.id.serverTRValue, String.format("%d", data
+				.getThread_num()));
+		setTextView(this, R.id.serverResourceUsageLabel, String.format(
+				"Resource usage at %s:", Helper
+						.formatLongTime(data.getTime() * 1000)));
 	}
 
 	/**
@@ -269,22 +326,8 @@ public class AFServerDetail extends AFDetailActivity {
 		if (processes == null)
 			return;
 		mShowProcesses.setVisibility(View.VISIBLE);
-//		List<String> names = new ArrayList<String>();
-//		List<String> details = new ArrayList<String>();
-//		List<Integer> ids = new ArrayList<Integer>();
-//		DynamicComparator.sort(processes, "name", true);
-//		for (int cnt = 0; cnt < processes.size(); cnt++) {
-//			com.appfirst.types.Process process = processes.get(cnt);
-//			names.add(String.format("%s (pid:%d)", process.getName(), process
-//					.getPid()));
-//			details.add(process.getArgs());
-//			ids.add(process.getId());
-//		}
-//		ListView lv = (ListView) findViewById(R.id.serverProcessList);
-//		lv.setAdapter(new DoubleLineLayoutArrayAdapter(this, names, details,
-//				ids, AFProcessDetail.class));
-		setTextView(this, R.id.serverProcessListLabel, String.format(
-				"Intercepted processes: %d", processes.size()));
+		this.mShowProcesses.setText(String.format("%d intercepted processes",
+				processes.size()));
 		MainApplication.setProcesses(processes);
 	}
 
@@ -294,24 +337,24 @@ public class AFServerDetail extends AFDetailActivity {
 				getString(R.string.frontend_address),
 				getString(R.string.api_servers), server_id);
 		if (mGraphData == null || bRefreshGraph) {
-			mGraphData = MainApplication.client.getServerData(url, 30);
-		} else {
-			setGraphData();
+			mGraphData = MainApplication.client.getServerData(url, 60);
 		}
 	}
 
 	@Override
 	protected void setGraphData() {
-		if (mButton.getVisibility() != View.GONE) {
-			dismissDialog(PROGRESS_DIALOG);
-			Intent intent = ChartFactory.getTimeChartIntent(this,
-					getChartDataset(mGraphData), getDemoRenderer(), null);
-			startActivity(intent);
-		} else {
-			if (mGraphData != null) {
-				mButton.setVisibility(View.VISIBLE);
-			}
+		mButton.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	protected void displayGraphData() {
+		if (mGraphData == null) {
+			Toast.makeText(this, "Please wait data to be loaded", 200).show();
+			return;
 		}
+		Intent intent = ChartFactory.getTimeChartIntent(this,
+				getChartDataset(mGraphData), getDemoRenderer(), null);
+		startActivity(intent);
 	}
 
 	private double getDataValue(SystemData data, String field) {
@@ -334,11 +377,11 @@ public class AFServerDetail extends AFDetailActivity {
 	protected void setupGraphOptions() {
 		mGraphOptions.add(this.CPU_DISPALY_NAME);
 		mGraphOptions.add(this.MEMORY_DISPLAY_NAME);
+		mGraphOptions.add(this.DISK_PERCENT_DISPLAY_NAME);
+		mGraphOptions.add(this.PAGE_FAULT_DISPLAY_NAME);
 		mGraphOptions.add(this.PROCESS_DISPLAY_NAME);
 		mGraphOptions.add(this.THREAD_DISPLAY_NAME);
-		mGraphOptions.add(this.PAGE_FAULT_DISPLAY_NAME);
-		mGraphOptions.add(this.DISK_PERCENT_DISPLAY_NAME);
-
+		
 		mGraphResource.add(true);
 		mGraphResource.add(false);
 		mGraphResource.add(false);
@@ -364,13 +407,24 @@ public class AFServerDetail extends AFDetailActivity {
 		builder = new AlertDialog.Builder(this);
 		builder.setView(createCPUListDialog());
 
-		builder.setMessage("CPU for all cores").setCancelable(false)
+		builder.setCancelable(false)
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						dismissDialog(CPU_DIALOG);
+						removeDialog(CPU_DIALOG);
 					}
 				});
+		if (MainHelper.isScreenVertical(this, WINDOW_SERVICE)) {
+			builder.setMessage("CPU usages");
+		}
 		alertDialog = builder.create();
+		alertDialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface arg0) {
+				// TODO Auto-generated method stub
+				currentDialogId = -1;
+			}
+		});
 		return alertDialog;
 	}
 
@@ -421,13 +475,24 @@ public class AFServerDetail extends AFDetailActivity {
 		builder = new AlertDialog.Builder(this);
 		builder.setView(createDiskListDialog());
 
-		builder.setMessage("Disk usages").setCancelable(false)
+		builder.setCancelable(false)
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						dismissDialog(DISK_DIALOG);
+						removeDialog(DISK_DIALOG);
 					}
 				});
+		if (MainHelper.isScreenVertical(this, WINDOW_SERVICE)) {
+			builder.setMessage("Disk usage");
+		}
 		alertDialog = builder.create();
+		alertDialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface arg0) {
+				// TODO Auto-generated method stub
+				currentDialogId = -1;
+			}
+		});
 		return alertDialog;
 	}
 
@@ -442,15 +507,27 @@ public class AFServerDetail extends AFDetailActivity {
 		AlertDialog alertDialog;
 
 		builder = new AlertDialog.Builder(this);
-		builder.setView(createDiskBusyListDialog());
+		builder.setView(createDiskBusyListDialog());	
 
-		builder.setMessage("Disk busy").setCancelable(false).setPositiveButton(
+		builder.setCancelable(false).setPositiveButton(
 				"OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						dismissDialog(DISK_BUSY_DIALOG);
+						removeDialog(DISK_BUSY_DIALOG);
 					}
 				});
+		if (MainHelper.isScreenVertical(this, WINDOW_SERVICE)) {
+			builder.setMessage("Disk busy");
+		}
+		
 		alertDialog = builder.create();
+		alertDialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface arg0) {
+				// TODO Auto-generated method stub
+				currentDialogId = -1;
+			}
+		});
 		return alertDialog;
 	}
 
@@ -504,7 +581,8 @@ public class AFServerDetail extends AFDetailActivity {
 		ScrollView container = new ScrollView(this);
 		container.setVerticalScrollBarEnabled(true);
 		container.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-				180));
+				this.dialogMaxInnerSpace));
+		
 		return container;
 	}
 

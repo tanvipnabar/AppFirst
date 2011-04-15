@@ -252,10 +252,14 @@ public class Helper {
 	public static String formatByteValue(long value) {
 		String valueString = String.format("%d", value);
 		String units = "B";
-		if (valueString.length() > 8) {
+		if (valueString.length() > 9) {
+			valueString = String.format("%d", value / 1000000000);
+			units = "GB";
+		}
+		else if (valueString.length() > 6) {
 			valueString = String.format("%d", value / 1000000);
 			units = "MB";
-		} else if (valueString.length() > 5) {
+		} else if (valueString.length() > 3) {
 			valueString = String.format("%d", value / 1000);
 			units = "KB";
 		}
@@ -393,7 +397,7 @@ public class Helper {
 				.getString(R.string.frontend_address), context
 				.getString(R.string.api_alerts));
 		if (id > 0) {
-			ret = String.format("%s/%d", ret, id); 
+			ret = String.format("%s%d/", ret, id); 
 		}
 		return ret;
 	}
@@ -425,10 +429,4 @@ public class Helper {
 	public static Boolean checkStatus(HttpResponse response) {
 		return response.getStatusLine().toString().equals(HTTP_OK);
 	}
-	
-	
-	
-	
-	
-
 }

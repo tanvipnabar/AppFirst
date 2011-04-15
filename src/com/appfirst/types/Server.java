@@ -71,9 +71,9 @@ public class Server extends BaseObject {
 			ArrayList<NameValuePair> diskValues = new ArrayList<NameValuePair>();
 			for (int i = 0; i < disks.names().length(); i++) {
 				String name = disks.names().getString(i);
-				String value = String.format("%d", disks.getInt(name));
+				String value = String.format("%d", disks.getLong(name));
 				diskValues.add(new BasicNameValuePair(name, value));
-				totalDisk += disks.getInt(name);
+				totalDisk += disks.getLong(name);
 			}
 			setCapacity_disks(diskValues);
 		} catch (JSONException e) {
@@ -165,13 +165,13 @@ public class Server extends BaseObject {
 	private int capacity_cpu_num;
 	private int capacity_cpu_freq;
 	private List<NameValuePair> capacity_disks;
-	private int totalDisk;
+	private Long totalDisk = 0L;
 
-	public int getTotalDisk() {
+	public Long getTotalDisk() {
 		return totalDisk;
 	}
 
-	public void setTotalDisk(int totalDisk) {
+	public void setTotalDisk(Long totalDisk) {
 		this.totalDisk = totalDisk;
 	}
 }

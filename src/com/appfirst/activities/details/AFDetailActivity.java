@@ -19,38 +19,41 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer;
+import org.achartengine.renderer.XYMultipleSeriesRenderer.Orientation;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SubMenu;
+import android.view.Display;
+import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
-import org.achartengine.renderer.XYMultipleSeriesRenderer.Orientation;
-
-import com.appfirst.datatypes.BaseResourceData;
-import com.appfirst.datatypes.DetailData;
-import com.appfirst.datatypes.SystemData;
-import com.appfirst.views.Helper;
-
 import android.widget.ScrollView;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+
+import com.appfirst.datatypes.BaseResourceData;
+import com.appfirst.datatypes.PolledDataData;
+import com.appfirst.datatypes.ProcessData;
+import com.appfirst.datatypes.SystemData;
+import com.appfirst.monitoring.MainHelper;
+import com.appfirst.views.Helper;
 
 /**
  * Detail view for display all the aspects for Server, Application, Poll data,
@@ -139,6 +142,9 @@ public abstract class AFDetailActivity extends Activity {
 	public final String AVG_RESPONSE_DISPLAY_NAME = "AVG response time (us)";
 	public final String REGISTRY_DISPLAY_NAME = "Registry accessed";
 
+	protected int currentDialogId = -1;
+	protected int dialogMaxInnerSpace = 180;
+
 	/**
 	 * Default constuctor.
 	 */
@@ -152,6 +158,7 @@ public abstract class AFDetailActivity extends Activity {
 		case PROGRESS_DIALOG:
 			progressDialog.setProgress(0);
 		}
+		currentDialogId = id;
 	}
 
 	protected void setTextView(Activity context, int id, String content) {
@@ -355,6 +362,37 @@ public abstract class AFDetailActivity extends Activity {
 		return progressDialog;
 	}
 
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		
+		if (currentDialogId == DISK_DIALOG
+				|| currentDialogId == DISK_BUSY_DIALOG
+				|| currentDialogId == CPU_DIALOG) {
+			int backupId = currentDialogId;
+			removeDialog(currentDialogId);
+			setDialogMaxInnerSpace();
+			showDialog(backupId);
+		} else {
+			setDialogMaxInnerSpace();
+		}
+		
+		
+	}
+
+	/**
+	 * 
+	 */
+	protected void setDialogMaxInnerSpace() {
+		/* First, get the Display from the WindowManager */
+		Display display = ((WindowManager) getSystemService(WINDOW_SERVICE))
+				.getDefaultDisplay();
+
+		/* Now we can retrieve all display-related infos */
+		int height = display.getHeight();
+		dialogMaxInnerSpace = height / 3;
+	}
+
 	/**
 	 * Create the alert box of choosing graph resource options. The inner view
 	 * is from the function createGraphOptionDialog.
@@ -368,12 +406,11 @@ public abstract class AFDetailActivity extends Activity {
 		builder = new AlertDialog.Builder(this);
 		builder.setView(createGraphOptionDialog());
 
-		builder.setMessage("Choose resources").setCancelable(false)
+		builder.setCancelable(false)
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						dismissDialog(OPTION_DIALOG);
-						showDialog(PROGRESS_DIALOG);
-						new GraphUpdater().execute();
+						removeDialog(OPTION_DIALOG);
+						displayGraphData();
 					}
 				}).setNegativeButton("Cancel",
 						new DialogInterface.OnClickListener() {
@@ -381,6 +418,10 @@ public abstract class AFDetailActivity extends Activity {
 								dialog.cancel();
 							}
 						});
+		
+		if (MainHelper.isScreenVertical(this, WINDOW_SERVICE)) {
+			builder.setMessage("Choose resources");
+		}
 
 		alertDialog = builder.create();
 		return alertDialog;
@@ -414,6 +455,8 @@ public abstract class AFDetailActivity extends Activity {
 		default:
 			break;
 		}
+
+		currentDialogId = id;
 
 		return dialog;
 	}
@@ -468,6 +511,7 @@ public abstract class AFDetailActivity extends Activity {
 		for (int cnt = 0; cnt < mGraphOptions.size(); cnt++) {
 			if (mGraphResource.get(cnt)) {
 				XYSeriesRenderer r = new XYSeriesRenderer();
+				r.setLineWidth(Helper.convertDpToPx(3, this));
 				r.setColor(mGraphColors[cnt % mGraphColors.length]);
 				renderer.addSeriesRenderer(r);
 			}
@@ -478,4 +522,37 @@ public abstract class AFDetailActivity extends Activity {
 		renderer.setZoomEnabled(false, false);
 		return renderer;
 	}
+
+	/**
+	 * 
+	 */
+	protected void displayGraphData() {
+		// TODO Auto-generated method stub
+
+	}
+
+	protected void resetGraphResources(int index) {
+		for (int cnt = 0; cnt < mGraphResource.size(); cnt++) {
+			if (index == cnt) {
+				mGraphResource.set(cnt, true);
+			} else {
+				mGraphResource.set(cnt, false);
+			}
+		}
+	}
+
+	protected void setRowLongClickEvent(int id, final int index) {
+		TableRow tableRow = (TableRow) findViewById(id);
+		tableRow.setLongClickable(true);
+		tableRow.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				resetGraphResources(index);
+				displayGraphData();
+				//return false;
+			}
+		});
+	}
+	
+	
 }

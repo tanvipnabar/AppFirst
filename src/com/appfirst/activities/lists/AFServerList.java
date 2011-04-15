@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.appfirst.activities.details.AFServerDetail;
 import com.appfirst.activities.lists.AFListActivity.ResourceLoader;
+import com.appfirst.communication.Helper;
 import com.appfirst.monitoring.MainApplication;
 import com.appfirst.monitoring.R;
 import com.appfirst.types.Server;
@@ -48,7 +49,7 @@ public class AFServerList extends AFListActivity {
 		setObjectClass(Server.class);
 		setCurrentView();
 		showDialog(PROGRESS_DIALOG);
-		mListView.setBackgroundResource(R.drawable.list_view_background);
+		mTitle.setText("Servers: ");
 
 		// Create an array of Strings, that will be put to our ListActivity
 		if (MainApplication.getServers() == null) {
@@ -69,11 +70,12 @@ public class AFServerList extends AFListActivity {
 		if (items == null) { // nothing is returned
 			return;
 		}
-		String sortName = "running";
+		mSortName = "running";
 		if (sortField != null) {
-			sortName = sortField.getName();
+			mSortName = sortField.getName();
 		}
-		DynamicComparator.sort(MainApplication.getServers(), sortName, true);
+		mSortText.setText(getSortAndFilter());
+		DynamicComparator.sort(MainApplication.getServers(), mSortName, true);
 		for (int i = 0; i < items.size(); i++) {
 			Server item = items.get(i);
 			String hostname = item.getHostname();
@@ -84,7 +86,11 @@ public class AFServerList extends AFListActivity {
 			} else {
 				names.add(String.format("%s (stopped)", item.getHostname()));
 			}
-			details.add("");
+
+			details.add(String.format("%s cores at %s MHZ, %s Memory, %s Disk", item
+					.getCapacity_cpu_num(), item.getCapacity_cpu_freq(), Helper
+					.formatByteValue(item.getCapacity_mem()), Helper.formatByteValue(
+							item.getTotalDisk() * 1000000)));
 
 			if (item.getOs().toString().startsWith("Windows")) {
 				images.add(R.drawable.ic_icon_windows);

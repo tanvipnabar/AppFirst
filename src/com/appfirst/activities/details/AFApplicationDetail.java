@@ -41,6 +41,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Contains all the activities of Application instance.
@@ -57,7 +58,7 @@ public class AFApplicationDetail extends AFDetailActivity {
 	private Button mDetailButton;
 	private Button mGraphButton;
 	private List<ProcessData> mGraphData;
-	private TextView mShowProcesses;
+	private Button mShowProcesses;
 	private Boolean bRefreshGraph = false;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,24 @@ public class AFApplicationDetail extends AFDetailActivity {
 
 		return dialog;
 	}
+	
+	private void setLongClickEvent() {
+		setRowLongClickEvent(R.id.applicationCpuValueRow, 0);
+		setRowLongClickEvent(R.id.applicationMemoryValueRow, 1);
+		setRowLongClickEvent(R.id.applicationPFValueRow, 2);
+		setRowLongClickEvent(R.id.applicationTNRow, 3);
+		setRowLongClickEvent(R.id.applicationSNRow, 4);
+		setRowLongClickEvent(R.id.applicationSRRow, 5);
+		setRowLongClickEvent(R.id.applicationSWRow, 6);
+		setRowLongClickEvent(R.id.applicationFNRow, 7);
+		setRowLongClickEvent(R.id.applicationFRRow, 8);
+		setRowLongClickEvent(R.id.applicationFWRow, 9);
+		setRowLongClickEvent(R.id.applicationRNRow, 10);
+		setRowLongClickEvent(R.id.applicationTLRow, 11);
+		setRowLongClickEvent(R.id.applicationCLRow, 12);
+		setRowLongClickEvent(R.id.applicationARTRow, 13);
+		setRowLongClickEvent(R.id.applicationResNRow, 14);
+	}
 
 	/**
 	 * @see com.appfirst.activities.details.AFDetailActivity#updateViewWithSelected(int)
@@ -108,6 +127,7 @@ public class AFApplicationDetail extends AFDetailActivity {
 				selected);
 		application_id = application.getId();
 		setTextView(this, R.id.applicationName, application.getName());
+		setLongClickEvent();
 	}
 
 	/**
@@ -123,13 +143,14 @@ public class AFApplicationDetail extends AFDetailActivity {
 		});
 		setupGraphOptions();
 	}
-	
+
 	private void setupShowProcesses() {
-		mShowProcesses = (TextView) findViewById(R.id.applicationShowProcesses);
+		mShowProcesses = (Button) findViewById(R.id.applicationShowProcesses);
 		mShowProcesses.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(AFApplicationDetail.this, AFProcessList.class);
+				Intent intent = new Intent(AFApplicationDetail.this,
+						AFProcessList.class);
 				startActivity(intent);
 			}
 		});
@@ -223,6 +244,10 @@ public class AFApplicationDetail extends AFDetailActivity {
 			setTextView(this, R.id.applicationResourceUsageLabel, String
 					.format("Resource usage at %s:", Helper.formatLongTime(data
 							.getTime() * 1000)));
+			
+			
+			
+			
 		} else {
 			setTextView(this, R.id.applicationResourceUsageLabel, String
 					.format("Resource usage %s:", "(Update failed)"));
@@ -236,26 +261,12 @@ public class AFApplicationDetail extends AFDetailActivity {
 	 */
 	@Override
 	protected void setProcessList() {
-//		List<String> names = new ArrayList<String>();
-//		List<String> details = new ArrayList<String>();
-//		List<Integer> ids = new ArrayList<Integer>();
 		if (processes == null) {
 			return;
 		}
-//		DynamicComparator.sort(processes, "name", true);
-//		for (int cnt = 0; cnt < processes.size(); cnt++) {
-//			com.appfirst.types.Process process = processes.get(cnt);
-//			names.add(String.format("%s (pid:%d)", process.getName(), process
-//					.getPid()));
-//			details.add(process.getArgs());
-//			ids.add(process.getId());
-//		}
-//		ListView lv = (ListView) findViewById(R.id.applicationProcessList);
-//		lv.setAdapter(new DoubleLineLayoutArrayAdapter(this, names, details,
-//				ids, AFProcessDetail.class));
 		mShowProcesses.setVisibility(View.VISIBLE);
-		setTextView(this, R.id.applicationProcessListLabel, String.format(
-				"Intercepted processes: %d", processes.size()));
+		mShowProcesses.setText(String.format("Intercepted processes: %d",
+				processes.size()));
 		MainApplication.setProcesses(processes);
 	}
 
@@ -292,16 +303,7 @@ public class AFApplicationDetail extends AFDetailActivity {
 
 	@Override
 	protected void setGraphData() {
-		if (mGraphButton.getVisibility() != View.GONE) {
-			dismissDialog(PROGRESS_DIALOG);
-			Intent intent = ChartFactory.getTimeChartIntent(this,
-					getChartDataset(mGraphData), getDemoRenderer(), null);
-			startActivity(intent);
-		} else {
-			if (mGraphData != null) {
-				mGraphButton.setVisibility(View.VISIBLE);
-			}
-		}
+		mGraphButton.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -310,9 +312,7 @@ public class AFApplicationDetail extends AFDetailActivity {
 				getString(R.string.frontend_address),
 				getString(R.string.api_applications), application_id);
 		if (mGraphData == null || bRefreshGraph) {
-			mGraphData = MainApplication.client.getProcessData(url, 30);
-		} else {
-			setGraphData();
+			mGraphData = MainApplication.client.getProcessData(url, 60);
 		}
 	}
 
@@ -388,20 +388,21 @@ public class AFApplicationDetail extends AFDetailActivity {
 	protected void setupGraphOptions() {
 		mGraphOptions.add(this.CPU_DISPALY_NAME);
 		mGraphOptions.add(this.MEMORY_DISPLAY_NAME);
-		mGraphOptions.add(this.THREAD_DISPLAY_NAME);
 		mGraphOptions.add(this.PAGE_FAULT_DISPLAY_NAME);
-		mGraphOptions.add(this.RESPONSE_NUM_DISPLAY_NAME);
-		mGraphOptions.add(this.AVG_RESPONSE_DISPLAY_NAME);
-		mGraphOptions.add(this.INCIDENTS_DISPLAY_NAME);
-		mGraphOptions.add(this.CRITICAL_INCIDENTS_DISPLAY_NAME);
-		mGraphOptions.add(this.FILE_NUM_DISPLAY_NAME);
-		mGraphOptions.add(this.FILE_READ_DISPLAY_NAME);
-		mGraphOptions.add(this.FILE_WRITE_DISPLAY_NAME);
+		mGraphOptions.add(this.THREAD_DISPLAY_NAME);
 		mGraphOptions.add(this.SOCKET_NUM_DISPLAY_NAME);
 		mGraphOptions.add(this.SOCKET_READ_DISPLAY_NAME);
 		mGraphOptions.add(this.SOCKET_WRITE_DISPLAY_NAME);
+		mGraphOptions.add(this.FILE_NUM_DISPLAY_NAME);
+		mGraphOptions.add(this.FILE_READ_DISPLAY_NAME);
+		mGraphOptions.add(this.FILE_WRITE_DISPLAY_NAME);
 		mGraphOptions.add(this.REGISTRY_DISPLAY_NAME);
-
+		mGraphOptions.add(this.INCIDENTS_DISPLAY_NAME);
+		mGraphOptions.add(this.CRITICAL_INCIDENTS_DISPLAY_NAME);
+		mGraphOptions.add(this.AVG_RESPONSE_DISPLAY_NAME);
+		mGraphOptions.add(this.RESPONSE_NUM_DISPLAY_NAME);
+		
+		
 		mGraphResource.add(true);
 		mGraphResource.add(false);
 		mGraphResource.add(false);
@@ -422,5 +423,16 @@ public class AFApplicationDetail extends AFDetailActivity {
 	@Override
 	public List<String> getGraphOptions() {
 		return mGraphOptions;
+	}
+
+	@Override
+	protected void displayGraphData() {
+		if (mGraphData == null) {
+			Toast.makeText(this, "Please wait data to be loaded", 200).show();
+			return;
+		}
+		Intent intent = ChartFactory.getTimeChartIntent(this,
+				getChartDataset(mGraphData), getDemoRenderer(), null);
+		startActivity(intent);
 	}
 }

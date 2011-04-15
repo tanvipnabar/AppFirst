@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, LoginScreen!</string>
-    <string name="app_name">AppFirst Monitoring</string>
+    <string name="app_name">AppFirst</string>
     <string name="frontend_address">"https://173.192.88.66"</string>
 <!--    <string name="frontend_address">"https://192.168.1.102"</string>-->
     <string name="api_login">/api/iphone/login/</string>

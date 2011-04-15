@@ -67,13 +67,16 @@ public abstract class AFListActivity extends ListActivity {
 
 	static final int PROGRESS_DIALOG = 0;
 
-	protected TextView mTextView;
+	protected TextView mTitle;
+	protected TextView mSortText;
+	protected String mSortName;
 	protected ListView mListView;
 	protected String filterString = "";
 	
 	protected void setCurrentView() {
 		setContentView(R.layout.searchable_list);
-		mTextView = (TextView) findViewById(R.id.searchable_textview);
+		mTitle = (TextView) findViewById(R.id.searchable_title);
+		mSortText = (TextView) findViewById(R.id.searchable_sort);
 		mListView = (ListView) findViewById(android.R.id.list);
 		handleIntent(getIntent());
 	}
@@ -87,10 +90,18 @@ public abstract class AFListActivity extends ListActivity {
 	protected void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
-			mTextView.setText(String.format("Filtered by word: '%s'", query));
 			filterString = query;
 			displayList();
 		}
+	}
+	
+	protected String getSortAndFilter() {
+		String sortPart = String.format("sorted by %s",  mSortName);
+		String ret = sortPart;
+		if (filterString != "") {
+			ret += String.format(", filtered by %s", filterString);
+		}
+		return ret;
 	}
 
 	@Override
@@ -143,8 +154,10 @@ public abstract class AFListActivity extends ListActivity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if (sortField != null)
+			if (sortField != null) {
+				
 				sortListItems();
+			}
 		}
 
 		return super.onOptionsItemSelected(item);

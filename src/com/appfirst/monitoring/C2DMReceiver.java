@@ -75,17 +75,18 @@ public class C2DMReceiver extends BroadcastReceiver {
 	 *            the content of the notification
 	 */
 	private void addNotification(Context context2, String message) {
-		int icon = android.R.drawable.btn_minus;
 		long when = System.currentTimeMillis();
 		String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager mNotificationManager = (NotificationManager) context2
 				.getSystemService(ns);
 
-		Notification notification = new Notification(icon, message, when);
+		Notification notification = new Notification(
+				R.drawable.ic_launcher_appfirst_flat, message, when);
 		CharSequence contentTitle = context2
 				.getString(R.string.notification_title);
 		CharSequence contentText = message;
-		Intent notificationIntent = new Intent(context2, LoginScreen.class);
+		Intent notificationIntent = new Intent(context2,
+				AFAlertHistoryList.class);
 		// redirect to alert history directly
 		notificationIntent.putExtra(context2.getString(R.string.redirect_key),
 				AFAlertHistoryList.class.getName().toString());

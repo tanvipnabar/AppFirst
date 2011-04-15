@@ -46,7 +46,9 @@ public class AFAlertList extends AFListActivity {
 		super.onCreate(icicle);
 		setObjectClass(Alert.class);
 		setCurrentView();
+		mTitle.setText("Alerts: ");
 		showDialog(PROGRESS_DIALOG);
+		
 		// Create an array of Strings, that will be put to our ListActivity
 		if (MainApplication.getAlerts() == null) {
 			new ResourceLoader().execute();
@@ -54,15 +56,25 @@ public class AFAlertList extends AFListActivity {
 			displayList();
 		}
 	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (MainApplication.getAlerts() == null) {
+			return;
+		}
+		showDialog(PROGRESS_DIALOG);
+		displayList();
+	}
 
 	@Override
 	public void displayList() {
 		dismissDialog(PROGRESS_DIALOG);
-		String sortName = "name";
+		mSortName = "name";
 		if (sortField != null) {
-			sortName = sortField.getName();
+			mSortName = sortField.getName();
 		}
-		DynamicComparator.sort(MainApplication.getAlerts(), sortName, true);
+		mSortText.setText(getSortAndFilter());
+		DynamicComparator.sort(MainApplication.getAlerts(), mSortName, true);
 		List<String> names = new ArrayList<String>();
 		List<String> details = new ArrayList<String>();
 		List<Integer> ids = new ArrayList<Integer>();

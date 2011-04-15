@@ -2,16 +2,30 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-    <TextView
-            android:id="@+id/searchable_textview"
+    <LinearLayout  android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    <TextView android:id="@+id/searchable_title"
             android:textColor="?android:textColorPrimary"
-            android:textSize="17dp"
+            android:textSize="15sp"
             android:text=""
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:textStyle="bold"
+            android:layout_marginRight="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+    </TextView>
+    <TextView android:id="@+id/searchable_sort"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="15sp"
+            android:text=""
+            android:textStyle="italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+    </TextView>
+    </LinearLayout>
     <ListView
             android:id="@+android:id/list"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1" 
+            />
 </LinearLayout>

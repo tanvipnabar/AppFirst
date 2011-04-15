@@ -48,6 +48,7 @@ public class AFPolledDataList extends AFListActivity {
 		setObjectClass(PolledDataObject.class);
 		// Create an array of Strings, that will be put to our ListActivity
 		setCurrentView();
+		mTitle.setText("Polled datas: ");
 		showDialog(PROGRESS_DIALOG);
 		if (MainApplication.getPolledDatas() == null) {
 			new ResourceLoader().execute();
@@ -59,11 +60,12 @@ public class AFPolledDataList extends AFListActivity {
 	@Override
 	public void displayList() {
 		dismissDialog(PROGRESS_DIALOG);
-		String sortName = "name";
+		mSortName = "name";
 		if (sortField != null) {
-			sortName = sortField.getName();
+			mSortName = sortField.getName();
 		}
-		DynamicComparator.sort(MainApplication.getPolledDatas(), sortName, true);
+		mSortText.setText(getSortAndFilter());
+		DynamicComparator.sort(MainApplication.getPolledDatas(), mSortName, true);
 		List<String> names = new ArrayList<String>();
 		List<String> serverNames = new ArrayList<String>();
 		List<Integer> ids = new ArrayList<Integer>();

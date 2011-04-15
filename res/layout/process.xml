@@ -1,185 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:stretchColumns="1" android:layout_marginLeft="2dp"
-	android:layout_marginRight="2dp">
-	<TextView android:text="name" android:id="@+id/processName" android:textStyle="bold"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-	<TextView android:text="server" android:visibility="gone"
-		android:id="@+id/processServerName" android:layout_width="wrap_content"
-		android:layout_height="wrap_content"></TextView>
-	<TableRow>
-		<TextView android:text="Start: " android:layout_width="wrap_content"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<TableLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:stretchColumns="1"
+		android:layout_marginLeft="2dp" android:layout_marginRight="2dp">
+		<TextView android:text="name" android:id="@+id/processName"
+			android:textStyle="bold" android:layout_width="wrap_content"
 			android:layout_height="wrap_content"></TextView>
-		<TextView android:text="@+id/TextView01" android:gravity="right"
-			android:id="@+id/processStart" android:layout_width="wrap_content"
+		<TextView android:text="server" android:visibility="gone"
+			android:id="@+id/processServerName" android:layout_width="wrap_content"
 			android:layout_height="wrap_content"></TextView>
-	</TableRow>
-	<TableRow android:id="@+id/processEndRow">
-		<TextView android:text="End: " android:layout_width="wrap_content"
-			android:layout_height="wrap_content"></TextView>
-		<TextView android:text="@+id/TextView01" android:gravity="right"
-			android:id="@+id/processEnd" android:layout_width="wrap_content"
-			android:layout_height="wrap_content"></TextView>
-	</TableRow>
+		<TableRow>
+			<TextView android:text="Start: " android:layout_width="wrap_content"
+				android:layout_height="wrap_content"></TextView>
+			<TextView android:text="@+id/TextView01" android:gravity="right"
+				android:id="@+id/processStart" android:layout_width="wrap_content"
+				android:layout_height="wrap_content"></TextView>
+		</TableRow>
+		<TableRow android:id="@+id/processEndRow">
+			<TextView android:text="End: " android:layout_width="wrap_content"
+				android:layout_height="wrap_content"></TextView>
+			<TextView android:text="@+id/TextView01" android:gravity="right"
+				android:id="@+id/processEnd" android:layout_width="wrap_content"
+				android:layout_height="wrap_content"></TextView>
+		</TableRow>
 
-	<TextView android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:text="Resource usage: (updating...)"
-		android:id="@+id/processResourceUsageLabel" android:gravity="left"></TextView>
-	<ScrollView android:layout_height="200dp" android:id="@+id/ScrollView01"
-		android:layout_width="fill_parent">
+		<TextView android:text="args" android:id="@+id/processArgs"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 
-		<TableLayout android:stretchColumns="1" android:id="@+id/LinearLayout01"
-			android:layout_width="fill_parent" android:layout_height="wrap_content">
-			<TableRow android:id="@+id/TableRow01" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="CPU"
-					android:id="@+id/TextView01" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processCpuValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow02" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="Memory"
-					android:id="@+id/TextView02" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processMemoryValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow03" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="Page Fault"
-					android:id="@+id/TextView03" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processPageFaultValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow04" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="Threads alive"
-					android:id="@+id/TextView04" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processThreadNumValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow05" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="Network connections"
-					android:id="@+id/TextView05" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processSocketNumValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow06" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="Inbound network traffic"
-					android:id="@+id/TextView06" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processSocketReadValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow07" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="Outbound network traffic"
-					android:id="@+id/TextView07" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processSocketWriteValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow08" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="File accessed"
-					android:id="@+id/TextView08" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processFileNumValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow09" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="File read"
-					android:id="@+id/TextView09" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processFileReadValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow10" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="File write"
-					android:id="@+id/TextView10" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processFileWriteValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow11" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="Registry key accessed"
-					android:id="@+id/TextView11" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processRegistryNumValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow12" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="Incidents reports"
-					android:id="@+id/TextView12" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processTotalLogValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow13" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="Critical incidents reports"
-					android:id="@+id/TextView13" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processCriticalLogValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow14" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="Average response time"
-					android:id="@+id/TextView14" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processAvgResponseTimeValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
-			<TableRow android:id="@+id/TableRow15" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView android:layout_width="wrap_content" android:text="Response number"
-					android:id="@+id/TextView15" android:layout_marginLeft="5dp"
-					android:layout_height="wrap_content"></TextView>
-				<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
-					android:text="" android:id="@+id/processResponseNumValue"
-					android:gravity="right" android:layout_height="wrap_content"></TextView>
-			</TableRow>
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="Resource usage: (updating...)"
+			android:id="@+id/processResourceUsageLabel" android:gravity="left"></TextView>
+		<ScrollView android:layout_height="wrap_content"
+			android:id="@+id/ScrollView01" android:layout_width="fill_parent">
 
-		</TableLayout>
-	</ScrollView>
-	<Button android:layout_height="35dp" android:layout_width="wrap_content"
-		android:textSize="12dp" android:text="Minute detail"
-		android:visibility="gone" android:id="@+id/processMoreDetail"
-		android:gravity="center" />
-	<Button android:layout_height="35dp" android:layout_width="wrap_content"
-		android:textSize="12dp" android:text="Show historical data"
-		android:visibility="gone" android:id="@+id/processShowGraph"
-		android:gravity="center" />
-	<ScrollView android:layout_height="fill_parent"
-        android:layout_width="fill_parent" android:minHeight="35dp">
-        <TextView android:text="args" android:id="@+id/processArgs"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-    </ScrollView>
-</TableLayout>
+			<TableLayout android:stretchColumns="1" android:id="@+id/LinearLayout01"
+				android:layout_width="fill_parent" android:layout_height="wrap_content">
+				<TableRow android:id="@+id/processTableRow01"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="CPU" android:id="@+id/TextView01"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processCpuValue" android:gravity="right"
+						android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow02"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="Memory" android:id="@+id/TextView02"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processMemoryValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow03"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="Page Fault" android:id="@+id/TextView03"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processPageFaultValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow04"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="Threads alive" android:id="@+id/TextView04"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processThreadNumValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow05"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="Network connections" android:id="@+id/TextView05"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processSocketNumValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow06"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="Inbound network traffic" android:id="@+id/TextView06"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processSocketReadValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow07"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="Outbound network traffic" android:id="@+id/TextView07"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processSocketWriteValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow08"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="File accessed" android:id="@+id/TextView08"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processFileNumValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow09"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="File read" android:id="@+id/TextView09"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processFileReadValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow10"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="File write" android:id="@+id/TextView10"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processFileWriteValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow11"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="Registry key accessed" android:id="@+id/TextView11"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processRegistryNumValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow12"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="Incidents reports" android:id="@+id/TextView12"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processTotalLogValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow13"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="Critical incidents reports" android:id="@+id/TextView13"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processCriticalLogValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow14"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="Average response time" android:id="@+id/TextView14"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processAvgResponseTimeValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+				<TableRow android:id="@+id/processTableRow15"
+					android:background="@android:drawable/list_selector_background"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<TextView android:layout_width="wrap_content"
+						android:text="Response number" android:id="@+id/TextView15"
+						android:layout_marginLeft="5dp" android:layout_height="wrap_content"></TextView>
+					<TextView android:maxWidth="150dp" android:layout_width="wrap_content"
+						android:text="" android:id="@+id/processResponseNumValue"
+						android:gravity="right" android:layout_height="wrap_content"></TextView>
+				</TableRow>
+				<View android:layout_width="fill_parent" android:background="#333333" android:layout_height="1dp"
+        android:layout_marginTop="2dp" android:layout_marginBottom="2dp"></View>
+
+			</TableLayout>
+		</ScrollView>
+		<Button android:layout_height="35dp" android:layout_width="wrap_content"
+			android:textSize="12dp" android:text="Minute detail"
+			android:visibility="gone" android:id="@+id/processMoreDetail"
+			android:gravity="center" />
+		<Button android:layout_height="35dp" android:layout_width="wrap_content"
+			android:textSize="12dp" android:text="Show historical data"
+			android:visibility="gone" android:id="@+id/processShowGraph"
+			android:gravity="center" />
+
+
+	</TableLayout>
+</ScrollView>
