@@ -136,7 +136,18 @@ public class AFPolledDataDetail extends AFDetailActivity {
 	 */
 	@Override
 	protected void updateViewWithSelected(int selected) {
-		PolledDataObject item = MainApplication.getPolledDatas().get(selected);
+		PolledDataObject item = null;
+		try {
+			item = MainApplication.getPolledDatas().get(selected);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (item == null) {
+			toastErrorMessage();
+			finish();
+		}
+		
 		polled_data_id = item.getId();
 		setTextView(this, R.id.polledDataName, String.format("Script name: %s",
 				item.getName()));
@@ -178,7 +189,11 @@ public class AFPolledDataDetail extends AFDetailActivity {
 	protected void setGraphData() {
 		// TODO Auto-generated method stub
 		if (mButton.getVisibility() != View.GONE) {
-			dismissDialog(PROGRESS_DIALOG);
+			try {
+				dismissDialog(PROGRESS_DIALOG);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 			
 		} else {
 			mButton.setVisibility(View.VISIBLE);

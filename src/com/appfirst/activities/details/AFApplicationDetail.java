@@ -123,8 +123,18 @@ public class AFApplicationDetail extends AFDetailActivity {
 	@Override
 	protected void updateViewWithSelected(int selected) {
 		// TODO Auto-generated method stub
-		Application application = MainApplication.getApplications().get(
-				selected);
+		Application application = null;
+		try {
+			application = MainApplication.getApplications().get(
+					selected);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (application == null) {
+			toastErrorMessage();
+			finish();
+		}
 		application_id = application.getId();
 		setTextView(this, R.id.applicationName, application.getName());
 		setLongClickEvent();

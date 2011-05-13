@@ -15,9 +15,7 @@
  */
 package com.appfirst.widgets;
 
-import java.util.Date;
-
-import com.appfirst.activities.lists.AFAlertHistoryList;
+import com.appfirst.activities.lists.AFAlertList;
 import com.appfirst.activities.lists.AFServerList;
 import com.appfirst.communication.Helper;
 import com.appfirst.monitoring.LoginScreen;
@@ -32,7 +30,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
@@ -109,8 +106,8 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 	 * @param views
 	 */
 	private void setAlertViewIntent(Context context, RemoteViews views) {
-		Intent intent = new Intent(context, AFAlertHistoryList.class);
-		intent.putExtra(context.getString(R.string.redirect_key), AFAlertHistoryList.class.getName().toString());
+		Intent intent = new Intent(context, AFAlertList.class);
+		intent.putExtra(context.getString(R.string.redirect_key), AFAlertList.class.getName().toString());
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 		views.setOnClickPendingIntent(R.id.widget_alert_container, pendingIntent);
 		views.setOnClickPendingIntent(R.id.widget_alert_count, pendingIntent);
@@ -148,13 +145,15 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 	 * @param context
 	 *            the application running context.
 	 */
-	protected static void setServerCount(RemoteViews views, Context context) {
+	protected static int setServerCount(RemoteViews views, Context context) {
+		int ret = 0;
 		MainApplication.loadServerList(Helper.getServerListUrl(context));
 		if (MainApplication.getServers() != null) {
-			String serverCount = String.format("%d", MainApplication.getServers()
-					.size());
+			ret = MainApplication.getServers().size();
+			String serverCount = String.format("%d", ret);
 			views.setTextViewText(R.id.widget_server_count, serverCount);
 		}
+		return ret;
 	}
 
 	/**
@@ -165,9 +164,10 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 	 * @param context
 	 *            the application running context.
 	 */
-	protected static void setAlertCount(RemoteViews views, Context context) {
-		Long badgeNumber = MainApplication.getBadgeNumber(context);
-		views.setTextViewText(R.id.widget_alert_count, String.format("%d", badgeNumber));
+	protected static int setAlertCount(RemoteViews views, Context context) {
+		int incidents = MainApplication.getAlertIncidents(context);
+		views.setTextViewText(R.id.widget_alert_count, String.format("%d", incidents));
+		return incidents;
 	}
 
 	/**
@@ -181,7 +181,6 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 		RemoteViews views = new RemoteViews(context.getPackageName(),
 				R.layout.widget_layout);
 		views.setTextViewText(R.id.widget_text, "Updating...");
-		//views.setViewVisibility(R.id.widget_refresh_button, View.INVISIBLE);
 		manager.updateAppWidget(thisWidget, views);
 	}
 
@@ -196,6 +195,14 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 	protected static void setUpdateTime(RemoteViews views, Context context) {
 		String text = Helper.formatTime(System.currentTimeMillis());
 		views.setTextViewText(R.id.widget_text, text);
+
+	}
+	
+	protected static void setUpdateFailure(RemoteViews views, Context context) {
+		String text = "Not logged in.";
+		views.setTextViewText(R.id.widget_text, text);
+		views.setTextViewText(R.id.widget_server_count, "");
+		views.setTextViewText(R.id.widget_alert_count, "");
 
 	}
 
@@ -234,12 +241,19 @@ public class AFDefaultWidgetProvider extends AppWidgetProvider {
 					R.layout.widget_layout);
 
 			byte[] ret = MainApplication.getSavedLogin(context);
+			if (ret == null) {
+				return views;
+			}
 			Log.i(TAG, ret.toString());
 			MainApplication.client.setmAuthString(ret);
 			try {
-				setServerCount(views, context);
-				setAlertCount(views, context);
-				setUpdateTime(views, context);
+				if (!MainApplication.checkClientLogin(context)) {
+					setUpdateFailure(views, context);
+				} else {
+					setServerCount(views, context);
+					setAlertCount(views, context);
+					setUpdateTime(views, context);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

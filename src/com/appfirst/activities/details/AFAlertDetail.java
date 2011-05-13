@@ -25,6 +25,7 @@ import com.appfirst.types.Alert;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -60,7 +61,18 @@ public class AFAlertDetail extends AFDetailActivity {
 	@Override
 	protected void updateViewWithSelected(final int selected) {
 		// TODO Auto-generated method stub
-		Alert alert = MainApplication.getAlerts().get(selected);
+		Alert alert = null; 
+		try {
+			alert = MainApplication.getAlerts().get(selected);
+		} catch (Exception e) {
+			Log.e(TAG, "Something is wrong. Alert object doesn't exist anymore.");
+			e.printStackTrace();
+		}
+		if (alert == null) {
+			Toast toast = Toast.makeText(this, "Error loading data.", Toast.LENGTH_LONG);
+			toast.show();
+			finish();
+		}
 		int lastTrigger = alert.getLast_triggered();
 		String triggerString = "N/A";
 		if (lastTrigger > 0) {
@@ -71,8 +83,8 @@ public class AFAlertDetail extends AFDetailActivity {
 		setTextView(this, R.id.alertType, alert.getType());
 		setTextView(this, R.id.alertTarget, alert.getTarget());
 		setTextView(this, R.id.lastTriggered, triggerString);
-		setTextView(this, R.id.inIncident, alert.isIn_incident());
-		this.setCheckBox(this, R.id.alertActive, alert.isActive());
+		setTextView(this, R.id.inIncident, alert.getIn_incident());
+		this.setCheckBox(this, R.id.alertActive, alert.getActive());
 		mAlertId = alert.getId();
 
 		mAlertActive = (CheckBox) findViewById(R.id.alertActive);
@@ -82,7 +94,7 @@ public class AFAlertDetail extends AFDetailActivity {
 						AFAlertDetail.this, mAlertId), mAlertId, ((CheckBox) v)
 						.isChecked());
 				CharSequence message;
-				if (newAlert.isActive()) {
+				if (newAlert.getActive()) {
 					message = "Alert has been enabled";
 				} else {
 					message = "Alert has been disabled";

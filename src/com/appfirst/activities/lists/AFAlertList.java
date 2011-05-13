@@ -22,6 +22,8 @@ import com.appfirst.activities.details.AFAlertDetail;
 import com.appfirst.activities.details.AFServerDetail;
 import com.appfirst.activities.lists.AFListActivity.ResourceLoader;
 import com.appfirst.communication.Helper;
+import com.appfirst.monitoring.AFHomeScreen;
+import com.appfirst.monitoring.LoginScreen;
 import com.appfirst.monitoring.MainApplication;
 import com.appfirst.monitoring.R;
 import com.appfirst.types.Alert;
@@ -30,6 +32,7 @@ import com.appfirst.utils.DynamicComparator;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -41,21 +44,31 @@ import android.widget.TextView;
  */
 public class AFAlertList extends AFListActivity {
 
+	private static final String TAG = "AFAlertList";
+
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle icicle) {
+		if (!MainApplication.checkClientLogin(this)) {
+			finish();
+			Intent intent = new Intent(this, LoginScreen.class);
+			startActivity(intent);
+		}
 		super.onCreate(icicle);
 		setObjectClass(Alert.class);
 		setCurrentView();
 		mTitle.setText("Alerts: ");
 		showDialog(PROGRESS_DIALOG);
-		
+
 		// Create an array of Strings, that will be put to our ListActivity
-		if (MainApplication.getAlerts() == null) {
+		if (MainApplication.getAlerts() == null
+				|| MainApplication.getAlerts().size() == 0 || MainApplication.isAlertNeedRefresh()) {
 			new ResourceLoader().execute();
+			MainApplication.setAlertNeedRefresh(false);
 		} else {
 			displayList();
 		}
 	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -68,8 +81,12 @@ public class AFAlertList extends AFListActivity {
 
 	@Override
 	public void displayList() {
-		dismissDialog(PROGRESS_DIALOG);
-		mSortName = "name";
+		try {
+			dismissDialog(PROGRESS_DIALOG);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		mSortName = "in_incident";
 		if (sortField != null) {
 			mSortName = sortField.getName();
 		}
@@ -93,8 +110,8 @@ public class AFAlertList extends AFListActivity {
 					.getTarget()));
 			ids.add(alert.getId());
 			Integer resourceId = 0;
-			if (alert.isActive()) {
-				if (alert.isIn_incident()) {
+			if (alert.getActive()) {
+				if (alert.getIn_incident()) {
 					resourceId = R.drawable.ic_icon_red_status;
 				} else {
 					resourceId = R.drawable.ic_icon_green_status;
@@ -133,7 +150,7 @@ public class AFAlertList extends AFListActivity {
 	 */
 	@Override
 	public void loadResource() {
-		// TODO Auto-generated method stub
+
 		String url = String.format("%s%s",
 				getString(R.string.frontend_address),
 				getString(R.string.api_alerts));

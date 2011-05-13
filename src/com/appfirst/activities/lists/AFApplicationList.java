@@ -48,8 +48,9 @@ public class AFApplicationList extends AFListActivity {
 		setCurrentView();
 		mTitle.setText("Applications: ");
 		showDialog(PROGRESS_DIALOG);
-		if (MainApplication.getApplications() == null) {
+		if (MainApplication.getApplications() == null || MainApplication.isApplicationNeedRefresh()) {
 			new ResourceLoader().execute();
+			MainApplication.setApplicationNeedRefresh(false);
 		} else {
 			displayList();
 		}

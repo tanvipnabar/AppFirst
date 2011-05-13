@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_height="match_parent" android:layout_width="fill_parent"
-	android:layout_marginLeft="2dp" android:layout_marginRight="2dp"
-	android:stretchColumns="1">
-	<TextView android:text="" android:id="@+id/alertName"
-		android:textStyle="bold" android:layout_height="wrap_content"
-		android:layout_width="fill_parent"></TextView>
-	<TableRow>
-		<TextView android:text="Type:" android:layout_height="wrap_content"
-			android:layout_column="0">
-		</TextView>
-		<TextView android:id="@+id/alertType" android:gravity="right"
-			android:maxWidth="150dp" android:layout_height="wrap_content">
-		</TextView>
-	</TableRow>
-	<TableRow>
-		<TextView android:text="Target:" android:layout_height="wrap_content"
-			android:layout_column="0">
-		</TextView>
-		<TextView android:id="@+id/alertTarget" android:gravity="right"
-			android:maxWidth="150dp" android:layout_height="wrap_content">
-		</TextView>
-	</TableRow>
-	<TableRow>
-		<TextView android:text="Trigger" android:layout_height="wrap_content"
-			android:layout_column="0">
-		</TextView>
-		<TextView android:id="@+id/alertTrigger" android:gravity="right"
-			android:maxWidth="150dp" android:layout_height="wrap_content">
-		</TextView>
-	</TableRow>
+<TableLayout android:layout_height="match_parent" 
+android:layout_width="fill_parent" android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp" android:stretchColumns="1"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:text="" android:id="@+id/alertName"
+        android:textStyle="bold" android:layout_height="wrap_content"
+        android:layout_width="fill_parent"></TextView>
+    <TableRow>
+        <TextView android:text="Type:" android:layout_height="wrap_content"
+            android:layout_column="0">
+        </TextView>
+        <TextView android:id="@+id/alertType" android:gravity="right"
+            android:maxWidth="150dp" android:layout_height="wrap_content">
+        </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Target:" android:layout_height="wrap_content"
+            android:layout_column="0">
+        </TextView>
+        <TextView android:id="@+id/alertTarget" android:gravity="right"
+            android:maxWidth="150dp" android:layout_height="wrap_content">
+        </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Trigger" android:layout_height="wrap_content"
+            android:layout_column="0">
+        </TextView>
+        <TextView android:id="@+id/alertTrigger" android:gravity="right"
+            android:maxWidth="150dp" android:layout_height="wrap_content">
+        </TextView>
+    </TableRow>
 
-	<TableRow>
-		<TextView android:text="Last triggered:"
-			android:layout_height="wrap_content" android:layout_column="0">
-		</TextView>
-		<TextView android:id="@+id/lastTriggered" android:gravity="right"
-			android:maxWidth="150dp" android:layout_height="wrap_content">
-		</TextView>
-	</TableRow>
-	<TableRow>
-		<TextView android:text="In incident" android:layout_height="wrap_content"
-			android:layout_column="0">
-		</TextView>
-		<TextView android:id="@+id/inIncident" android:gravity="right"
-			android:maxWidth="150dp" android:layout_height="wrap_content">
-		</TextView>
-	</TableRow>
-	<TableRow>
-		<TextView android:text="Enabled:" android:layout_height="wrap_content"
-			android:layout_column="0">
-		</TextView>
-		<LinearLayout android:gravity="right">
-			<CheckBox android:text="@+id/alertActive"
-				android:layout_height="30dp" android:id="@+id/alertActive"
-				android:layout_width="35dp">
-			</CheckBox>
-		</LinearLayout>
-	</TableRow>
+    <TableRow>
+        <TextView android:text="Last triggered:"
+            android:layout_height="wrap_content" android:layout_column="0">
+        </TextView>
+        <TextView android:id="@+id/lastTriggered" android:gravity="right"
+            android:maxWidth="150dp" android:layout_height="wrap_content">
+        </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="In incident" android:layout_height="wrap_content"
+            android:layout_column="0">
+        </TextView>
+        <TextView android:id="@+id/inIncident" android:gravity="right"
+            android:maxWidth="150dp" android:layout_height="wrap_content">
+        </TextView>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Enabled:" android:layout_height="wrap_content"
+            android:layout_column="0">
+        </TextView>
+        <LinearLayout android:gravity="right">
+            <CheckBox android:text="@+id/alertActive"
+                android:layout_height="30dp" android:id="@+id/alertActive"
+                android:layout_width="35dp">
+            </CheckBox>
+        </LinearLayout>
+    </TableRow>
 </TableLayout>

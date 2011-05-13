@@ -17,6 +17,7 @@ package com.appfirst.activities.details;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.appfirst.activities.lists.AFAlertHistoryList;
 import com.appfirst.datatypes.AlertHistoryData;
@@ -92,8 +93,12 @@ public class AFAlertHistoryDetail extends AFDetailActivity {
 	 */
 	@Override
 	protected void setData() {
-		// TODO Auto-generated method stub
-		dismissDialog(PROGRESS_DIALOG);
+		try {
+			// TODO Auto-generated method stub
+			dismissDialog(PROGRESS_DIALOG);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		setTextView(this, R.id.alertHistoryMessage, mAlertMessage.getText());
 	}
 
@@ -140,7 +145,15 @@ public class AFAlertHistoryDetail extends AFDetailActivity {
 	@Override
 	protected void updateViewWithSelected(int selected) {
 		// TODO Auto-generated method stub
-		mAlertHistory = MainApplication.getAlertHistories().get(selected);
+		try {
+			mAlertHistory = MainApplication.getAlertHistories().get(selected);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (mAlertHistory == null) {
+			toastErrorMessage();
+			finish();
+		}
 	}
-
 }

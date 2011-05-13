@@ -67,7 +67,7 @@ public class Helper {
 	public static List<Server> convertServerList(JSONArray jsonArray) {
 		List<Server> serverList = new ArrayList<Server>();
 		if (jsonArray == null)
-			return null;
+			return serverList;
 		for (int i = 0; i < jsonArray.length(); i++) {
 			try {
 				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
@@ -84,6 +84,8 @@ public class Helper {
 
 	public static List<SystemData> convertServerDataList(JSONArray jsonArray) {
 		List<SystemData> serverList = new ArrayList<SystemData>();
+		if (jsonArray == null)
+			return serverList;
 		for (int i = 0; i < jsonArray.length(); i++) {
 			try {
 				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
@@ -100,6 +102,8 @@ public class Helper {
 
 	public static List<ProcessData> convertProcessDataList(JSONArray jsonArray) {
 		List<ProcessData> processDataList = new ArrayList<ProcessData>();
+		if (jsonArray == null)
+			return processDataList;
 		for (int i = 0; i < jsonArray.length(); i++) {
 			try {
 				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
@@ -116,6 +120,8 @@ public class Helper {
 
 	public static List<Process> convertProcessList(JSONArray jsonArray) {
 		List<Process> processList = new ArrayList<Process>();
+		if (jsonArray == null) 
+			return processList;
 		for (int i = 0; i < jsonArray.length(); i++) {
 			try {
 				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
@@ -132,6 +138,9 @@ public class Helper {
 
 	public static List<Alert> convertAlertList(JSONArray jsonArray) {
 		List<Alert> alertList = new ArrayList<Alert>();
+		if (jsonArray == null) {
+			return alertList;
+		}
 		for (int i = 0; i < jsonArray.length(); i++) {
 			try {
 				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
@@ -148,6 +157,9 @@ public class Helper {
 
 	public static List<AlertHistory> convertAlertHistoryList(JSONArray jsonArray) {
 		List<AlertHistory> list = new ArrayList<AlertHistory>();
+		if (jsonArray == null) {
+			return list;
+		}
 		for (int i = 0; i < jsonArray.length(); i++) {
 			try {
 				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
@@ -169,6 +181,9 @@ public class Helper {
 	public static List<PolledDataObject> convertPolledDataList(
 			JSONArray jsonArray) {
 		List<PolledDataObject> list = new ArrayList<PolledDataObject>();
+		if (jsonArray == null) {
+			return list;
+		}
 		for (int i = 0; i < jsonArray.length(); i++) {
 			try {
 				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
@@ -191,6 +206,9 @@ public class Helper {
 			JSONArray jsonArray) {
 		// TODO Auto-generated method stub
 		List<PolledDataData> list = new ArrayList<PolledDataData>();
+		if (jsonArray == null) {
+			return list;
+		}
 		for (int i = 0; i < jsonArray.length(); i++) {
 			try {
 				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
@@ -212,6 +230,9 @@ public class Helper {
 	public static List<Application> convertApplicationList(JSONArray jsonArray) {
 		// TODO Auto-generated method stub
 		List<Application> list = new ArrayList<Application>();
+		if (jsonArray == null) {
+			return list;
+		}
 		for (int i = 0; i < jsonArray.length(); i++) {
 			try {
 				JSONObject jsonObject = (JSONObject) jsonArray.get(i);

@@ -73,7 +73,7 @@ public class Alert extends BaseObject {
 		setSubscribers(BaseObject.getJSONArrayField("subscribers", jsonObject));
 	}
 
-	public Boolean isActive() {
+	public Boolean getActive() {
 		return active;
 	}
 
@@ -121,7 +121,7 @@ public class Alert extends BaseObject {
 		last_triggered = lastTriggered;
 	}
 
-	public Boolean isIn_incident() {
+	public Boolean getIn_incident() {
 		return in_incident;
 	}
 

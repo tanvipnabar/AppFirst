@@ -140,7 +140,17 @@ public class AFServerDetail extends AFDetailActivity {
 
 	@Override
 	protected void updateViewWithSelected(int selected) {
-		mServer = MainApplication.getServers().get(selected);
+		try {
+			mServer = MainApplication.getServers().get(selected);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (mServer == null) {
+			toastErrorMessage();
+			finish();
+		}
+		
 		String cpuInfo = String.format("%s cores at %s MHZ", mServer
 				.getCapacity_cpu_num(), mServer.getCapacity_cpu_freq());
 		String memInfo = Helper.formatByteValue(mServer.getCapacity_mem());
@@ -623,7 +633,13 @@ public class AFServerDetail extends AFDetailActivity {
 		List<BasicNameValuePair> items = data.getDisk_busy();
 		for (int i = 0; i < items.size(); i++) {
 			BasicNameValuePair item = items.get(i);
-			Double value = Double.parseDouble(item.getValue());
+			Double value = 0.0;
+			try {
+				value = Double.parseDouble(item.getValue());
+			} catch (Exception e) {
+				e.printStackTrace();
+				continue;
+			}
 			String name = item.getName();
 			LinearLayout row = createTableRow(LinearLayout.VERTICAL);
 			TextView text = new TextView(this);

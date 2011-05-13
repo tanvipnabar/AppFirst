@@ -61,7 +61,6 @@ public class Process extends BaseObject {
 		super(process);
 		try {
 			setResource_uri(new URI(process.getString("resource_uri")));
-			Log.v("start", String.format("%d", process.getLong("start")));
 			setStart(process.getLong("start"));
 			setPid(process.getInt("pid"));
 			setArgs(process.getString("args"));

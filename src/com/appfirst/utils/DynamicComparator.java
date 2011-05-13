@@ -38,8 +38,12 @@ public final class DynamicComparator implements Comparator, Serializable {
 	}
 
 	public static void sort(Collection collection, String field, boolean sortAsc) {
-		Collections.sort((List) collection, new DynamicComparator(collection,
-				field, sortAsc));
+		try {
+			Collections.sort((List) collection, new DynamicComparator(collection,
+					field, sortAsc));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public int compare(Object o1, Object o2) {
@@ -219,7 +223,7 @@ public final class DynamicComparator implements Comparator, Serializable {
 						retType = EQUAL;
 					if (f2 == false)
 						retType = LESS_THAN;
-					if (f1 == false)
+					else
 						retType = GREATER_THAN;
 					return retType * getSortOrder();
 				}

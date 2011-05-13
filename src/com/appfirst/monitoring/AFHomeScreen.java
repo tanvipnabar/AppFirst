@@ -86,6 +86,7 @@ public class AFHomeScreen extends Activity {
 		}
 		handleIntent(getIntent());
 	}
+	
 
 	private void initializeApplication() {
 		showDialog(PROGRESS_DIALOG);
@@ -140,14 +141,26 @@ public class AFHomeScreen extends Activity {
 	protected void loadResource() {
 		if (MainApplication.getUid() != "") {
 			JSONObject deviceObject = null;
-			if (firstLogin) {
-				deviceObject = MainApplication.client.saveDeviceInfo(Helper
-						.getDeviceUrl(this, -1), getString(R.string.brand),
-						MainApplication.getUid(), subscribeAll);
-			} else {
-				deviceObject = MainApplication.client.saveDeviceInfo(Helper
-						.getDeviceUrl(this, -1), getString(R.string.brand),
-						MainApplication.getUid());
+			try {
+				if (firstLogin) {
+					deviceObject = MainApplication.client.saveDeviceInfo(Helper
+							.getDeviceUrl(this, -1), getString(R.string.brand),
+							MainApplication.getUid(), subscribeAll);
+				} else {
+					deviceObject = MainApplication.client.saveDeviceInfo(Helper
+							.getDeviceUrl(this, -1), getString(R.string.brand),
+							MainApplication.getUid());
+				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				Toast toast = Toast
+						.makeText(
+								this,
+								"Can't save device information, check your network connection",
+								Toast.LENGTH_LONG);
+				toast.show();
+				finish();
 			}
 			if (deviceObject != null) {
 				try {
@@ -162,7 +175,11 @@ public class AFHomeScreen extends Activity {
 	}
 
 	protected void displayResult() {
-		dismissDialog(PROGRESS_DIALOG);
+		try {
+			dismissDialog(PROGRESS_DIALOG);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	protected class ResourceLoader extends AsyncTask<URL, Integer, Long> {

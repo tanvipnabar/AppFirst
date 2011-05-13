@@ -50,8 +50,9 @@ public class AFPolledDataList extends AFListActivity {
 		setCurrentView();
 		mTitle.setText("Polled datas: ");
 		showDialog(PROGRESS_DIALOG);
-		if (MainApplication.getPolledDatas() == null) {
+		if (MainApplication.getPolledDatas() == null || MainApplication.isPolledDataNeedRefresh()) {
 			new ResourceLoader().execute();
+			MainApplication.setPolledDataNeedRefresh(false);
 		} else {
 			displayList();
 		}
@@ -59,7 +60,11 @@ public class AFPolledDataList extends AFListActivity {
 
 	@Override
 	public void displayList() {
-		dismissDialog(PROGRESS_DIALOG);
+		try {
+			dismissDialog(PROGRESS_DIALOG);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		mSortName = "name";
 		if (sortField != null) {
 			mSortName = sortField.getName();

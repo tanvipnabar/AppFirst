@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.appfirst.activities.details.AFServerDetail;
 import com.appfirst.activities.lists.AFListActivity.ResourceLoader;
 import com.appfirst.communication.Helper;
+import com.appfirst.monitoring.LoginScreen;
 import com.appfirst.monitoring.MainApplication;
 import com.appfirst.monitoring.R;
 import com.appfirst.types.Server;
@@ -46,13 +47,19 @@ public class AFServerList extends AFListActivity {
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+		if (!MainApplication.checkClientLogin(this)) {
+			finish();
+			Intent intent = new Intent(this, LoginScreen.class);
+			startActivity(intent);
+		}
 		setObjectClass(Server.class);
 		setCurrentView();
 		showDialog(PROGRESS_DIALOG);
 		mTitle.setText("Servers: ");
 
 		// Create an array of Strings, that will be put to our ListActivity
-		if (MainApplication.getServers() == null) {
+		if (MainApplication.getServers() == null
+				|| MainApplication.getServers().size() == 0) {
 			new ResourceLoader().execute();
 		} else {
 			displayList();
@@ -61,7 +68,11 @@ public class AFServerList extends AFListActivity {
 
 	@Override
 	public void displayList() {
-		dismissDialog(PROGRESS_DIALOG);
+		try {
+			dismissDialog(PROGRESS_DIALOG);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		List<String> names = new ArrayList<String>();
 		List<String> details = new ArrayList<String>();
 		List<Integer> images = new ArrayList<Integer>();
@@ -87,10 +98,10 @@ public class AFServerList extends AFListActivity {
 				names.add(String.format("%s (stopped)", item.getHostname()));
 			}
 
-			details.add(String.format("%s cores at %s MHZ, %s Memory, %s Disk", item
-					.getCapacity_cpu_num(), item.getCapacity_cpu_freq(), Helper
-					.formatByteValue(item.getCapacity_mem()), Helper.formatByteValue(
-							item.getTotalDisk() * 1000000)));
+			details.add(String.format("%s cores at %s MHZ, %s Memory, %s Disk",
+					item.getCapacity_cpu_num(), item.getCapacity_cpu_freq(),
+					Helper.formatByteValue(item.getCapacity_mem()), Helper
+							.formatByteValue(item.getTotalDisk() * 1000000)));
 
 			if (item.getOs().toString().startsWith("Windows")) {
 				images.add(R.drawable.ic_icon_windows);

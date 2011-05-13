@@ -41,15 +41,15 @@ public class AFAccountManagement extends Activity {
 
 		mSignoutButton = (Button) findViewById(R.id.accountSignoutButton);
 		mReceiveNotification = (CheckBox) findViewById(R.id.accountReceiveNotification);
-
 		mReceiveNotification.setChecked(MainApplication.getReceiveNotification());
-		
 		mSignoutButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				MainApplication.deleteUserLogin(AFAccountManagement.this);
+				MainApplication.unregistrateC2DM(AFAccountManagement.this);
 				finish();
 				Intent intent = new Intent(AFAccountManagement.this, LoginScreen.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 			}
 		});

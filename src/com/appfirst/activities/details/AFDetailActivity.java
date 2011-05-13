@@ -46,6 +46,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.appfirst.datatypes.BaseResourceData;
@@ -552,6 +553,11 @@ public abstract class AFDetailActivity extends Activity {
 				//return false;
 			}
 		});
+	}
+	
+	protected void toastErrorMessage() {
+		Toast toast = Toast.makeText(this, "Error loading data", Toast.LENGTH_LONG);
+		toast.show();
 	}
 	
 	

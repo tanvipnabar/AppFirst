@@ -177,7 +177,7 @@ public abstract class AFListActivity extends ListActivity {
 			Class cls = fld.getType();
 			if (cls == Double.class || cls == String.class || cls == int.class
 					|| cls == Long.class
-					|| cls.getName() == Boolean.class.getName()) {
+					|| cls == Boolean.class) {
 				options.add(fld.getName());
 			}
 		}
