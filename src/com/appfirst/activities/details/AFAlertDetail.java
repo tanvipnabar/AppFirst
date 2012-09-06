@@ -32,7 +32,7 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 /**
- * @author Bin Liu2
+ * @author Bin Liu6
  * 
  */
 public class AFAlertDetail extends AFDetailActivity {
