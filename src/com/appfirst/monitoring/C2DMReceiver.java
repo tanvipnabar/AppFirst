@@ -21,7 +21,6 @@ package com.appfirst.monitoring;
  */
 
 import com.appfirst.activities.lists.AFAlertHistoryList;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -113,6 +112,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 			// Registration failed, should try again later.
 			Log.d(TAG, "registration failed");
 			String error = intent.getStringExtra("error");
+			System.out.println("REGERROR ----> " + error);
 			if (error == "SERVICE_NOT_AVAILABLE") {
 				Log.d(TAG, "SERVICE_NOT_AVAILABLE");
 			} else if (error == "ACCOUNT_MISSING") {
