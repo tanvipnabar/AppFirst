@@ -25,6 +25,9 @@ import com.appfirst.activities.lists.AFAlertList;
 import com.appfirst.activities.lists.AFApplicationList;
 import com.appfirst.activities.lists.AFPolledDataList;
 import com.appfirst.activities.lists.AFServerList;
+import com.appfirst.animations.ExpandAnimation;
+import com.appfirst.animations.CollapseAnimation;
+
 import com.appfirst.communication.Helper;
 import com.appfirst.types.AFDevice;
 import com.appfirst.utils.VerticalImageTextGroupAdapter;
@@ -44,6 +47,11 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.util.Log;
 import android.view.View;
+import android.util.DisplayMetrics;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
 
 /**
  * AFHomeScreen holds a {@link GridView} which displays each of AppFirst's
@@ -61,10 +69,21 @@ public class AFHomeScreen extends Activity {
 	private static final String TAG = "AFHomeScreen";
 	private static Boolean subscribeAll = false;
 	private Boolean firstLogin = false;
+	private LinearLayout MenuList;
+	private Button btnToggleMenuList;
+	private int screenWidth;
+	private boolean isExpanded;
+
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.home);
+		setContentView(R.layout.home2);
+		MenuList = (LinearLayout) findViewById(R.id.linearLayout2);
+		btnToggleMenuList = (Button) findViewById(R.id.button1);
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		screenWidth = metrics.widthPixels;
+		     
 		GridView gridview = (GridView) findViewById(R.id.homeview);
 		gridview.setAdapter(new VerticalImageTextGroupAdapter(this));
 
@@ -85,6 +104,20 @@ public class AFHomeScreen extends Activity {
 			initializeApplication();
 		}
 		handleIntent(getIntent());
+		
+		btnToggleMenuList.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (isExpanded) {
+        			isExpanded = false;
+        			MenuList.startAnimation(new CollapseAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
+        		}else {
+            		isExpanded = true;
+            		MenuList.startAnimation(new ExpandAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
+        		}
+			}
+        });
 	}
 	
 
