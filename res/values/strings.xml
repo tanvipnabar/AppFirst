@@ -23,4 +23,8 @@
     <string name="appfirst_preference_key">"AppFirst_Monitoring_5(84*76%@#^$FD"</string>
     <string name="brand">"Android"</string>
     <string name="search_hint">Search</string>
+    <string name="togglemenu">ToggleMenu</string>
+    <color name="white">#FFFFFF</color>
+    <color name="menuOuter">#4c646a</color>
+    <color name="menuDrawer">#1c2527</color>
 </resources>

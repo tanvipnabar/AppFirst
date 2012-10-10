@@ -17,7 +17,7 @@ package com.appfirst.monitoring;
 
 import java.net.URL;
 
-import org.json.JSONException;
+//import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.appfirst.activities.lists.AFAlertHistoryList;
@@ -36,13 +36,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.SearchManager;
+//import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.util.Log;
@@ -72,7 +73,7 @@ public class AFHomeScreen extends Activity {
 	private LinearLayout MenuList;
 	private Button btnToggleMenuList;
 	private int screenWidth;
-	private boolean isExpanded;
+	private boolean isExpanded = false;
 
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,10 +85,13 @@ public class AFHomeScreen extends Activity {
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		screenWidth = metrics.widthPixels;
 		     
-		GridView gridview = (GridView) findViewById(R.id.homeview);
-		gridview.setAdapter(new VerticalImageTextGroupAdapter(this));
-
-		gridview.setOnItemClickListener(new OnItemClickListener() {
+		//GridView gridview = (GridView) findViewById(R.id.homeview);
+		//gridview.setAdapter(new VerticalImageTextGroupAdapter(this));
+		ListView listView = (ListView) findViewById(R.id.homeview);
+		listView.setAdapter(new VerticalImageTextGroupAdapter(this));
+		
+		//gridview.setOnItemClickListener(new OnItemClickListener() {
+		listView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
 				navigateToView(position);
@@ -313,7 +317,7 @@ public class AFHomeScreen extends Activity {
 	private void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			// handles a search query
-			String query = intent.getStringExtra(SearchManager.QUERY);
+			//String query = intent.getStringExtra(SearchManager.QUERY);
 			// showResults(query);
 		}
 	}

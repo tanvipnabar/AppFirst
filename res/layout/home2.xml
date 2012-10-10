@@ -9,30 +9,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-
         <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.01"
             android:orientation="vertical" >
-    
-            <GridView xmlns:android="http://schemas.android.com/apk/res/android" 
-                android:id="@+id/homeview" 
-                android:layout_width="match_parent" 
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                >
-            </GridView>
+            
+            <ListView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/homeview"
+                android:layout_width="320dp"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" 
+                android:background="@color/menuDrawer" >
+
+            </ListView>
 
         </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.99"
-                android:orientation="vertical" >
+                android:orientation="vertical" 
+                android:background="@color/menuOuter" >
   <TableRow
                     android:id="@+id/tableRow1"
                     android:layout_width="fill_parent"
@@ -53,7 +54,7 @@
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ToggleMenu"
+            android:text="@string/togglemenu"
             android:layout_marginTop="2dp" />
     </LinearLayout>
 

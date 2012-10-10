@@ -87,6 +87,7 @@ public class VerticalImageTextGroupAdapter extends BaseAdapter {
 			holder = (ViewHolder) myView.getTag();
 		}
 		holder.textView.setText(mNames[position]);
+		holder.textView.setGravity(3);
 		holder.imageView.setImageResource(mThumbIds[position]);
 		return myView;
 	}
