@@ -93,7 +93,7 @@ public class AFHomeScreen extends Activity {
 		ListView listView = (ListView) findViewById(R.id.homeview);
 		ListView alertHistoryListView = (ListView) findViewById(R.id.alerthistorylistview);
 		listView.setAdapter(new VerticalImageTextGroupAdapter(this));
-		//alertHistoryListView.setAdapter(new HomePageAlertListPopulator(this));
+		alertHistoryListView.setAdapter(new HomePageAlertListPopulator(this));
 		
 		//gridview.setOnItemClickListener(new OnItemClickListener() {
 		listView.setOnItemClickListener(new OnItemClickListener() {

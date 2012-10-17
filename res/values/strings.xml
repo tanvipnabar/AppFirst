@@ -27,5 +27,7 @@
     <color name="white">#FFFFFF</color>
     <color name="menuOuter">#4c646a</color>
     <color name="menuDrawer">#1c2527</color>
+    <color name="black">#000000</color>
     <string name="mycontent">mycontent</string>
+    <string name="todo">TODO</string>
 </resources>

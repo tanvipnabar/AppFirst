@@ -11,6 +11,7 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        public static final int black=0x7f060003;
         public static final int menuDrawer=0x7f060002;
         public static final int menuOuter=0x7f060001;
         public static final int white=0x7f060000;
@@ -274,6 +275,7 @@ public final class R {
         public static final int search_hint=0x7f050015;
         public static final int sender_email=0x7f050010;
         public static final int subscribe_all_key=0x7f05000d;
+        public static final int todo=0x7f050018;
         public static final int togglemenu=0x7f050016;
         public static final int uid_key=0x7f05000e;
         public static final int username_key=0x7f05000c;

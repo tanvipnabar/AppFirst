@@ -15,6 +15,8 @@
  */
 package com.appfirst.utils;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.appfirst.monitoring.R;
@@ -26,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.content.Context;
 
 /**
  * This class provides the customized rendering of an {@link ImageView} along
@@ -38,7 +41,7 @@ import android.widget.TextView;
  */
 public class HomePageAlertListPopulator extends BaseAdapter {
 
-	private AlertHistory alertHistories[] = new AlertHistory[5];
+	private ArrayList<AlertHistory> alertHistories = new ArrayList<AlertHistory>();
 	
 	static class ViewHolder {
 		public ImageView icon;
@@ -49,7 +52,7 @@ public class HomePageAlertListPopulator extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return 5;//mThumbIds.length;
+		return alertHistories.size();//mThumbIds.length;
 	}
 
 	@Override
@@ -72,9 +75,16 @@ public class HomePageAlertListPopulator extends BaseAdapter {
 	 */
 	public HomePageAlertListPopulator(Activity activity) {
 		mContext = activity;
-		List<AlertHistory> items = MainApplication.getAlertHistories();
-		for(int i=0; i<5; i++)
-			alertHistories[i] = items.get(i);
+		List<AlertHistory> items;
+		if (MainApplication.getAlertHistories() == null || MainApplication.isAlertHistoryNeedRefresh()) {
+			String url = "https://173.192.88.66/api/v1/alert-histories/";//String.format("%s%s",getString(R.string.frontend_address),getString(R.string.api_alert_histories));
+			MainApplication.loadAlertHistory(url);
+		}
+		items = MainApplication.getAlertHistories();
+		//System.out.println("AH SIZZZEEEE *****---->  " + items.get(0).getSubject());
+		for(int i=0; i<5; i++) {
+			alertHistories.add((AlertHistory)items.get(i));
+		}
 	}
 
 	/**
@@ -96,8 +106,9 @@ public class HomePageAlertListPopulator extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) myView.getTag();
 		}
-		holder.timeLine.setText(alertHistories[position].getEnd());
-		holder.subjectLine.setText(alertHistories[position].getSubject()); //mNames[position]);
+		Date date = new Date(alertHistories.get(position).getStart());
+		holder.timeLine.setText(date.toString());
+		holder.subjectLine.setText(alertHistories.get(position).getSubject()); //mNames[position]);
 		//holder.textView.setGravity(3);
 		holder.icon.setImageResource(R.drawable.ic_icon_server);//mThumbIds[position]);
 		return myView;
