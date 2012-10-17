@@ -27,9 +27,5 @@
     <color name="white">#FFFFFF</color>
     <color name="menuOuter">#4c646a</color>
     <color name="menuDrawer">#1c2527</color>
-<<<<<<< HEAD
-    <string name="todo">TODO</string>
-=======
     <string name="mycontent">mycontent</string>
->>>>>>> c355d468d91799318a6fcb70030888520bafebd7
 </resources>
