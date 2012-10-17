@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:orientation="vertical">
+    
+    <LinearLayout
+        android:id="@+id/linearLayout0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        
+	    <TableRow
+			android:id="@+id/tableRow1"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			
+			<LinearLayout
+	   			android:id="@+id/linearLayout5"
+	   			android:layout_width="match_parent"
+	   			android:layout_height="match_parent"
+	   			android:orientation="horizontal" 
+	   			android:background="@color/menuDrawer">
+	
+	          		<Button
+		       			android:id="@+id/button1"
+		       			android:layout_width="wrap_content"
+		       			android:layout_height="wrap_content"
+		       			android:text="@string/togglemenu"
+		       			android:layout_marginTop="2dp" />
+	          	
+			</LinearLayout>
+				
+		</TableRow>
+		
+	</LinearLayout>
+
+	<FrameLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/framelayout1"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_below="@+id/linearLayout0" >
+	
+		    <LinearLayout
+		        android:id="@+id/linearLayout1"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent" 
+		        android:orientation="horizontal">
+		
+		        <LinearLayout
+		            android:id="@+id/linearLayout2"
+		            android:layout_width="0dp"
+		            android:layout_height="match_parent"
+		            android:orientation="vertical" >
+		            
+		            <ListView
+		                xmlns:android="http://schemas.android.com/apk/res/android"
+		                android:id="@+id/homeview"
+		                android:layout_width="320dp"
+		                android:layout_height="fill_parent"
+		                android:orientation="vertical" 
+		                android:background="@color/menuDrawer" >
+		
+		            </ListView>
+		
+		        </LinearLayout>
+		
+		        <LinearLayout
+		             android:id="@+id/linearLayout3"
+		             android:layout_width="0dp"
+		             android:layout_height="match_parent"
+		             android:layout_weight="0.99"
+		             android:orientation="vertical" 
+		             android:background="@color/menuOuter" >
+				</LinearLayout>
+		
+			</LinearLayout>    
+	</FrameLayout>
+</RelativeLayout>

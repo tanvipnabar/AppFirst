@@ -7,7 +7,8 @@
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent" 
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -27,39 +28,39 @@
 
         </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/linearLayout3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.99"
-                android:orientation="vertical" 
-                android:background="@color/menuOuter" >
-  <TableRow
-                    android:id="@+id/tableRow1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+        <LinearLayout
+             android:id="@+id/linearLayout3"
+             android:layout_width="0dp"
+             android:layout_height="match_parent"
+             android:layout_weight="0.99"
+             android:orientation="vertical" 
+             android:background="@color/menuOuter" >
+		
+			<TableRow
+			    android:id="@+id/tableRow1"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/menuDrawer">
 
-    <LinearLayout
-        android:id="@+id/linearLayout5"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal" >
-"
-                    
+	  			<LinearLayout
+	      			android:id="@+id/linearLayout5"
+	      			android:layout_width="match_parent"
+	      			android:layout_height="match_parent"
+	      			android:orientation="horizontal" >
+	
+	             		<Button
+	             		    android:id="@+id/button1"
+	             		    android:layout_width="wrap_content"
+	             		    android:layout_height="wrap_content"
+	             		    android:layout_marginTop="2dp"
+	             		    android:text="@string/togglemenu" />
+	             	
+	  			</LinearLayout>
+	
+			</TableRow>
 
-        
+		</LinearLayout>
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/togglemenu"
-            android:layout_marginTop="2dp" />
-    </LinearLayout>
-
-                </TableRow>
-
-</LinearLayout>
-</LinearLayout>
+	</LinearLayout>
+		
 </FrameLayout>
