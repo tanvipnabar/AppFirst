@@ -30,6 +30,7 @@ import com.appfirst.animations.CollapseAnimation;
 
 import com.appfirst.communication.Helper;
 import com.appfirst.types.AFDevice;
+import com.appfirst.utils.HomePageAlertListPopulator;
 import com.appfirst.utils.VerticalImageTextGroupAdapter;
 
 import android.app.Activity;
@@ -71,6 +72,7 @@ public class AFHomeScreen extends Activity {
 	private static Boolean subscribeAll = false;
 	private Boolean firstLogin = false;
 	private LinearLayout MenuList;
+	private LinearLayout AlertHistoryList;
 	private Button btnToggleMenuList;
 	private int screenWidth;
 	private boolean isExpanded = false;
@@ -78,8 +80,9 @@ public class AFHomeScreen extends Activity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.home2);
+		setContentView(R.layout.home3);
 		MenuList = (LinearLayout) findViewById(R.id.linearLayout2);
+		AlertHistoryList = (LinearLayout) findViewById(R.id.linearLayout3_2);
 		btnToggleMenuList = (Button) findViewById(R.id.button1);
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -88,7 +91,9 @@ public class AFHomeScreen extends Activity {
 		//GridView gridview = (GridView) findViewById(R.id.homeview);
 		//gridview.setAdapter(new VerticalImageTextGroupAdapter(this));
 		ListView listView = (ListView) findViewById(R.id.homeview);
+		ListView alertHistoryListView = (ListView) findViewById(R.id.alerthistorylistview);
 		listView.setAdapter(new VerticalImageTextGroupAdapter(this));
+		//alertHistoryListView.setAdapter(new HomePageAlertListPopulator(this));
 		
 		//gridview.setOnItemClickListener(new OnItemClickListener() {
 		listView.setOnItemClickListener(new OnItemClickListener() {
