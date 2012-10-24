@@ -77,7 +77,6 @@ public class AFHomeScreen extends Activity {
 	private int screenWidth;
 	private boolean isExpanded = false;
 
-
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home3);

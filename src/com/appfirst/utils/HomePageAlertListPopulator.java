@@ -106,12 +106,33 @@ public class HomePageAlertListPopulator extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) myView.getTag();
 		}
-		Date date = new Date(alertHistories.get(position).getStart());
+		Date date = new Date(System.currentTimeMillis() - alertHistories.get(position).getStart());
 		holder.timeLine.setText(date.toString());
 		holder.subjectLine.setText(alertHistories.get(position).getSubject()); //mNames[position]);
 		//holder.textView.setGravity(3);
-		holder.icon.setImageResource(R.drawable.ic_icon_server);//mThumbIds[position]);
+		holder.icon.setImageResource(checkIcon(alertHistories.get(position).getSubject()));//mThumbIds[position]);
 		return myView;
+	}
+	
+	public int checkIcon(String subject) {
+		subject = subject.toUpperCase();
+		if(subject.contains("POLLED DATA"))
+			return R.drawable.ic_icon_nagios;
+		if(subject.contains("PROCESSES IN APPLICATION") && subject.contains("TERMINATED"))
+			return R.drawable.ic_icon_processes_terminated;
+		if(subject.contains("NO DATA RECEIVED"))
+			return R.drawable.ic_icon_no_data;
+		if(subject.contains("ACTION REQUIRED"))
+			return R.drawable.ic_icon_alert;
+		if(subject.contains("LOG CONTENT"))
+			return R.drawable.ic_icon_log;
+		if(subject.contains("NETWORK"))
+			return R.drawable.ic_icon_network;
+		if(subject.contains("CPU ALERT"))
+			return R.drawable.ic_icon_cpu;
+		if(subject.contains("DISK"))
+			return R.drawable.ic_icon_disk;
+		return R.drawable.ic_icon_server;
 	}
 
 	// references to our images

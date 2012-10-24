@@ -67,7 +67,7 @@
 	        	    <ListView
 	        	        xmlns:android="http://schemas.android.com/apk/res/android"
 	        	        android:id="@+id/alerthistorylistview"
-	        	        android:layout_width="fill_parent"
+	        	        android:layout_width="320dp"
 	        	        android:layout_height="fill_parent"
 	        	        android:orientation="vertical" >
 	        	    </ListView>
