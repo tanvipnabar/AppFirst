@@ -52,10 +52,6 @@ public class Log extends BaseObject {
 	private String source;
 	private String type;
 
-	public Log() {
-
-	}
-
 	/**
 	 * @param jsonObject
 	 */

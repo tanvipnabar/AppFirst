@@ -14,6 +14,7 @@ import com.appfirst.types.Alert;
 import com.appfirst.types.AlertHistory;
 import com.appfirst.types.PolledDataObject;
 import com.appfirst.types.Server;
+import com.appfirst.types.Log;
 
 import android.app.Application;
 import android.app.NotificationManager;
@@ -22,7 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
+import android.util.*;
 
 /**
  * Represents the whole application and serves as a global variable. It holds a
@@ -36,6 +37,7 @@ public class MainApplication extends Application {
 	private static List<Alert> alerts;
 	private static List<com.appfirst.types.Application> applications;
 	private static List<Server> servers;
+	private static List<com.appfirst.types.Log> logs;
 	private static List<PolledDataObject> polledDatas;
 	private static List<AlertHistory> alertHistories;
 	private static List<com.appfirst.types.Process> processes;
@@ -50,9 +52,18 @@ public class MainApplication extends Application {
 	private static boolean alertHistoryNeedRefresh = false;
 	private static boolean polledDataNeedRefresh = false;
 	private static boolean applicationNeedRefresh = false;
+	private static boolean logNeedRefresh = false;
 	
 	public static boolean isAlertNeedRefresh() {
 		return alertNeedRefresh;
+	}
+	
+	public static boolean isLogNeedRefresh() {
+		return logNeedRefresh;
+	}
+	
+	public static void setLogNeedRefresh(boolean logNeedRefresh) {
+		MainApplication.logNeedRefresh = logNeedRefresh;
 	}
 
 	public static void setAlertNeedRefresh(boolean alertNeedRefresh) {
@@ -155,6 +166,10 @@ public class MainApplication extends Application {
 	public static List<Server> getServers() {
 		return servers;
 	}
+	
+	public static List<Log> getLogs() {
+		return logs;
+	}
 
 	public static List<PolledDataObject> getPolledDatas() {
 		return polledDatas;
@@ -202,6 +217,10 @@ public class MainApplication extends Application {
 
 	public static synchronized void loadPolledDataList(String url) {
 		polledDatas = client.getPollDataList(url);
+	}
+	
+	public static synchronized void loadLogList(String url) {
+		logs = client.getLogList(url);
 	}
 
 	public static synchronized void loadApplicationList(String url) {
@@ -277,7 +296,7 @@ public class MainApplication extends Application {
 			return;
 		}
 
-		Log.i(TAG, "Try to register c2dm");
+		android.util.Log.i(TAG, "Try to register c2dm");
 		Intent registrationIntent = new Intent(
 				"com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(context,
@@ -422,7 +441,7 @@ public class MainApplication extends Application {
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(ns);
 		mNotificationManager.cancelAll();
-		Log.i(TAG, "Badge has been resetted. ");
+		android.util.Log.i(TAG, "Badge has been resetted. ");
 	}
 
 	/**
@@ -443,7 +462,7 @@ public class MainApplication extends Application {
 									// be changed
 			try {
 				MainApplication.setDevice(new AFDevice(deviceObject));
-				Log.i(TAG, String.format("Get new device id: %d",
+				android.util.Log.i(TAG, String.format("Get new device id: %d",
 						MainApplication.getDevice().getId()));
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -39,6 +39,7 @@ import org.json.JSONObject;
 
 import com.appfirst.datatypes.AlertHistoryData;
 import com.appfirst.datatypes.DetailData;
+import com.appfirst.datatypes.LogData2;
 import com.appfirst.datatypes.PolledDataData;
 import com.appfirst.datatypes.ProcessData;
 import com.appfirst.datatypes.SystemData;
@@ -49,16 +50,16 @@ import com.appfirst.types.Application;
 import com.appfirst.types.PolledDataObject;
 import com.appfirst.types.Server;
 import com.appfirst.types.Process;
+import com.appfirst.types.Log;
 
-import android.util.Log;
-import android.util.Base64;
+import android.util.*;
 
 /**
  * JAVA Client library for accessing AppFirst Monitoring public API. This is
  * used on Android platform.
  * <p>
  * It provides most of the interface of getting the current status for servers,
- * applications, tags, processes, polled datas and alerts. At the same time, it
+ * applications, logs, tags, processes, polled datas and alerts. At the same time, it
  * doesn't implement the interface of accessing he functionalities like deleting
  * or adding.
  * </p>
@@ -135,7 +136,7 @@ public class AFClient {
 			if (Helper.checkStatus(response)) {
 				result = true;
 			} else {
-				Log.e(TAG, String.format("Log in failed: %s", response
+				android.util.Log.e(TAG, String.format("Log in failed: %s", response
 						.getStatusLine()));
 				result = false;
 			}
@@ -507,6 +508,36 @@ public class AFClient {
 
 		return new Application(jsonObject);
 	}
+	
+	/**
+	 * Gets log list
+	 * 
+	 * @param url
+	 *            the public api address of the query
+	 * @return a list of {@link Log} object.
+	 */
+	public List<Log> getLogList(String url) {
+		JSONArray jsonArray = null;
+		HttpGet getRequest = new HttpGet(url);
+		jsonArray = makeJsonArrayRequest(getRequest);
+
+		return Helper.convertLogList(jsonArray);
+	}
+
+	/**
+	 * Gets a log with id.
+	 * 
+	 * @param url
+	 *            the public api address of the query
+	 * @return a {@link Log} object.
+	 */
+	public Log getLog(String url) {
+		JSONObject jsonObject = null;
+		HttpGet getRequest = new HttpGet(url);
+		jsonObject = makeJsonObjectRequest(getRequest);
+
+		return new Log(jsonObject);
+	}
 
 	/**
 	 * Gets alert list
@@ -588,6 +619,20 @@ public class AFClient {
 		return Helper.convertAlertHistoryList(jsonArray);
 	}
 
+	/**
+	 * Gets the content of a log message.
+	 * 
+	 * @param url
+	 *            the public api address of the query
+	 * @return a {@link AlertHistoryData} object
+	 */
+	public LogData2 getLogData(String url) {
+		JSONObject jsonObject = null;
+		HttpGet getRequest = new HttpGet(url);
+		jsonObject = makeJsonObjectRequest(getRequest);
+		return new LogData2(jsonObject);
+	}
+	
 	/**
 	 * Gets the message of a triggered alert.
 	 * 
@@ -739,7 +784,7 @@ public class AFClient {
 		try {
 			HttpResponse response = this.mClient.execute(request);
 			if (!Helper.checkStatus(response)) {
-				Log.e(TAG, String.format("Request failed with :%s", response
+				android.util.Log.e(TAG, String.format("Request failed with :%s", response
 						.getStatusLine()));
 				return null;
 			}
@@ -775,7 +820,7 @@ public class AFClient {
 		try {
 			HttpResponse response = this.mClient.execute(getRequest);
 			if (!Helper.checkStatus(response)) {
-				Log.e(TAG, String.format("Request failed with :%s", response
+				android.util.Log.e(TAG, String.format("Request failed with :%s", response
 						.getStatusLine()));
 				return null;
 			}
@@ -811,7 +856,7 @@ public class AFClient {
 		try {
 			HttpResponse response = this.mClient.execute(getRequest);
 			if (!Helper.checkStatus(response)) {
-				Log.e(TAG, String.format("Request failed with :%s", response
+				android.util.Log.e(TAG, String.format("Request failed with :%s", response
 						.getStatusLine()));
 				return null;
 			}
@@ -863,7 +908,7 @@ public class AFClient {
 					instream.close();
 				}
 			} else {
-				Log.e(TAG, String.format("Request failed with :%s", response
+				android.util.Log.e(TAG, String.format("Request failed with :%s", response
 						.getStatusLine()));
 				return jsonObject;
 			}

@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import com.appfirst.activities.lists.AFAlertHistoryList;
 import com.appfirst.activities.lists.AFAlertList;
 import com.appfirst.activities.lists.AFApplicationList;
+import com.appfirst.activities.lists.AFLogList2;
 import com.appfirst.activities.lists.AFPolledDataList;
 import com.appfirst.activities.lists.AFServerList;
 import com.appfirst.animations.ExpandAnimation;
@@ -166,6 +167,11 @@ public class AFHomeScreen extends Activity {
 			startActivity(alertHistory);
 			break;
 		case 5:
+			Intent log = new Intent(AFHomeScreen.this,
+					AFLogList2.class);
+			startActivity(log);
+			break;
+		case 6:
 			Intent account = new Intent(AFHomeScreen.this,
 					AFAccountManagement.class);
 			startActivity(account);

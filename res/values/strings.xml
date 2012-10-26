@@ -11,6 +11,7 @@
     <string name="api_applications">"/api/v1/applications/"</string>
     <string name="api_polled_datas">"/api/v1/polled-data/"</string>
     <string name="api_alert_histories">"/api/v1/alert-histories/"</string>
+    <string name="api_logs">"/api/v1/logs/"</string>
     <string name="api_device">"/api/v1/mobile-devices/"</string>
     <string name="passowrd_key">"af_password"</string>
     <string name="username_key">"af_username"</string>

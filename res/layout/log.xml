@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+  <TextView android:layout_width="fill_parent"
+  android:layout_height="wrap_content" android:id="@+id/server"
+  android:text="">
+  </TextView>
+  <TextView android:layout_width="fill_parent"
+  android:layout_height="wrap_content" android:id="@+id/type"
+  android:text="">
+  </TextView>
+  <TextView android:layout_width="fill_parent"
+  android:layout_height="wrap_content" android:id="@+id/source"
+  android:text="">
+  </TextView>
+  <TextView android:layout_width="fill_parent"
+  android:layout_height="wrap_content" android:id="@+id/critical"
+  android:text="">
+  </TextView>
+  <TextView android:layout_width="fill_parent"
+  android:layout_height="wrap_content" android:id="@+id/filter"
+  android:text="">
+  </TextView>
+  <TextView android:layout_width="fill_parent"
+  android:layout_height="wrap_content" android:id="@+id/time"
+  android:text="">
+  </TextView>
+  <TextView android:layout_width="fill_parent"
+  android:layout_height="wrap_content" android:id="@+id/num_info"
+  android:text="">
+  </TextView>
+  <TextView android:layout_width="fill_parent"
+  android:layout_height="wrap_content" android:id="@+id/num_warning"
+  android:text="">
+  </TextView>
+  <TextView android:layout_width="fill_parent"
+  android:layout_height="wrap_content" android:id="@+id/num_critical"
+  android:text="">
+  </TextView>
+</LinearLayout>

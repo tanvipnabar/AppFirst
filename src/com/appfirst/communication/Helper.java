@@ -25,6 +25,7 @@ import com.appfirst.monitoring.R;
 import com.appfirst.types.Alert;
 import com.appfirst.types.AlertHistory;
 import com.appfirst.types.Application;
+import com.appfirst.types.Log;
 import com.appfirst.types.PolledDataObject;
 import com.appfirst.types.Server;
 import com.appfirst.types.Process;
@@ -153,6 +154,25 @@ public class Helper {
 		}
 
 		return alertList;
+	}
+	
+	public static List<Log> convertLogList(JSONArray jsonArray) {
+		List<Log> logList = new ArrayList<Log>();
+		if (jsonArray == null) {
+			return logList;
+		}
+		for (int i = 0; i < jsonArray.length(); i++) {
+			try {
+				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+				Log process = new Log(jsonObject);
+				logList.add(process);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return logList;
 	}
 
 	public static List<AlertHistory> convertAlertHistoryList(JSONArray jsonArray) {
@@ -405,6 +425,22 @@ public class Helper {
 		return String.format("%s%s", context
 				.getString(R.string.frontend_address), context
 				.getString(R.string.api_polled_datas));
+	}
+	
+	/**
+	 * Get the url of the alert query. 
+	 * @param context current activity.
+	 * @param id alert id
+	 * @return the formatted url String. 
+	 */
+	public static String getLogUrl(Context context, int id) {
+		String ret = String.format("%s%s", context
+				.getString(R.string.frontend_address), context
+				.getString(R.string.api_logs));
+		if (id > 0) {
+			ret = String.format("%s%d/", ret, id); 
+		}
+		return ret;
 	}
 	
 	/**

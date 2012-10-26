@@ -96,9 +96,9 @@ public class VerticalImageTextGroupAdapter extends BaseAdapter {
 	private Integer[] mThumbIds = { R.drawable.ic_icon_server,
 			R.drawable.ic_icon_application, R.drawable.ic_icon_alert,
 			R.drawable.ic_icon_nagios, R.drawable.ic_icon_alerthistory,
-			R.drawable.ic_icon_setting };
+			R.drawable.ic_icon_log, R.drawable.ic_icon_setting };
 	// references to the names
 	private String[] mNames = new String[] { "Servers", "Applications",
-			"Alerts", "Polled data", "Alert Histories", "Settings" };
+			"Alerts", "Polled data", "Alert Histories", "Logs", "Settings" };
 	private Activity mContext;
 }

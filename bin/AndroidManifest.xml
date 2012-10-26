@@ -38,6 +38,19 @@
 			<meta-data android:name="android.app.searchable"
 				android:resource="@xml/searchable" />
 		</activity>
+		<activity android:name="com.appfirst.activities.lists.AFLogList2"
+			android:configChanges="orientation|keyboardHidden"
+			android:launchMode="singleTop" android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.Default" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+			</intent-filter>
+			<meta-data android:name="android.app.searchable"
+				android:resource="@xml/searchable" />
+		</activity>
 		<activity android:name="com.appfirst.activities.lists.AFProcessList"
 			android:configChanges="orientation|keyboardHidden"
 			android:launchMode="singleTop" android:label="@string/app_name">
@@ -133,6 +146,13 @@
 			</intent-filter>
 		</activity>
 		<activity android:name="com.appfirst.activities.details.AFApplicationDetail"
+			android:configChanges="orientation|keyboardHidden" android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.Default" />
+			</intent-filter>
+		</activity>
+		<activity android:name="com.appfirst.activities.details.AFLogDetail"
 			android:configChanges="orientation|keyboardHidden" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
