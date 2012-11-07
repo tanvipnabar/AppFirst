@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.appfirst.communication.Helper;
 import com.appfirst.monitoring.R;
 import com.appfirst.monitoring.MainApplication;
 import com.appfirst.types.AlertHistory;
@@ -106,8 +107,8 @@ public class HomePageAlertListPopulator extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) myView.getTag();
 		}
-		Date date = new Date(System.currentTimeMillis() - alertHistories.get(position).getStart());
-		holder.timeLine.setText(date.toString());
+		//Date date = new Date(System.currentTimeMillis() - alertHistories.get(position).getStart());
+		holder.timeLine.setText(Helper.toRelativeTimeString(alertHistories.get(position).getStart())); //date.toString());
 		holder.subjectLine.setText(alertHistories.get(position).getSubject()); //mNames[position]);
 		//holder.textView.setGravity(3);
 		holder.icon.setImageResource(checkIcon(alertHistories.get(position).getSubject()));//mThumbIds[position]);

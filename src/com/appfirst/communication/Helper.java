@@ -21,6 +21,7 @@ import android.content.Context;
 import com.appfirst.datatypes.PolledDataData;
 import com.appfirst.datatypes.ProcessData;
 import com.appfirst.datatypes.SystemData;
+import com.appfirst.monitoring.MainApplication;
 import com.appfirst.monitoring.R;
 import com.appfirst.types.Alert;
 import com.appfirst.types.AlertHistory;
@@ -165,7 +166,8 @@ public class Helper {
 			try {
 				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
 				Log process = new Log(jsonObject);
-				logList.add(process);
+				if(MainApplication.getServerNameById(process.getServerId()) != null)
+					logList.add(process);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -305,6 +307,30 @@ public class Helper {
 			units = "KB";
 		}
 		return String.format("%s %s", valueString, units);
+	}
+	
+	public static String toRelativeTimeString(long timestamp) {
+		Date convertedDate = new Date(timestamp);
+	    Date todayDate = new Date();
+	    double ti = System.currentTimeMillis()/1000 - timestamp;
+	    System.out.println("TIMEEE -->" + ti);
+	    if (ti < 1) {
+	        return "never";
+	    } else if (ti < 60) {
+	        int diff = (int)ti;
+	        return diff + " seconds ago";
+	    } else if (ti < 7200) {
+	        int diff = (int) Math.round(ti / 60);
+	        return diff + " minutes ago";
+	    } else if (ti < 86400) {
+	        int diff = (int) Math.round(ti / 60 / 60);
+	        return diff + " hours ago";
+	    } else if (ti < 2629743) {
+	        int diff = (int) Math.round(ti / 60 / 60 / 24);
+	        return diff + " days ago";
+	    } else {
+	        return "never";
+	    }
 	}
 
 	/**

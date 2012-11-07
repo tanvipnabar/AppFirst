@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_NSLnYA15EeK7uIDLD1jPsg" elementId="org.eclipse.e4.legacy.ide.application" contributorURI="platform:/plugin/org.eclipse.ui.workbench" selectedElement="_NSLnYQ15EeK7uIDLD1jPsg" bindingContexts="_NSLnag15EeK7uIDLD1jPsg">
   <tags>activeSchemeId:org.eclipse.ui.defaultAcceleratorConfiguration</tags>
-  <children xsi:type="basic:TrimmedWindow" xmi:id="_NSLnYQ15EeK7uIDLD1jPsg" elementId="IDEWindow" contributorURI="platform:/plugin/org.eclipse.ui.workbench" selectedElement="_N0AiEg15EeK7uIDLD1jPsg" x="42" y="22" width="1024" height="717">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_NSLnYQ15EeK7uIDLD1jPsg" elementId="IDEWindow" contributorURI="platform:/plugin/org.eclipse.ui.workbench" selectedElement="_N0AiEg15EeK7uIDLD1jPsg" x="42" y="22" width="1280" height="800">
     <tags>topLevel</tags>
     <children xsi:type="basic:PartSashContainer" xmi:id="_N0AiEg15EeK7uIDLD1jPsg" selectedElement="_N0AiEw15EeK7uIDLD1jPsg" horizontal="true">
       <children xsi:type="advanced:PerspectiveStack" xmi:id="_N0AiEw15EeK7uIDLD1jPsg" elementId="PerspectiveStack" containerData="7500" selectedElement="_OTjk0A15EeK7uIDLD1jPsg">
