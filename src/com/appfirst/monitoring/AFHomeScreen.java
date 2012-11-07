@@ -20,6 +20,7 @@ import java.net.URL;
 //import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appfirst.activities.details.AFAlertHistoryDetail;
 import com.appfirst.activities.lists.AFAlertHistoryList;
 import com.appfirst.activities.lists.AFAlertList;
 import com.appfirst.activities.lists.AFApplicationList;
@@ -45,6 +46,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -74,7 +76,7 @@ public class AFHomeScreen extends Activity {
 	private Boolean firstLogin = false;
 	private LinearLayout MenuList;
 	private LinearLayout AlertHistoryList;
-	private Button btnToggleMenuList;
+	private ImageButton btnToggleMenuList;
 	private int screenWidth;
 	private boolean isExpanded = false;
 
@@ -83,7 +85,7 @@ public class AFHomeScreen extends Activity {
 		setContentView(R.layout.home3);
 		MenuList = (LinearLayout) findViewById(R.id.linearLayout2);
 		AlertHistoryList = (LinearLayout) findViewById(R.id.linearLayout3_2);
-		btnToggleMenuList = (Button) findViewById(R.id.button1);
+		btnToggleMenuList = (ImageButton) findViewById(R.id.button1);
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		screenWidth = metrics.widthPixels;
@@ -100,6 +102,13 @@ public class AFHomeScreen extends Activity {
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
 				navigateToView(position);
+			}
+		});
+		
+		alertHistoryListView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View v,
+					int position, long id) {
+				goToAlertHistoryDetail(position);
 			}
 		});
 
@@ -129,10 +138,21 @@ public class AFHomeScreen extends Activity {
         });
 	}
 	
-
 	private void initializeApplication() {
 		showDialog(PROGRESS_DIALOG);
 		new ResourceLoader().execute();
+	}
+	
+	/**
+	 * Load he selected Alert History View
+	 * @param position : the index of the alert history to be loaded
+	 */
+	private void goToAlertHistoryDetail(int position) {
+		Intent intent = new Intent(AFHomeScreen.this,
+				AFAlertHistoryDetail.class);
+		intent.putExtra(AFAlertHistoryDetail.class.getName() + ".selected",
+				position);
+		startActivity(intent);
 	}
 
 	/**

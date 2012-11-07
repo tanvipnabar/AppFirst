@@ -44,16 +44,34 @@
 
 	        	    <LinearLayout
 	        	        android:id="@+id/linearLayout5"
-	        	        android:layout_width="match_parent"
+	        	        android:layout_width="320dip"
 	        	        android:layout_height="match_parent"
 	        	        android:orientation="horizontal" >
 
-	        	        <Button
+	        	        <ImageButton
 	        	            android:id="@+id/button1"
 	        	            android:layout_width="wrap_content"
 	        	            android:layout_height="wrap_content"
+	        	            android:layout_gravity="center_vertical"
 	        	            android:layout_marginTop="2dp"
+	        	            android:background="@color/menuDrawer"
+	        	            android:paddingLeft="5dip"
+	        	            android:paddingRight="5dip"
+	        	            android:src="@drawable/list_menu_icon"
 	        	            android:text="@string/togglemenu" />
+	        	        
+	        	        <ImageView
+	        	            android:id="@+id/logo"
+	        	            android:layout_width="wrap_content"
+	        	            android:layout_height="wrap_content"
+	        	            android:layout_gravity="center_horizontal"
+	        	            android:layout_marginRight="6dip"
+	        	            android:contentDescription="TODO"
+	        	            android:paddingBottom="5dip"
+	        	            android:paddingLeft="20dip"
+	        	            android:paddingTop="5dip"
+	        	            android:src="@drawable/appfirst_logo_header_large" />
+
 	        	    </LinearLayout>
 	        	</TableRow>
 
