@@ -18,7 +18,7 @@ public class ExpandAnimation extends Animation implements Animation.AnimationLis
 	public ExpandAnimation(View v, int FromWidth, int ToWidth, int Duration) {
 		
 		this.view = v;
-		ANIMATION_DURATION = 1;
+		ANIMATION_DURATION = 2;
 		this.FromWidth = FromWidth;
 		this.ToWidth = ToWidth;
 		setDuration(ANIMATION_DURATION);

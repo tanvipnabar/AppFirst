@@ -23,11 +23,12 @@
 	   			android:background="@color/menuDrawer">
 	
 	          		<Button
-		       			android:id="@+id/button1"
-		       			android:layout_width="wrap_content"
-		       			android:layout_height="wrap_content"
-		       			android:text="@string/togglemenu"
-		       			android:layout_marginTop="2dp" />
+	          		    android:id="@+id/button1"
+	          		    android:layout_width="wrap_content"
+	          		    android:layout_height="wrap_content"
+	          		    android:layout_marginTop="2dp"
+	          		    android:background="@drawable/list_menu_icon"
+	          		    android:text="@string/togglemenu" />
 	          	
 			</LinearLayout>
 				

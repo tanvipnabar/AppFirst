@@ -17,7 +17,7 @@ public class CollapseAnimation extends Animation implements Animation.AnimationL
 		
 		this.view = v;
 		LayoutParams lyp =  view.getLayoutParams();
-		ANIMATION_DURATION = 1;
+		ANIMATION_DURATION = 2;
 		this.FromWidth = lyp.width;
 		this.ToWidth = lyp.width;
 		setDuration(ANIMATION_DURATION);

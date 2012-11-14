@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.appfirst.monitoring" android:versionCode="6"
+	package="com.appfirst.monitoring" android:versionCode="7"
 	android:versionName="2.4">
 	<application android:name="MainApplication"
-		android:debuggable="false" android:icon="@drawable/ic_launcher_appfirst_flat"
+		android:debuggable="FALSE" android:icon="@drawable/ic_launcher_appfirst_flat"
 		android:label="@string/app_name">
+		
 		<activity android:name=".LoginScreen" android:configChanges="orientation|keyboardHidden"
 			android:label="@string/app_name">
 			<intent-filter>
