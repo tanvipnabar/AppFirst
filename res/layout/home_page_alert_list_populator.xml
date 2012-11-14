@@ -14,11 +14,11 @@
         
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_width="35dip"
+            android:layout_height="35dip"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:layout_marginRight="6dip"
             android:contentDescription="TODO" />
 

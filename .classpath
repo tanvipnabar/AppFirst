@@ -4,6 +4,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="/Users/jorgevargas/Downloads/achartengine-1.0.0-demo-source/lib/achartengine-1.0.0.jar"/>
+	<classpathentry kind="lib" path="/Users/tpn220/Downloads/achartengine-1.0.0.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -313,7 +313,6 @@ public class Helper {
 		Date convertedDate = new Date(timestamp);
 	    Date todayDate = new Date();
 	    double ti = System.currentTimeMillis()/1000 - timestamp;
-	    System.out.println("TIMEEE -->" + ti);
 	    if (ti < 1) {
 	        return "never";
 	    } else if (ti < 60) {

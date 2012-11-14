@@ -37,7 +37,6 @@ public class ExpandAnimation extends Animation implements Animation.AnimationLis
 		LayoutParams lyp =  view.getLayoutParams();
 		lyp.width = LastWidth +=ToWidth/20;
 		view.setLayoutParams(lyp);
-		System.out.println("lyp.width -> " + lyp.width);
 	}
 
 	public void onAnimationStart(Animation anim) {
@@ -46,7 +45,6 @@ public class ExpandAnimation extends Animation implements Animation.AnimationLis
 		lyp.width = 0;
 		view.setLayoutParams(lyp);
 		LastWidth = 0;
-		System.out.println("*************created!! view is " + view.toString());
 	}
 
 }

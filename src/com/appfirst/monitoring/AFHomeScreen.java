@@ -76,7 +76,7 @@ public class AFHomeScreen extends Activity {
 	private Boolean firstLogin = false;
 	private LinearLayout MenuList;
 	private LinearLayout AlertHistoryList;
-	private ImageButton btnToggleMenuList;
+	private Button btnToggleMenuList;
 	private int screenWidth;
 	private boolean isExpanded = false;
 
@@ -85,7 +85,7 @@ public class AFHomeScreen extends Activity {
 		setContentView(R.layout.home3);
 		MenuList = (LinearLayout) findViewById(R.id.linearLayout2);
 		AlertHistoryList = (LinearLayout) findViewById(R.id.linearLayout3_2);
-		btnToggleMenuList = (ImageButton) findViewById(R.id.button1);
+		btnToggleMenuList = (Button) findViewById(R.id.button1);
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		screenWidth = metrics.widthPixels;

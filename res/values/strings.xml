@@ -25,10 +25,18 @@
     <string name="brand">"Android"</string>
     <string name="search_hint">Search</string>
     <string name="togglemenu">ToggleMenu</string>
+    <color name="yellow1">#F7FE2E</color>
+    <color name="yellow2">#D7DF01</color>
+    <color name="orange4">#FAAC58</color>
+    <color name="orange5">#FE9A2E</color>
+    <color name="gray1">#848484</color>
+    <color name="gray2">#2E2E2E</color>
     <color name="white">#FFFFFF</color>
+    <color name="grey05">#BDBDBD</color>
     <color name="menuOuter">#4c646a</color>
     <color name="menuDrawer">#1c2527</color>
     <color name="black">#000000</color>
     <string name="mycontent">mycontent</string>
     <string name="todo">TODO</string>
+    <string name="drawerString">Menu</string>
 </resources>
