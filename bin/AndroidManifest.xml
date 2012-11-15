@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.appfirst.monitoring" android:versionCode="7"
-	android:versionName="2.4">
+	package="com.appfirst.monitoring2" android:versionCode="7"
+	android:versionName="2.5">
 	<application android:name="MainApplication"
 		android:debuggable="FALSE" android:icon="@drawable/ic_launcher_appfirst_flat"
 		android:label="@string/app_name">
@@ -245,20 +245,20 @@
 			<meta-data android:name="android.appwidget.provider"
 				android:resource="@xml/appwidget_info" />
 		</receiver>
-		<receiver android:name="com.appfirst.monitoring.C2DMReceiver"
+		<receiver android:name="com.appfirst.monitoring2.C2DMReceiver"
 			android:permission="com.google.android.c2dm.permission.SEND">
 			<!-- Receive the actual message -->
 			<intent-filter>
 				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
-				<category android:name="com.appfirst.monitoring" />
+				<category android:name="com.appfirst.monitoring2" />
 			</intent-filter>
 			<!-- Receive the registration id -->
 			<intent-filter>
 				<action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-				<category android:name="com.appfirst.monitoring" />
+				<category android:name="com.appfirst.monitoring2" />
 			</intent-filter>
 		</receiver>
-		<service android:name="com.appfirst.monitoring.C2DMReceiver" />
+		<service android:name="com.appfirst.monitoring2.C2DMReceiver" />
 		<service android:name="com.appfirst.widgets.AFDefaultWidgetProvider$UpdateService" />
 	</application>
 
@@ -267,9 +267,9 @@
 	<!--
 		Only this application can receive the messages and registration result
 	-->
-	<permission android:name="com.appfirst.monitoring.permission.C2D_MESSAGE"
+	<permission android:name="com.appfirst.monitoring2.permission.C2D_MESSAGE"
 		android:protectionLevel="signature" />
-	<uses-permission android:name="com.appfirst.monitoring.permission.C2D_MESSAGE" />
+	<uses-permission android:name="com.appfirst.monitoring2.permission.C2D_MESSAGE" />
 
 	<!-- This app has permission to register and receive message -->
 	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />

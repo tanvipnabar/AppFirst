@@ -19,8 +19,8 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import com.appfirst.communication.Helper;
-import com.appfirst.monitoring.MainApplication;
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
+import com.appfirst.monitoring2.MainApplication;
 import com.appfirst.types.Alert;
 
 import android.content.Intent;

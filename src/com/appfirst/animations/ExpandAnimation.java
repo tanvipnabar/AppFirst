@@ -1,6 +1,6 @@
 package com.appfirst.animations;
 
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
 
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;

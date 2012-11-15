@@ -28,8 +28,8 @@ import android.widget.Toast;
 
 import com.appfirst.activities.details.AFPolledDataDetail;
 import com.appfirst.activities.lists.AFListActivity.ResourceLoader;
-import com.appfirst.monitoring.MainApplication;
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
+import com.appfirst.monitoring2.MainApplication;
 import com.appfirst.types.Alert;
 import com.appfirst.types.PolledDataObject;
 import com.appfirst.types.Server;

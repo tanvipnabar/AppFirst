@@ -15,7 +15,7 @@
  */
 package com.appfirst.utils;
 
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
 
 import android.app.Activity;
 import android.view.View;

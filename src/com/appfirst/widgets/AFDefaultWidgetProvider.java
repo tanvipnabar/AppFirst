@@ -18,9 +18,9 @@ package com.appfirst.widgets;
 import com.appfirst.activities.lists.AFAlertList;
 import com.appfirst.activities.lists.AFServerList;
 import com.appfirst.communication.Helper;
-import com.appfirst.monitoring.LoginScreen;
-import com.appfirst.monitoring.MainApplication;
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
+import com.appfirst.monitoring2.LoginScreen;
+import com.appfirst.monitoring2.MainApplication;
 
 import android.app.Activity;
 import android.app.PendingIntent;

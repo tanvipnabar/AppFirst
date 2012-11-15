@@ -22,8 +22,8 @@ import android.widget.Toast;
 import com.appfirst.activities.lists.AFAlertHistoryList;
 import com.appfirst.datatypes.AlertHistoryData;
 import com.appfirst.datatypes.LogData2;
-import com.appfirst.monitoring.MainApplication;
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
+import com.appfirst.monitoring2.MainApplication;
 import com.appfirst.types.AlertHistory;
 import com.appfirst.types.Log;
 
@@ -101,15 +101,15 @@ public class AFLogDetail extends AFDetailActivity {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		setTextView(this, R.id.server, "Server\t:" + MainApplication.getServerNameById(mLog.getServerId()));
-		setTextView(this, R.id.type, "Type\t:" + mLog.getType());
-		setTextView(this, R.id.source, "Source\t:" + mLog.getSource());
-		setTextView(this, R.id.critical, "Critical\t:" + mLog.getCritical());
-		setTextView(this, R.id.filter, "Filter\t:" + mLog.getFilter());
-		setTextView(this, R.id.time, "Time\t:" + String.valueOf(mLogData.getTime()));
-		setTextView(this, R.id.num_info, "Num. of Info Messages\t:" + mLogData.getNum_info());
-		setTextView(this, R.id.num_warning, "Num. of Warning Messages\t:" + mLogData.getNum_warning());
-		setTextView(this, R.id.num_critical, "Num. of Critical Messages\t:" + mLogData.getNum_critical());
+		setTextView(this, R.id.server, "Server : " + MainApplication.getServerNameById(mLog.getServerId()));
+		setTextView(this, R.id.type, "Type : " + mLog.getType());
+		setTextView(this, R.id.source, "Source : " + mLog.getSource());
+		setTextView(this, R.id.critical, "Critical : " + mLog.getCritical());
+		setTextView(this, R.id.filter, "Filter : " + mLog.getFilter());
+		setTextView(this, R.id.time, "Time : " + String.valueOf(mLogData.getTime()));
+		setTextView(this, R.id.num_info, "Num. of Info Messages : " + mLogData.getNum_info());
+		setTextView(this, R.id.num_warning, "Num. of Warning Messages : " + mLogData.getNum_warning());
+		setTextView(this, R.id.num_critical, "Num. of Critical Messages : " + mLogData.getNum_critical());
 	}
 
 	/*

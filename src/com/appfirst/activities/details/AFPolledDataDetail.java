@@ -36,8 +36,8 @@ import android.widget.Button;
 import com.appfirst.communication.Helper;
 import com.appfirst.datatypes.PolledDataData;
 import com.appfirst.datatypes.SystemData;
-import com.appfirst.monitoring.MainApplication;
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
+import com.appfirst.monitoring2.MainApplication;
 import com.appfirst.types.PolledDataObject;
 
 /**

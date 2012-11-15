@@ -51,14 +51,13 @@
 	        	        <Button
 	        	            android:id="@+id/button1"
 	        	            style="button_style"
-	        	            android:background="@drawable/drawer_button_style"
 	        	            android:layout_width="wrap_content"
 	        	            android:layout_height="wrap_content"
 	        	            android:layout_gravity="center_vertical"
 	        	            android:layout_marginTop="2dp"
+	        	            android:background="@drawable/list_menu_icon"
 	        	            android:paddingLeft="5dip"
-	        	            android:paddingRight="5dip"
-	        	            android:text="@string/drawerString" />
+	        	            android:paddingRight="5dip" />
 	        	        
 	        	        <TextView
 	        	            android:layout_width="fill_parent"

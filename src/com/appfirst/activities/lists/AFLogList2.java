@@ -27,8 +27,8 @@ import android.widget.TextView;
 
 import com.appfirst.activities.details.AFApplicationDetail;
 import com.appfirst.activities.details.AFLogDetail;
-import com.appfirst.monitoring.MainApplication;
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
+import com.appfirst.monitoring2.MainApplication;
 import com.appfirst.types.Application;
 import com.appfirst.types.Log;
 import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
@@ -73,13 +73,13 @@ public class AFLogList2 extends AFListActivity {
 		List<Log> items = MainApplication.getLogs();
 		for (int i = 0; i < items.size(); i++) {
 			Log item = items.get(i);
-			String name = item.getType() + "(" + MainApplication.getServerNameById(item.getServerId()) + ")";
+			String name = item.getType() + " : " + item.getSource();
 			if (this.filterString != ""
 					&& !name.toLowerCase().contains(filterString.toLowerCase())) {
 				continue;
 			}
 			names.add(name);
-			details.add("");
+			details.add(MainApplication.getServerNameById(item.getServerId()));
 			ids.add(item.getId());
 		}
 		// Create an ArrayAdapter, that will actually make the Strings above

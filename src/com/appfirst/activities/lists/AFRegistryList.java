@@ -22,7 +22,7 @@ import android.os.Bundle;
 
 
 import com.appfirst.datatypes.RegistryData;
-import com.appfirst.monitoring.MainApplication;
+import com.appfirst.monitoring2.MainApplication;
 import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
 import com.appfirst.utils.DynamicComparator;
 

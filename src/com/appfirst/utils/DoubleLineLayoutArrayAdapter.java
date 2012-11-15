@@ -21,7 +21,7 @@ import com.appfirst.activities.details.AFApplicationDetail;
 import com.appfirst.activities.details.AFMinuteDetail;
 import com.appfirst.activities.details.AFProcessDetail;
 import com.appfirst.activities.lists.AFApplicationList;
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
 import com.appfirst.types.Application;
 
 import android.app.Activity;

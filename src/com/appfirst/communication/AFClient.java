@@ -43,7 +43,7 @@ import com.appfirst.datatypes.LogData2;
 import com.appfirst.datatypes.PolledDataData;
 import com.appfirst.datatypes.ProcessData;
 import com.appfirst.datatypes.SystemData;
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
 import com.appfirst.types.Alert;
 import com.appfirst.types.AlertHistory;
 import com.appfirst.types.Application;

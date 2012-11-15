@@ -25,9 +25,9 @@ import org.achartengine.model.XYMultipleSeriesDataset;
 
 import com.appfirst.communication.Helper;
 import com.appfirst.datatypes.ProcessData;
-import com.appfirst.monitoring.MainApplication;
 
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
+import com.appfirst.monitoring2.MainApplication;
 
 import android.app.Dialog;
 import android.content.Intent;

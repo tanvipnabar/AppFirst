@@ -20,8 +20,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.appfirst.monitoring.AFHomeScreen;
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
+import com.appfirst.monitoring2.AFHomeScreen;
 import com.appfirst.types.BaseObject;
 
 import android.app.Dialog;

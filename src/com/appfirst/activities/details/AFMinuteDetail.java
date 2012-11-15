@@ -20,8 +20,8 @@ import com.appfirst.activities.lists.AFLogList;
 import com.appfirst.activities.lists.AFRegistryList;
 import com.appfirst.activities.lists.AFSocketList;
 import com.appfirst.activities.lists.AFThreadList;
-import com.appfirst.monitoring.MainApplication;
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
+import com.appfirst.monitoring2.MainApplication;
 
 import android.app.TabActivity;
 import android.content.Intent;

@@ -62,7 +62,7 @@ public class Log extends BaseObject {
 			type = BaseObject.getStringField("type", jsonObject);
 			serverId = BaseObject.getIntField("server", jsonObject);
 			critical = BaseObject.getStringField("critical", jsonObject);
-			filter = BaseObject.getStringField("server", jsonObject);
+			filter = BaseObject.getStringField("filter", jsonObject);
 			source = BaseObject.getStringField("source", jsonObject);
 			
 		} catch (Exception e) {

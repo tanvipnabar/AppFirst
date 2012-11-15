@@ -22,7 +22,7 @@ import android.os.Bundle;
 
 import com.appfirst.communication.Helper;
 import com.appfirst.datatypes.SocketData;
-import com.appfirst.monitoring.MainApplication;
+import com.appfirst.monitoring2.MainApplication;
 import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
 import com.appfirst.utils.DynamicComparator;
 

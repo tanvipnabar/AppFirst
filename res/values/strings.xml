@@ -33,6 +33,7 @@
     <color name="gray2">#696969</color>
     <color name="white">#FFFFFF</color>
     <color name="grey05">#BDBDBD</color>
+    <color name="red">#E31E1E</color>
     <color name="menuOuter">#4c646a</color>
     <color name="menuDrawer">#1c2527</color>
     <color name="black">#000000</color>

@@ -21,7 +21,7 @@ import java.util.List;
 import android.os.Bundle;
 
 import com.appfirst.datatypes.LogData;
-import com.appfirst.monitoring.MainApplication;
+import com.appfirst.monitoring2.MainApplication;
 
 import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
 import com.appfirst.utils.DynamicComparator;

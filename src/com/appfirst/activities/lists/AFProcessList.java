@@ -23,8 +23,8 @@ import android.widget.ListView;
 
 import com.appfirst.activities.details.AFProcessDetail;
 import com.appfirst.activities.lists.AFListActivity.ResourceLoader;
-import com.appfirst.monitoring.MainApplication;
-import com.appfirst.monitoring.R;
+import com.appfirst.monitoring2.R;
+import com.appfirst.monitoring2.MainApplication;
 import com.appfirst.types.Application;
 import com.appfirst.utils.DoubleLineLayoutArrayAdapter;
 import com.appfirst.utils.DynamicComparator;
