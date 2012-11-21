@@ -83,8 +83,11 @@ public class HomePageAlertListPopulator extends BaseAdapter {
 		}
 		items = MainApplication.getAlertHistories();
 		//System.out.println("AH SIZZZEEEE *****---->  " + items.get(0).getSubject());
-		for(int i=0; i<10; i++) {
-			alertHistories.add((AlertHistory)items.get(i));
+		items.clear();
+		if(items.size() != 0) {
+			for(int i=0; i<10; i++) {
+				alertHistories.add((AlertHistory)items.get(i));
+			}
 		}
 	}
 
